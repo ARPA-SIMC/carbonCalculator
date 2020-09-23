@@ -1,0 +1,32 @@
+Index	Fine classification	Gross classification	Bouwman equivalent	Dry matter fraction harvested	slope	intercept	N content - above ground	below:above ratio	N content below
+1	Alfalfa	Alfalfa	Other crop	0.9	0.29	0	0.027	0.4	0.019
+2	Apple	Tree Crop	Other crop	#N/D	#N/D	#N/D	0.015166667	0	0.013166667
+3	Barley	Grain	Other crop	0.89	0.98	0.59	0.007	0.22	0.014
+4	Clover	N-fixing forage	Legume	0.9	0.3	0	0.025	0.8	0.16
+5	Coffee	Tree Crop	Other crop	#N/D	#N/D	#N/D	0.014560606	0	0.013166667
+6	Cotton	Other	Other crop	0.791666667	0.665	0.721666667	0.015166667	0.291666667	0.013166667
+7	Dry Bean	Beans & pulses	Legume	0.9	0.36	0.68	0.01	0.19	0.01
+8	Grass-clover mix	Grass-clover mix	Grass-clover	0.9	0.3	0	0.025	0.8	0.16
+9	Maize	Grain	Other crop	0.87	1.03	0.61	0.006	0.22	0.007
+10	Millet	Grain	Other crop	0.9	1.43	0.14	0.007	1	0
+11	Oats	Grain	Other crop	0.89	0.91	0.89	0.007	0.25	0.008
+12	Peanut	Beans & pulses	Legume	0.94	1.07	1.54	0.016	1	0
+13	Perennial grass	Perennial grass	Grass	0.9	0.3	0	0.015	0.54	0.012
+14	Potato	Tuber	Other crop	0.22	0.1	1.06	0.019	0.2	0.014
+15	Rice	Grain	Wetland rice	0.89	0.95	2.46	0.007	0.16	0
+16	Rye	Grain	Other crop	0.88	1.09	0.88	0.005	0.635	0.011
+17	Sorghum	Grain	Other crop	0.89	0.88	1.33	0.007	1	0
+18	Soyabean	Beans & pulses	Legume	0.91	0.93	1.35	0.008	0.19	0.008
+19	Spring wheat	Grain	Other crop	0.89	1.29	0.75	0.006	0.28	0.009
+20	Tea	Tree Crop	Other crop	#N/D	#N/D	#N/D	0.0152	0.0000	0.0132
+21	Tomato	Tomato	Other crop	0.9	0	3.22667	0.015166667	0.291666667	0.013166667
+22	Tree Crop	Bush crop	Other crop	#N/D	#N/D	#N/D	0.015166667	0	0.0132
+23	Vegetable	Vegetable	Other crop	0.1235	0.155061111	0.116638889	0.032	0.3956	0.032
+24	Winter wheat	Grain	Other crop	0.89	1.61	0.4	0.006	0.23	0.009
+25	Other grain	Grain	Other crop	0.88	1.09	0.88	0.006	0.22	0.009
+26	Other legume	Beans & pulses	Legume	0.91	1.13	0.85	0.008	0.19	0.008
+27	Other N-fixing forage	N-fixing forage	Legume	0.9	0.3	0	0.027	0.4	0.022
+28	Other Non-N-fixing forage	Non-N-fixing forage	Grass	0.9	0.3	0	0.015	0.54	0.012
+29	Other root crops	Root crop	Other crop	0.94	1.07	1.54	0.016	0.2	0.014
+30	Other tuber crop	Tuber	Other crop	0.22	0.1	1.06	0.019	0.2	0.014
+31	Other	Other	Other crop	0.791666667	0.665	0.721666667	0.015166667	0.291666667	0.013166667
