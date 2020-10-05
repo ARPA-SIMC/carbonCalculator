@@ -50,5 +50,7 @@ int main(int argc, char *argv[])
 
     kgCO2EqDueToCO2 = 1000*(parameterDryMatterFraction*residueWeight*parameterResidueReconvertedToCO2/100.);
     printf("%f %f %f\n",kgCO2EqDueToCH4,kgCO2EqDueToN2O,kgCO2EqDueToCO2);
+    kgCO2EqTotal = kgCO2EqDueToCO2 + kgCO2EqDueToCH4 + kgCO2EqDueToN2O;
+    printf("%f\n",kgCO2EqTotal);
     return 0;
 }
