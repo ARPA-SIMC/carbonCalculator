@@ -3,19 +3,20 @@ QT -= gui
 
 CONFIG += c++11
 
-TARGET = carbonCalculatorGeco2
+TARGET = carbonCalculatorTest
 CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
-CONFIG(release, debug|release) {
-    LIBS += -L../cabonCalculator/release -lcarboncalculator
-} else {
-    LIBS += -L../cabonCalculator/debug -lcarboncalculator
-}
-
 INCLUDEPATH += ../carbonCalculator
+
+
+CONFIG(release, debug|release) {
+    LIBS += -L../carbonCalculator/release -lcarbonCalculator
+} else {
+    LIBS += -L../carbonCalculator/debug -lcarbonCalculator
+}
 
 
 SOURCES += main.cpp

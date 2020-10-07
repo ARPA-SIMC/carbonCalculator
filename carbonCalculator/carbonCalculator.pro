@@ -23,6 +23,8 @@ win32:{
 TEMPLATE = lib
 CONFIG += staticlib
 
-SOURCES += carboncalculator.cpp
+SOURCES += \
+    carbonCalculator.cpp
 
-HEADERS += carboncalculator.h
+HEADERS += \
+    carbonCalculator.h

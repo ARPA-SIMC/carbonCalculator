@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include <stdio.h>
 #include <math.h>
-#include "carboncalculator.h"
+#include "carbonCalculator.h"
 
 #define NODATA -9999
 
