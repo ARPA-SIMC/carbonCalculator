@@ -1,17 +1,22 @@
 #include <QCoreApplication>
 #include <stdio.h>
 #include <math.h>
+#include "carboncalculator.h"
 
 #define NODATA -9999
+
+cropResidueManagement cropRes;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     // input
-    int cropType = 1;
-    int residueType = 1;
+    // int cropType = 1;
+    // int residueType = 1;
     double residueWeight = 5;
+    cropRes.computeEquivalentCO2(residueWeight);
     // output
+    /*
     double kgCO2EqDueToN2O = NODATA;
     double kgCO2EqDueToCO2 = NODATA;
     double kgCO2EqDueToCH4 = NODATA;
@@ -51,6 +56,6 @@ int main(int argc, char *argv[])
     kgCO2EqDueToCO2 = 1000*(parameterDryMatterFraction*residueWeight*parameterResidueReconvertedToCO2/100.);
     printf("%f %f %f\n",kgCO2EqDueToCH4,kgCO2EqDueToN2O,kgCO2EqDueToCO2);
     kgCO2EqTotal = kgCO2EqDueToCO2 + kgCO2EqDueToCH4 + kgCO2EqDueToN2O;
-    printf("%f\n",kgCO2EqTotal);
+    printf("%f\n",kgCO2EqTotal);*/
     return 0;
 }
