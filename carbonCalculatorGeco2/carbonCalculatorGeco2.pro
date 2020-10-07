@@ -10,9 +10,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 CONFIG(release, debug|release) {
-    LIBS += -L../cabonCalculator/release -lcarboncalculator
+    LIBS += -L../cabonCalculator/release -lcarbonCalculator
 } else {
-    LIBS += -L../cabonCalculator/debug -lcarboncalculator
+    LIBS += -L../cabonCalculator/debug -lcarbonCalculator
 }
 
 INCLUDEPATH += ../carbonCalculator

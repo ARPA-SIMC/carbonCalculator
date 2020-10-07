@@ -1,4 +1,4 @@
-#include "carboncalculator.h"
+#include "carbonCalculator.h"
 #include <math.h>
 #include <stdio.h>
 
