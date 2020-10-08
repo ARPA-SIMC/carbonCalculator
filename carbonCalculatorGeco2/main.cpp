@@ -5,7 +5,8 @@
 
 #define NODATA -9999
 
-cropResidueManagement cropRes;
+//cropResidueManagement cropRes;
+carbonCalculator calculatorCO2;
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +15,8 @@ int main(int argc, char *argv[])
     // int cropType = 1;
     // int residueType = 1;
     double residueWeight = 5;
-    cropRes.computeEquivalentCO2(residueWeight);
+    //cropRes.computeEquivalentCO2(residueWeight);
+    calculatorCO2.cropResidue.computeEquivalentCO2(residueWeight);
     // output
     /*
     double kgCO2EqDueToN2O = NODATA;
