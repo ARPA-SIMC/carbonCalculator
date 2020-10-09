@@ -34,8 +34,8 @@ void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewables
     else input.fromElectricityOwnHydropower = inputFromUser.fromElectricityOwnHydropower;
     if (inputFromUser.fromElectricityOwnPhotovoltaic ==  NODATA) input.fromElectricityOwnPhotovoltaic = 0;
     else input.fromElectricityOwnPhotovoltaic = inputFromUser.fromElectricityOwnPhotovoltaic;
-    if (inputFromUser.fromElectricityOwnPhotovoltaic ==  NODATA) input.fromElectricityOwnWind = 0;
-    else input.fromElectricityOwnPhotovoltaic = inputFromUser.fromElectricityOwnWind;
+    if (inputFromUser.fromElectricityOwnWind ==  NODATA) input.fromElectricityOwnWind = 0;
+    else input.fromElectricityOwnWind = inputFromUser.fromElectricityOwnWind;
     if (inputFromUser.fromFuelBiodiesel ==  NODATA) input.fromFuelBiodiesel = 0;
     else input.fromFuelBiodiesel = inputFromUser.fromFuelBiodiesel;
     if (inputFromUser.fromFuelBioethanol ==  NODATA) input.fromFuelBioethanol = 0;
@@ -56,6 +56,7 @@ void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewables
     else input.fromFuelWood = inputFromUser.fromFuelWood;
 
     country = myCountry;
+    if (myRenewablesPercentage == NODATA) percentageRenewablesInGrid = 50; // supposed renewable energy are 50% of the production
     percentageRenewablesInGrid = myRenewablesPercentage;
 
 
@@ -72,8 +73,8 @@ void energyManagement::computeEmissions()
     if (percentageRenewablesInGrid == NODATA) percentageRenewablesInGrid = 50.;
     parameter = parameterElectricity.fossil * (100. - percentageRenewablesInGrid)/100 + (percentageRenewablesInGrid/100.)*(parameterElectricity.hydropower+parameterElectricity.photovoltaic + parameterElectricity.wind)/3.0;
     emissions.fromElectricityGrid = energyManagement::electricityEmissionComputation(input.fromElectricityGrid,parameter);
-    parameter = parameterElectricity.wind;
-    emissions.fromElectricityOwnWind = energyManagement::electricityEmissionComputation(input.fromElectricityOwnWind ,parameter);
+    //parameter = parameterElectricity.wind;
+    //emissions.fromElectricityOwnWind = energyManagement::electricityEmissionComputation(input.fromElectricityOwnWind ,parameter);
     parameter = parameterElectricity.photovoltaic;
     emissions.fromElectricityOwnPhotovoltaic = energyManagement::electricityEmissionComputation(input.fromElectricityOwnPhotovoltaic ,parameter);
     parameter = parameterElectricity.wind;

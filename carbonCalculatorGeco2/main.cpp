@@ -15,8 +15,27 @@ int main(int argc, char *argv[])
     // int cropType = 1;
     // int residueType = 1;
     double residueWeight = 5;
-    //cropRes.computeEquivalentCO2(residueWeight);
     calculatorCO2.cropResidue.computeEquivalentCO2(residueWeight);
+
+    TkindOfEnergy kindOfEnergy;
+    kindOfEnergy.fromElectricityGrid = 50; // kWh
+    kindOfEnergy.fromElectricityOwnHydropower = 50; // kWh
+    kindOfEnergy.fromElectricityOwnPhotovoltaic = 50; // kWh
+    kindOfEnergy.fromElectricityOwnWind = 50; // kWh
+    kindOfEnergy.fromFuelBiodiesel = NODATA;
+    kindOfEnergy.fromFuelBioethanol = NODATA;
+    kindOfEnergy.fromFuelCoal = NODATA;
+    kindOfEnergy.fromFuelDiesel = NODATA;
+    kindOfEnergy.fromFuelHighDensityBiomass = NODATA;
+    kindOfEnergy.fromFuelLiquidPropane = NODATA;
+    kindOfEnergy.fromFuelOil = NODATA;
+    kindOfEnergy.fromFuelPetrol = NODATA;
+    kindOfEnergy.fromFuelWood = NODATA;
+
+    calculatorCO2.energy.setInput(kindOfEnergy,40,1);
+    calculatorCO2.energy.computeEmissions();
+
+
     // output
     /*
     double kgCO2EqDueToN2O = NODATA;

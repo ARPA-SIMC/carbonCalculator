@@ -79,16 +79,18 @@ struct TkindOfEnergy {
 
 
 class energyManagement{
-private:
+public:
 // variables
     TkindOfEnergy emissions;
     TkindOfEnergy input;
     TparameterElectricity parameterElectricity;
     TparameterFuel parameterFuel;
+private:
     double percentageRenewablesInGrid;
     double country;
 
 // functions
+public:
     void setInput(TkindOfEnergy input, double renewablesPercentage,int country);
     void computeEmissions();
     double electricityEmissionComputation(double input,double parameter);
