@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       -= gui
+QT      += sql
+QT      -= gui
 
 unix:{
     CONFIG(debug, debug|release) {
@@ -24,7 +25,9 @@ TEMPLATE = lib
 CONFIG += staticlib
 
 SOURCES += \
-    carbonCalculator.cpp
+    carbonCalculator.cpp \
+    dbUtilities.cpp
 
 HEADERS += \
-    carbonCalculator.h
+    carbonCalculator.h \
+    dbUtilities.h

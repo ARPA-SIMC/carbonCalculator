@@ -1,12 +1,20 @@
 #include <QCoreApplication>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariant>
+#include <QFile>
+
 #include <stdio.h>
 #include <math.h>
-#include "carbonCalculator.h"
+#include <iostream>
 
-#define NODATA -9999
+#include "carbonCalculator.h"
+#include "dbUtilities.h"
+
 
 //cropResidueManagement cropRes;
-carbonCalculator calculatorCO2;
+static carbonCalculator calculatorCO2;
 
 int main(int argc, char *argv[])
 {
@@ -32,7 +40,55 @@ int main(int argc, char *argv[])
     kindOfEnergy.fromFuelPetrol = NODATA;
     kindOfEnergy.fromFuelWood = NODATA;
 
-    calculatorCO2.energy.setInput(kindOfEnergy,40,1);
+    // search data path
+    QString dataPath;
+    if (! searchDataPath(&dataPath))
+    {
+        std::cout << "Error: missing DATA directory" << std::endl;
+        return -1;
+    }
+
+    // open database
+    QString dbName = dataPath + "carbonCalculatorDataBase.db";
+    if (! QFile(dbName).exists())
+    {
+        std::cout << "Error! db file is missing: " << dbName.toStdString() << std::endl;
+        return -1;
+    }
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "carbon");
+    db.setDatabaseName(dbName);
+    if (! db.open())
+    {
+        std::cout << "Error opening db:" << db.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+
+    // query table
+    QString idCountry = "ITALY";
+    QString queryString = "SELECT * FROM renewable_energy_land WHERE id_country='" + idCountry + "'";
+    QSqlQuery query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+
+    // read values
+    double renewablesPercentage;
+    if (! getValue(query.value("percentage"), &renewablesPercentage))
+    {
+        std::cout << "Error: missing renewables percentage data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // TODO: other queries
+
+    std::cout << "Country: " << idCountry.toStdString() << std::endl;
+    std::cout << "Renewables percentage: " << renewablesPercentage << std::endl;
+
+    calculatorCO2.energy.setInput(kindOfEnergy, renewablesPercentage, idCountry);
     calculatorCO2.energy.computeEmissions();
 
 

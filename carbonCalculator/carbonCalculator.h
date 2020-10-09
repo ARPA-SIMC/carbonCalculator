@@ -5,6 +5,8 @@
 #define EQUIVALENTN2OTOCO2 296
 #define NODATA -9999
 
+#include <QString>
+
 struct TcropResidueParameter{
 
     int residueWeight;
@@ -87,11 +89,11 @@ public:
     TparameterFuel parameterFuel;
 private:
     double percentageRenewablesInGrid;
-    double country;
+    QString country;
 
 // functions
 public:
-    void setInput(TkindOfEnergy input, double renewablesPercentage,int country);
+    void setInput(TkindOfEnergy input, double renewablesPercentage, QString myCountry);
     void computeEmissions();
     double electricityEmissionComputation(double input,double parameter);
     double fuelEmissionComputation(double input);

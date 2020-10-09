@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 
-
 void cropResidueManagement::setParameters()
 {
 
@@ -26,7 +25,7 @@ void cropResidueManagement::getEquivalentCO2()
 
 }
 
-void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewablesPercentage,int myCountry)
+void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewablesPercentage, QString myCountry)
 {
     if (inputFromUser.fromElectricityGrid == NODATA) input.fromElectricityGrid = 0;
     else input.fromElectricityGrid = inputFromUser.fromElectricityGrid;
