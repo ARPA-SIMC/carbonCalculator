@@ -102,6 +102,19 @@ public:
 
 };
 
+class appliedPesticides{
+private:
+    double renewablesInCountry;
+    double emissionDueToProduction;
+    double weightOfActivePrinciple;
+    double energyPerMassOfActivePrinciple = 217.3; // [MJ/kg]
+    double electricalEnergyPerMassOfActivePrinciple = 70.83; // [MJ/kg]
+public:
+    void setInput(double myWeigthOfActivePrinciple, double myRenewablePercentage);
+    void computeEmissions();
+
+};
+
 class cropResidueManagement {
 private:
     // functions
@@ -138,6 +151,7 @@ public:
     // classes
         cropResidueManagement cropResidue;
         energyManagement energy;
+        appliedPesticides pesticide;
     // functions
 
     //variables

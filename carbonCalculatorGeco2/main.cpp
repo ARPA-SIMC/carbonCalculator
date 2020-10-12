@@ -56,10 +56,23 @@ int main(int argc, char *argv[])
         std::cout << "Error! csv file is missing: " << csvFileName.toStdString() << std::endl;
         return -1;
     }
+    FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    int numberOfFields = 1;
+    char dummyComma;
+    do
+    {
+        dummyComma = getc(fp);
+        if (dummyComma == ',') numberOfFields++;
+    } while (dummyComma != '\n' && dummyComma != EOF);
+    fclose(fp);
+
+
     // read csv
+
     std::vector<QStringList> data;
     QString error;
-    if (! importCsvData(csvFileName, 4, true, data, error))
+    if (! importCsvData(csvFileName, numberOfFields, true, data, error))
     {
         std::cout << "Error: " << error.toStdString() << std::endl;
     }
@@ -67,7 +80,7 @@ int main(int argc, char *argv[])
     QString idCountry = data[0].value(2).remove("\"");
     float avgTemperature = data[0].value(3).remove("\"").toFloat();
     //...
-
+    // *****************************************************************
     // open database
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())

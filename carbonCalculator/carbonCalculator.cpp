@@ -99,3 +99,16 @@ void energyManagement::computeEmissions()
 {
 
 }*/
+
+void appliedPesticides::setInput(double myWeightOfActivePrinciple,double renewablePercentageInOwnCountry)
+{
+    weightOfActivePrinciple = myWeightOfActivePrinciple;
+    renewablesInCountry = renewablePercentageInOwnCountry;
+}
+
+void appliedPesticides::computeEmissions()
+{
+    double nonElectricalEnergyRequired = weightOfActivePrinciple * (energyPerMassOfActivePrinciple - electricalEnergyPerMassOfActivePrinciple);
+    double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple*(100. - renewablesInCountry)/100.;
+    emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired);
+}
