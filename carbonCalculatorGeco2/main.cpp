@@ -11,6 +11,7 @@
 
 #include "carbonCalculator.h"
 #include "dbUtilities.h"
+#include "csvUtilities.h"
 
 
 //cropResidueManagement cropRes;
@@ -48,6 +49,25 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // csv file
+    QString csvFileName = dataPath + "geco2ModuloRisposte.csv";
+    if (! QFile(csvFileName).exists())
+    {
+        std::cout << "Error! csv file is missing: " << csvFileName.toStdString() << std::endl;
+        return -1;
+    }
+    // read csv
+    std::vector<QStringList> data;
+    QString error;
+    if (! importCsvData(csvFileName, 4, true, data, error))
+    {
+        std::cout << "Error: " << error.toStdString() << std::endl;
+    }
+    // read values (remove quotes)
+    QString idCountry = data[0].value(2).remove("\"");
+    float avgTemperature = data[0].value(3).remove("\"").toFloat();
+    //...
+
     // open database
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
@@ -64,7 +84,6 @@ int main(int argc, char *argv[])
     }
     // *********************************************************************************
     // query energy_country table
-    QString idCountry = "ITALY";
     QString queryString = "SELECT * FROM renewable_energy_land WHERE id_country='" + idCountry + "'";
     QSqlQuery query = db.exec(queryString);
     query.last();
@@ -82,9 +101,6 @@ int main(int argc, char *argv[])
         return -1;
     }
     query.clear();
-
-    // TODO: other queries
-
 
     //********************************************************************************
     //read residue_treatment table
@@ -190,6 +206,7 @@ int main(int argc, char *argv[])
 
     // *****************************************************************************
     std::cout << "Country: " << idCountry.toStdString() << std::endl;
+    std::cout << "Avg temperature: " << avgTemperature << std::endl;
     std::cout << "Renewables percentage: " << renewablesPercentage << std::endl;
 
     std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;

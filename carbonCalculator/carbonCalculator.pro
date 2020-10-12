@@ -26,8 +26,10 @@ CONFIG += staticlib
 
 SOURCES += \
     carbonCalculator.cpp \
+    csvUtilities.cpp \
     dbUtilities.cpp
 
 HEADERS += \
     carbonCalculator.h \
+    csvUtilities.h \
     dbUtilities.h
