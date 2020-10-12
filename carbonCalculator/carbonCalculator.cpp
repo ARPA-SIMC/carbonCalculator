@@ -3,12 +3,14 @@
 #include <stdio.h>
 
 
-void cropResidueManagement::setParameters()
+void cropResidueManagement::setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2)
 {
+    cropResidueParameter.residueReconvertedToCO2 = dryMatterToCO2;
+    cropResidueParameter.emissionCH4 = emissionCH4;
+    cropResidueParameter.emissionN2O = emissionN2O;
 
 }
-
-void cropResidueManagement::computeEquivalentCO2(double residueWeight)
+void cropResidueManagement::computeEmissions(double residueWeight)
 {
     aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  *residueWeight;
     belowGroundResidue = cropResidueParameter.belowAboveRatio*residueWeight;
@@ -55,7 +57,8 @@ void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewables
     else input.fromFuelWood = inputFromUser.fromFuelWood;
 
     country = myCountry;
-    if (myRenewablesPercentage == NODATA) percentageRenewablesInGrid = 50; // supposed renewable energy are 50% of the production
+    if (myRenewablesPercentage == NODATA && country == "") percentageRenewablesInGrid = 40; // supposed renewable energy are 50% of the production
+
     percentageRenewablesInGrid = myRenewablesPercentage;
 
 

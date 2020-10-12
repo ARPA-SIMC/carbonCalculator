@@ -116,9 +116,9 @@ private:
 
 public:
     // functions
-    void setParameters();
+    void setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2);
     void getEquivalentCO2();
-    void computeEquivalentCO2(double residueWeight);
+    void computeEmissions(double residueWeight);
     // variables
 
 };
