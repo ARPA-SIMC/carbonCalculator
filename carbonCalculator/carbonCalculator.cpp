@@ -27,7 +27,7 @@ void cropResidueManagement::getEquivalentCO2()
 
 }
 
-void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewablesPercentage, QString myCountry)
+void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewablesPercentage, QString myCountry,int year)
 {
     if (inputFromUser.fromElectricityGrid == NODATA) input.fromElectricityGrid = 0;
     else input.fromElectricityGrid = inputFromUser.fromElectricityGrid;
@@ -57,10 +57,11 @@ void energyManagement::setInput(TkindOfEnergy inputFromUser, double myRenewables
     else input.fromFuelWood = inputFromUser.fromFuelWood;
 
     country = myCountry;
-    if (myRenewablesPercentage == NODATA && country == "") percentageRenewablesInGrid = 40; // supposed renewable energy are 50% of the production
+    if (myRenewablesPercentage == NODATA && country == "") percentageRenewablesInGrid = 24 + (year-2016); // supposed renewable energy are 50% of the production
 
-    percentageRenewablesInGrid = myRenewablesPercentage;
+    else percentageRenewablesInGrid = myRenewablesPercentage;
 
+    if (percentageRenewablesInGrid > 100) percentageRenewablesInGrid = 100;
 
 }
 double energyManagement::electricityEmissionComputation(double input,double parameterConversionInput)
@@ -88,10 +89,10 @@ void energyManagement::computeEmissions()
     emissions.fromFuelBioethanol = input.fromFuelBioethanol * parameterFuel.ethanolEmissionPerLitre;
     emissions.fromFuelPetrol = input.fromFuelPetrol * parameterFuel.petrolEmissionPerLitre;
     emissions.fromFuelDiesel = input.fromFuelDiesel * parameterFuel.dieselEmissionPerLitre;
-    emissions.fromFuelHighDensityBiomass = 0; // ???????????
-    emissions.fromFuelWood = 0; // ????????????????
+    emissions.fromFuelHighDensityBiomass = input.fromFuelHighDensityBiomass*parameterFuel.HighDensityBiomassEmissionPerEnergyUnit*parameterFuel.highDensityBiomassHeatPower; // ???????????
+    emissions.fromFuelWood = input.fromFuelWood*parameterFuel.woodEmissionPerEnergyUnit*parameterFuel.woodHeatPower; // ??????????????????????
     emissions.fromFuelCoal = input.fromFuelCoal*parameterFuel.coalEmissionPerEnergyUnit*parameterFuel.coalHeatPower;
-    emissions.fromFuelOil = input.fromFuelOil * 0.8* parameterFuel.oilPerEnergyUnit*parameterFuel.highDensityBiomassHeatPower;
+    emissions.fromFuelOil = input.fromFuelOil * 0.8* parameterFuel.oilPerEnergyUnit*parameterFuel.heavyOilHeatPower;
     emissions.fromFuelLiquidPropane = input.fromFuelOil * 0.582 *parameterFuel.lpgPerEnergyUnit * parameterFuel.propaneHeatPower;
 }
 
@@ -108,7 +109,7 @@ void appliedPesticides::setInput(double myWeightOfActivePrinciple,double renewab
 
 void appliedPesticides::computeEmissions()
 {
-    double nonElectricalEnergyRequired = weightOfActivePrinciple * (energyPerMassOfActivePrinciple - electricalEnergyPerMassOfActivePrinciple);
-    double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple*(100. - renewablesInCountry)/100.;
-    emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired);
+    double nonElectricalEnergyRequired = weightOfActivePrinciple * (energyPerMassOfActivePrinciple - electricalEnergyPerMassOfActivePrinciple); // requirement in MJ
+    double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple*(100. - renewablesInCountry)/100.; // requirement in MJ
+    emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired); // kgCO2eq
 }

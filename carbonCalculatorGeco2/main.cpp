@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
     // int cropType = 1;
     // int residueType = 1;
     double residueWeight = 5;
+    int year = 2020;
     //calculatorCO2.cropResidue.computeEquivalentCO2(residueWeight);
 
     TkindOfEnergy kindOfEnergy;
@@ -31,15 +32,15 @@ int main(int argc, char *argv[])
     kindOfEnergy.fromElectricityOwnHydropower = 50; // kWh
     kindOfEnergy.fromElectricityOwnPhotovoltaic = 50; // kWh
     kindOfEnergy.fromElectricityOwnWind = 50; // kWh
-    kindOfEnergy.fromFuelBiodiesel = NODATA;
-    kindOfEnergy.fromFuelBioethanol = NODATA;
-    kindOfEnergy.fromFuelCoal = NODATA;
-    kindOfEnergy.fromFuelDiesel = NODATA;
-    kindOfEnergy.fromFuelHighDensityBiomass = NODATA;
-    kindOfEnergy.fromFuelLiquidPropane = NODATA;
-    kindOfEnergy.fromFuelOil = NODATA;
-    kindOfEnergy.fromFuelPetrol = NODATA;
-    kindOfEnergy.fromFuelWood = NODATA;
+    kindOfEnergy.fromFuelBiodiesel = 1; // l
+    kindOfEnergy.fromFuelBioethanol = 1; // l
+    kindOfEnergy.fromFuelCoal = 1; // kg
+    kindOfEnergy.fromFuelDiesel = 1; // l
+    kindOfEnergy.fromFuelHighDensityBiomass = 1; // kg
+    kindOfEnergy.fromFuelLiquidPropane = 1; // l
+    kindOfEnergy.fromFuelOil = 1; // l
+    kindOfEnergy.fromFuelPetrol = 1; // l
+    kindOfEnergy.fromFuelWood = 1; // kg
 
     // search data path
     QString dataPath;
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
     }
     // *********************************************************************************
     // query energy_country table
-    QString queryString = "SELECT * FROM renewable_energy_land WHERE id_country='" + idCountry + "'";
+    QString queryString = "SELECT * FROM percentage_renewables_land WHERE id_country='" + idCountry + "'";
     QSqlQuery query = db.exec(queryString);
     query.last();
     if (! query.isValid())
@@ -110,8 +111,9 @@ int main(int argc, char *argv[])
     double renewablesPercentage;
     if (! getValue(query.value("percentage"), &renewablesPercentage))
     {
-        std::cout << "Error: missing renewables percentage data" << std::endl;
-        return -1;
+        //std::cout << "Error: missing renewables percentage data" << std::endl;
+        //return -1;
+        renewablesPercentage = 24.;
     }
     query.clear();
 
@@ -228,10 +230,16 @@ int main(int argc, char *argv[])
 
 
 
-    calculatorCO2.energy.setInput(kindOfEnergy, renewablesPercentage, idCountry);
+    calculatorCO2.energy.setInput(kindOfEnergy, renewablesPercentage, idCountry,year);
     calculatorCO2.energy.computeEmissions();
+
     calculatorCO2.cropResidue.setInput(emissionMethane,emissionN2O,dryMatterToCO2Percentage);
     calculatorCO2.cropResidue.computeEmissions(residueWeight);
+
+    calculatorCO2.pesticide.setInput(15.4,renewablesPercentage);
+    calculatorCO2.pesticide.computeEmissions();
+
+
 
 
     return 0;

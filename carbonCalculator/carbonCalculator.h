@@ -43,6 +43,8 @@ struct TparameterElectricity{
 struct TparameterFuel{
 
     double coalEmissionPerEnergyUnit = 0.0927; // kgCO2Eq/MJ
+    double HighDensityBiomassEmissionPerEnergyUnit = 0.106; // kgCO2Eq/MJ from https://www.volker-quaschning.de/datserv/CO2-spez/index_e.php
+    double woodEmissionPerEnergyUnit = 0.109; // kgCO2Eq/MJ from https://www.volker-quaschning.de/datserv/CO2-spez/index_e.php
     double lpgPerEnergyUnit = 0.0628; // kgCO2Eq/MJ
     double oilPerEnergyUnit = 0.0773; // kgCO2Eq/MJ
 
@@ -93,7 +95,7 @@ private:
 
 // functions
 public:
-    void setInput(TkindOfEnergy input, double renewablesPercentage, QString myCountry);
+    void setInput(TkindOfEnergy input, double renewablesPercentage, QString myCountry,int year);
     void computeEmissions();
     double electricityEmissionComputation(double input,double parameter);
     double fuelEmissionComputation(double input);
