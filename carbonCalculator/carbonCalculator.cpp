@@ -113,3 +113,20 @@ void appliedPesticides::computeEmissions()
     double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple*(100. - renewablesInCountry)/100.; // requirement in MJ
     emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired); // kgCO2eq
 }
+
+void fertiliserApplication::setNitrogenInhibitorsTable()
+{
+    nitrogenInhibitorN2O.none[0] = 1;
+    nitrogenInhibitorN2O.none[1] = 1;
+    nitrogenInhibitorN2O.nitrificationInhibitor[0] = 0.4;
+    nitrogenInhibitorN2O.nitrificationInhibitor[1] = 0.63;
+    nitrogenInhibitorN2O.polymerCoated[0] = 0.23;
+    nitrogenInhibitorN2O.polymerCoated[1] = 1;
+
+    nitrogenInhibitorNO.none[0] = 1;
+    nitrogenInhibitorNO.none[1] = 1;
+    nitrogenInhibitorNO.nitrificationInhibitor[0] = 0.54;
+    nitrogenInhibitorNO.nitrificationInhibitor[1] = 0.54;
+    nitrogenInhibitorNO.polymerCoated[0] = 0.6;
+    nitrogenInhibitorNO.polymerCoated[1] = 0.6;
+}

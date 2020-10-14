@@ -82,6 +82,13 @@ struct TkindOfEnergy {
 };
 
 
+struct TnitrogenInhibitors{
+    double none[2];
+    double nitrificationInhibitor[2];
+    double polymerCoated[2];
+};
+
+
 class energyManagement{
 public:
 // variables
@@ -138,7 +145,24 @@ public:
 
 };
 
-#endif // CARBONCALCULATOR_H
+class fertiliserApplication{
+private:
+    double applicationRate; // kg/ha
+    int kindOfFertiliser;
+    int applicationMethod;
+    int kindOfInhibitor;
+    int kindOfFertiliserProduction;
+    TnitrogenInhibitors nitrogenInhibitorNO;
+    TnitrogenInhibitors nitrogenInhibitorN2O;
+
+    void setNitrogenInhibitorsTable();
+
+public:
+    void setInput();
+    void computeEmissions();
+
+
+};
 
 
 class carbonCalculator{
@@ -154,9 +178,12 @@ public:
         cropResidueManagement cropResidue;
         energyManagement energy;
         appliedPesticides pesticide;
+        fertiliserApplication fertiliser;
+
     // functions
 
     //variables
 
 
 };
+#endif // CARBONCALCULATOR_H
