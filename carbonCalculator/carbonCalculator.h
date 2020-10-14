@@ -88,6 +88,13 @@ struct TnitrogenInhibitors{
     double polymerCoated[2];
 };
 
+struct TpercentageElements{
+    double nitrogen;
+    double potassium;
+    double phosphorus;
+    double carbon;
+};
+
 
 class energyManagement{
 public:
@@ -154,6 +161,17 @@ private:
     int kindOfFertiliserProduction;
     TnitrogenInhibitors nitrogenInhibitorNO;
     TnitrogenInhibitors nitrogenInhibitorN2O;
+    TpercentageElements percentageElements;
+
+    double amountFertiliser;
+
+    double indexBouwmanN2O;
+    double indexBouwmanNO;
+    double indexBouwmanNH3;
+
+    double emissionsByProduction;
+
+
 
     void setNitrogenInhibitorsTable();
 

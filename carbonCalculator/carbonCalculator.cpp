@@ -130,3 +130,15 @@ void fertiliserApplication::setNitrogenInhibitorsTable()
     nitrogenInhibitorNO.polymerCoated[0] = 0.6;
     nitrogenInhibitorNO.polymerCoated[1] = 0.6;
 }
+
+void fertiliserApplication::computeEmissions()
+{
+
+    double amountNitrogen = amountFertiliser*percentageElements.nitrogen;
+    double amountOtherElements = amountFertiliser * (percentageElements.phosphorus + percentageElements.potassium);
+    double amountCarbon = amountFertiliser*percentageElements.carbon;
+    double producedN2O = indexBouwmanN2O*amountNitrogen;
+    double producedNO = indexBouwmanNO*amountNitrogen;
+    double producedNH3 = indexBouwmanNH3*amountNitrogen;
+
+}
