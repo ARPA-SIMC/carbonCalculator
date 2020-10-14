@@ -13,6 +13,13 @@
 #include "dbUtilities.h"
 #include "csvUtilities.h"
 
+// uncomment to compute test
+#define TEST
+
+void usage()
+{
+    std::cout << "USAGE:\ncarbonCalculatorTest <csv data file>\n";
+}
 
 //cropResidueManagement cropRes;
 static carbonCalculator calculatorCO2;
@@ -20,6 +27,37 @@ static carbonCalculator calculatorCO2;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    // search data path
+    QString dataPath;
+    if (! searchDataPath(&dataPath))
+    {
+        std::cout << "Error: missing DATA directory" << std::endl;
+        return -1;
+    }
+
+    QString csvFileName;
+    if (argc < 2)
+    {
+        #ifdef TEST
+            csvFileName = dataPath + "geco2ModuloRisposte.csv";
+        #else
+            usage();
+            return 1;
+        #endif
+    }
+    else
+    {
+        csvFileName = argv[1];
+    }
+
+    // check csv file
+    if (! QFile(csvFileName).exists())
+    {
+        std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
+        return -1;
+    }
+
     // input
     // int cropType = 1;
     // int residueType = 1;
@@ -42,21 +80,8 @@ int main(int argc, char *argv[])
     kindOfEnergy.fromFuelPetrol = 1; // l
     kindOfEnergy.fromFuelWood = 1; // kg
 
-    // search data path
-    QString dataPath;
-    if (! searchDataPath(&dataPath))
-    {
-        std::cout << "Error: missing DATA directory" << std::endl;
-        return -1;
-    }
-
-    // csv file
-    QString csvFileName = dataPath + "geco2ModuloRisposte.csv";
-    if (! QFile(csvFileName).exists())
-    {
-        std::cout << "Error! csv file is missing: " << csvFileName.toStdString() << std::endl;
-        return -1;
-    }
+    // *****************************************************************
+    // check numberOfFields of csv
     FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     int numberOfFields = 1;
@@ -69,8 +94,8 @@ int main(int argc, char *argv[])
     fclose(fp);
 
 
+    // *****************************************************************
     // read csv
-
     std::vector<QStringList> data;
     QString error;
     if (! importCsvData(csvFileName, numberOfFields, true, data, error))
@@ -80,7 +105,8 @@ int main(int argc, char *argv[])
     // read values (remove quotes)
     QString idCountry = data[0].value(2).remove("\"");
     float avgTemperature = data[0].value(3).remove("\"").toFloat();
-    //...
+    // ... read other values
+
     // *****************************************************************
     // open database
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
@@ -96,7 +122,8 @@ int main(int argc, char *argv[])
         std::cout << "Error opening db:" << db.lastError().text().toStdString() << std::endl;
         return -1;
     }
-    // *********************************************************************************
+
+    // *****************************************************************
     // query energy_country table
     QString queryString = "SELECT * FROM percentage_renewables_land WHERE id_country='" + idCountry + "'";
     QSqlQuery query = db.exec(queryString);
@@ -106,8 +133,6 @@ int main(int argc, char *argv[])
         std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
         return -1;
     }
-
-    // read values
     double renewablesPercentage;
     if (! getValue(query.value("percentage"), &renewablesPercentage))
     {
@@ -117,9 +142,8 @@ int main(int argc, char *argv[])
     }
     query.clear();
 
-    //********************************************************************************
+    // ****************************************************************
     //read residue_treatment table
-
     QString idResidue = "biochar";
     queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue + "'";
     query = db.exec(queryString);
@@ -167,7 +191,7 @@ int main(int argc, char *argv[])
     }
     query.clear();
 
-    // **************************************************************************
+    // ****************************************************************
     // read crop_parameters table
     QString idCrop = "BARLEY";
     double abovegroundNitrogen, belowAboveRatio, dryMatterFraction;
@@ -217,17 +241,14 @@ int main(int argc, char *argv[])
     }
     query.clear();
 
-
-
-    // *****************************************************************************
+    // ****************************************************************
+    // print parameters
     std::cout << "Country: " << idCountry.toStdString() << std::endl;
     std::cout << "Avg temperature: " << avgTemperature << std::endl;
     std::cout << "Renewables percentage: " << renewablesPercentage << std::endl;
-
     std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;
     std::cout << "N2O emission conversion: " << emissionN2O << std::endl;
     std::cout << "dry matter to CO2: " << dryMatterToCO2Percentage << std::endl;
-
 
 
     calculatorCO2.energy.setInput(kindOfEnergy, renewablesPercentage, idCountry,year);
