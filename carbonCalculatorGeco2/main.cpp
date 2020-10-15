@@ -242,6 +242,173 @@ int main(int argc, char *argv[])
     query.clear();
 
     // ****************************************************************
+    TfertInput fertInputDB;
+    QString idFertiliser = "Ammonium_nitrate";
+    double bouwmanN2O;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("bouwman_n2o"), &bouwmanN2O))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double bouwmanNO;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("bouwman_no"), &bouwmanNO))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double bouwmanNH3;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("bouwman_nh3"), &bouwmanNH3))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double contentN;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("N"), &contentN))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double contentP;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("P"), &contentP))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double contentK;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("K"), &contentK))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double contentC;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("C"), &contentC))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *******************************************************************
+
+    idFertiliser = "Ammonium_nitrate";
+    double emissionPerKgOfProduct;
+
+    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
+    query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        return -1;
+    }
+    if (! getValue(query.value("current_tech"), &emissionPerKgOfProduct))
+    {
+        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
+        return -1;
+    }
+    query.clear();
+
+    // *********************************************************************
+
+    fertInputDB.bouwmanN2O = bouwmanN2O;
+    fertInputDB.bouwmanNO = bouwmanNO;
+    fertInputDB.bouwmanNH3 = bouwmanNH3;
+
+
+
     // print parameters
     std::cout << "Country: " << idCountry.toStdString() << std::endl;
     std::cout << "Avg temperature: " << avgTemperature << std::endl;

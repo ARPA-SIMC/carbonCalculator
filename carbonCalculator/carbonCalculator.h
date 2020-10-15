@@ -63,6 +63,7 @@ struct TparameterFuel{
 };
 
 
+
 struct TkindOfEnergy {
     double fromElectricityGrid;
     double fromElectricityOwnPhotovoltaic;
@@ -88,13 +89,21 @@ struct TnitrogenInhibitors{
     double polymerCoated[2];
 };
 
-struct TpercentageElements{
+struct TcontentElements{
     double nitrogen;
     double potassium;
     double phosphorus;
     double carbon;
 };
 
+struct TfertInput{
+
+    double bouwmanN2O;
+    double bouwmanNO;
+    double bouwmanNH3;
+    double emissionPerKgOfProduct;
+    TcontentElements contentElement;
+};
 
 class energyManagement{
 public:
@@ -161,8 +170,7 @@ private:
     int kindOfFertiliserProduction;
     TnitrogenInhibitors nitrogenInhibitorNO;
     TnitrogenInhibitors nitrogenInhibitorN2O;
-    TpercentageElements percentageElements;
-
+    TfertInput fertInput;
     double amountFertiliser;
 
     double indexBouwmanN2O;
@@ -176,7 +184,7 @@ private:
     void setNitrogenInhibitorsTable();
 
 public:
-    void setInput();
+    void setInput(TfertInput inputFromDB, double amountProduct);
     void computeEmissions();
 
 

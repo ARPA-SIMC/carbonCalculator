@@ -134,9 +134,9 @@ void fertiliserApplication::setNitrogenInhibitorsTable()
 void fertiliserApplication::computeEmissions()
 {
 
-    double amountNitrogen = amountFertiliser*percentageElements.nitrogen;
-    double amountOtherElements = amountFertiliser * (percentageElements.phosphorus + percentageElements.potassium);
-    double amountCarbon = amountFertiliser*percentageElements.carbon;
+    double amountNitrogen = amountFertiliser*fertInput.contentElement.nitrogen;
+    double amountOtherElements = amountFertiliser * (fertInput.contentElement.phosphorus + fertInput.contentElement.potassium);
+    double amountCarbon = amountFertiliser*fertInput.contentElement.carbon;
     double producedN2O = indexBouwmanN2O*amountNitrogen;
     double producedNO = indexBouwmanNO*amountNitrogen;
     double producedNH3 = indexBouwmanNH3*amountNitrogen;
