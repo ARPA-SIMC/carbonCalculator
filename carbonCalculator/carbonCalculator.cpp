@@ -142,3 +142,18 @@ void fertiliserApplication::computeEmissions()
     double producedNH3 = indexBouwmanNH3*amountNitrogen;
 
 }
+
+void fertiliserApplication::setInput(TfertInput inputFromDB, double amountProduct)
+{
+    amountFertiliser = amountProduct;
+
+    fertInput.bouwmanN2O = inputFromDB.bouwmanN2O;
+    fertInput.bouwmanNO = inputFromDB.bouwmanNO;
+    fertInput.bouwmanNH3 = inputFromDB.bouwmanNH3;
+    fertInput.contentElement.carbon = inputFromDB.contentElement.carbon;
+    fertInput.contentElement.nitrogen = inputFromDB.contentElement.nitrogen;
+    fertInput.contentElement.potassium = inputFromDB.contentElement.potassium;
+    fertInput.contentElement.phosphorus = inputFromDB.contentElement.phosphorus;
+    fertInput.emissionPerKgOfProduct = inputFromDB.emissionPerKgOfProduct;
+
+}

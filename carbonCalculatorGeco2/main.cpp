@@ -406,9 +406,15 @@ int main(int argc, char *argv[])
     fertInputDB.bouwmanN2O = bouwmanN2O;
     fertInputDB.bouwmanNO = bouwmanNO;
     fertInputDB.bouwmanNH3 = bouwmanNH3;
+    fertInputDB.contentElement.carbon = contentC;
+    fertInputDB.contentElement.nitrogen = contentN;
+    fertInputDB.contentElement.potassium = contentK;
+    fertInputDB.contentElement.phosphorus = contentP;
+    fertInputDB.emissionPerKgOfProduct = emissionPerKgOfProduct;
 
+    double amountProductPerHectare = 50; //kg/ha
 
-
+    // **********************************************************************
     // print parameters
     std::cout << "Country: " << idCountry.toStdString() << std::endl;
     std::cout << "Avg temperature: " << avgTemperature << std::endl;
@@ -426,6 +432,9 @@ int main(int argc, char *argv[])
 
     calculatorCO2.pesticide.setInput(15.4,renewablesPercentage);
     calculatorCO2.pesticide.computeEmissions();
+
+    calculatorCO2.fertiliser.setInput(fertInputDB,amountProductPerHectare);
+    calculatorCO2.fertiliser.computeEmissions();
 
 
 
