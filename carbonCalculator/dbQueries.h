@@ -1,0 +1,12 @@
+#ifndef DBQUERIES_H
+#define DBQUERIES_H
+
+    class QSqlDatabase;
+    class QString;
+    class CarbonCalculator;
+
+    bool readRenewables(QString idCountry, int year, QSqlDatabase &db, CarbonCalculator &carbonCalculator, QString &error);
+    bool readFertilizer(QString idFertiliser, QSqlDatabase &db, CarbonCalculator &calculator, QString &error);
+
+
+#endif // DBQUERIES_H

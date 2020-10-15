@@ -11,22 +11,25 @@
 
 #include "carbonCalculator.h"
 #include "dbUtilities.h"
+#include "dbQueries.h"
 #include "csvUtilities.h"
 
 // uncomment to compute test
 #define TEST
+
+static CarbonCalculator calculatorCO2;
+
 
 void usage()
 {
     std::cout << "USAGE:\ncarbonCalculatorTest <csv data file>\n";
 }
 
-//cropResidueManagement cropRes;
-static carbonCalculator calculatorCO2;
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    QString error;
 
     // search data path
     QString dataPath;
@@ -36,6 +39,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+    // read argument
     QString csvFileName;
     if (argc < 2)
     {
@@ -51,37 +55,15 @@ int main(int argc, char *argv[])
         csvFileName = argv[1];
     }
 
-    // check csv file
+    // ****************************************************************
+    // read CSV
     if (! QFile(csvFileName).exists())
     {
         std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
         return -1;
     }
 
-    // input
-    // int cropType = 1;
-    // int residueType = 1;
-    double residueWeight = 5;
-    int year = 2020;
-    //calculatorCO2.cropResidue.computeEquivalentCO2(residueWeight);
-
-    TkindOfEnergy kindOfEnergy;
-    kindOfEnergy.fromElectricityGrid = 50; // kWh
-    kindOfEnergy.fromElectricityOwnHydropower = 50; // kWh
-    kindOfEnergy.fromElectricityOwnPhotovoltaic = 50; // kWh
-    kindOfEnergy.fromElectricityOwnWind = 50; // kWh
-    kindOfEnergy.fromFuelBiodiesel = 1; // l
-    kindOfEnergy.fromFuelBioethanol = 1; // l
-    kindOfEnergy.fromFuelCoal = 1; // kg
-    kindOfEnergy.fromFuelDiesel = 1; // l
-    kindOfEnergy.fromFuelHighDensityBiomass = 1; // kg
-    kindOfEnergy.fromFuelLiquidPropane = 1; // l
-    kindOfEnergy.fromFuelOil = 1; // l
-    kindOfEnergy.fromFuelPetrol = 1; // l
-    kindOfEnergy.fromFuelWood = 1; // kg
-
-    // *****************************************************************
-    // check numberOfFields of csv
+    // check numberOfFields
     FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     int numberOfFields = 1;
@@ -93,22 +75,21 @@ int main(int argc, char *argv[])
     } while (dummyComma != '\n' && dummyComma != EOF);
     fclose(fp);
 
-
-    // *****************************************************************
-    // read csv
+    // read data
     std::vector<QStringList> data;
-    QString error;
     if (! importCsvData(csvFileName, numberOfFields, true, data, error))
     {
         std::cout << "Error: " << error.toStdString() << std::endl;
     }
+
     // read values (remove quotes)
     QString idCountry = data[0].value(2).remove("\"");
     float avgTemperature = data[0].value(3).remove("\"").toFloat();
     // ... read other values
 
-    // *****************************************************************
-    // open database
+
+    // ****************************************************************
+    // read DB
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
     {
@@ -123,30 +104,29 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // *****************************************************************
-    // query energy_country table
-    QString queryString = "SELECT * FROM percentage_renewables_land WHERE id_country='" + idCountry + "'";
-    QSqlQuery query = db.exec(queryString);
-    query.last();
-    if (! query.isValid())
+    // read renewables
+    int year = 2020;
+    if (! readRenewables(idCountry, year, db, calculatorCO2, error))
     {
-        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
-    double renewablesPercentage;
-    if (! getValue(query.value("percentage"), &renewablesPercentage))
+
+    // read fertilizer
+    QString idFertiliser = "Ammonium_nitrate";
+    if (! readFertilizer(idFertiliser, db, calculatorCO2, error))
     {
-        //std::cout << "Error: missing renewables percentage data" << std::endl;
-        //return -1;
-        renewablesPercentage = 24.;
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
+        return -1;
     }
-    query.clear();
+    calculatorCO2.fertiliser.amountFertiliser = 50; // kg/ha
 
     // ****************************************************************
+    // TODO: create functions in dbQueries and remove setInput
     //read residue_treatment table
     QString idResidue = "biochar";
-    queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue + "'";
-    query = db.exec(queryString);
+    QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue + "'";
+    QSqlQuery query = db.exec(queryString);
     query.last();
     if (! query.isValid())
     {
@@ -171,7 +151,6 @@ int main(int argc, char *argv[])
     }
     query.clear();
 
-    // ****************************************************************
     // read crop_parameters table
     QString idCrop = "BARLEY";
     double abovegroundNitrogen, belowAboveRatio, dryMatterFraction;
@@ -201,118 +180,42 @@ int main(int argc, char *argv[])
     }
     query.clear();
 
-    // ****************************************************************
-    TfertInput fertInputDB;
-    QString idFertiliser = "Ammonium_nitrate";
-    double bouwmanN2O;
-
-    queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser + "'";
-    query = db.exec(queryString);
-    query.last();
-    if (! query.isValid())
-    {
-        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
-        return -1;
-    }
-    if (! getValue(query.value("bouwman_n2o"), &bouwmanN2O))
-    {
-        std::cout << "Error: missing emission of Bouwman index for N2O" << std::endl;
-        return -1;
-    }
-
-    double bouwmanNO;
-
-    if (! getValue(query.value("bouwman_no"), &bouwmanNO))
-    {
-        std::cout << "Error: missing emission of Bouwman index for NO" << std::endl;
-        return -1;
-    }
-
-    double bouwmanNH3;
-
-    if (! getValue(query.value("bouwman_nh3"), &bouwmanNH3))
-    {
-        std::cout << "Error: missing emission of Bouwman index for NH3" << std::endl;
-        return -1;
-    }
-
-    double contentN;
-
-    if (! getValue(query.value("N"), &contentN))
-    {
-        std::cout << "Error: missing emission of nitrogen content" << std::endl;
-        return -1;
-    }
-
-    double contentP;
-
-    if (! getValue(query.value("P"), &contentP))
-    {
-        std::cout << "Error: missing emission of phosphorus content" << std::endl;
-        return -1;
-    }
-
-    double contentK;
-
-    if (! getValue(query.value("K"), &contentK))
-    {
-        std::cout << "Error: missing emission of potassium content" << std::endl;
-        return -1;
-    }
-
-    double contentC;
-
-    if (! getValue(query.value("C"), &contentC))
-    {
-        std::cout << "Error: missing emission of carbon content" << std::endl;
-        return -1;
-    }
-
-    double emissionPerKgOfProduct;
-
-    if (! getValue(query.value("current_tech"), &emissionPerKgOfProduct))
-    {
-        std::cout << "Error: missing emission per kg of product" << std::endl;
-        return -1;
-    }
-    query.clear();
 
     // *********************************************************************
+    double residueWeight = 5;
+    calculatorCO2.energy.input.fromElectricityGrid = 50; // kWh
+    calculatorCO2.energy.input.fromElectricityOwnHydropower = 50; // kWh
+    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 50; // kWh
+    calculatorCO2.energy.input.fromElectricityOwnWind = 50; // kWh
+    calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l
+    calculatorCO2.energy.input.fromFuelBioethanol = 1; // l
+    calculatorCO2.energy.input.fromFuelCoal = 1; // kg
+    calculatorCO2.energy.input.fromFuelDiesel = 1; // l
+    calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg
+    calculatorCO2.energy.input.fromFuelLiquidPropane = 1; // l
+    calculatorCO2.energy.input.fromFuelOil = 1; // l
+    calculatorCO2.energy.input.fromFuelPetrol = 1; // l
+    calculatorCO2.energy.input.fromFuelWood = 1; // kg
 
-    fertInputDB.bouwmanN2O = bouwmanN2O;
-    fertInputDB.bouwmanNO = bouwmanNO;
-    fertInputDB.bouwmanNH3 = bouwmanNH3;
-    fertInputDB.contentElement.carbon = contentC;
-    fertInputDB.contentElement.nitrogen = contentN;
-    fertInputDB.contentElement.potassium = contentK;
-    fertInputDB.contentElement.phosphorus = contentP;
-    fertInputDB.emissionPerKgOfProduct = emissionPerKgOfProduct;
-
-    double amountProductPerHectare = 50; //kg/ha
 
     // **********************************************************************
     // print parameters
-    std::cout << "Country: " << idCountry.toStdString() << std::endl;
+    std::cout << "Country: " << calculatorCO2.energy.country.toStdString() << std::endl;
     std::cout << "Avg temperature: " << avgTemperature << std::endl;
-    std::cout << "Renewables percentage: " << renewablesPercentage << std::endl;
+    std::cout << "Renewables percentage: " << calculatorCO2.energy.percentageRenewablesInGrid << std::endl;
     std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;
     std::cout << "N2O emission conversion: " << emissionN2O << std::endl;
     std::cout << "dry matter to CO2: " << dryMatterToCO2Percentage << std::endl;
 
-
-    calculatorCO2.energy.setInput(kindOfEnergy, renewablesPercentage, idCountry,year);
     calculatorCO2.energy.computeEmissions();
 
     calculatorCO2.cropResidue.setInput(emissionMethane,emissionN2O,dryMatterToCO2Percentage);
     calculatorCO2.cropResidue.computeEmissions(residueWeight);
 
-    calculatorCO2.pesticide.setInput(15.4,renewablesPercentage);
+    calculatorCO2.pesticide.setInput(15.4, calculatorCO2.energy.percentageRenewablesInGrid);
     calculatorCO2.pesticide.computeEmissions();
 
-    calculatorCO2.fertiliser.setInput(fertInputDB,amountProductPerHectare);
     calculatorCO2.fertiliser.computeEmissions();
-
-
 
 
     return 0;
