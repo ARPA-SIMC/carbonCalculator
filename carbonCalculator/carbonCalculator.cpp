@@ -137,9 +137,9 @@ void fertiliserApplication::computeEmissions()
     double amountNitrogen = amountFertiliser*fertInput.contentElement.nitrogen;
     double amountOtherElements = amountFertiliser * (fertInput.contentElement.phosphorus + fertInput.contentElement.potassium);
     double amountCarbon = amountFertiliser*fertInput.contentElement.carbon;
-    double producedN2O = indexBouwmanN2O*amountNitrogen;
-    double producedNO = indexBouwmanNO*amountNitrogen;
-    double producedNH3 = indexBouwmanNH3*amountNitrogen;
+    double producedN2O = fertInput.bouwmanN2O*amountNitrogen;
+    double producedNO = fertInput.bouwmanNO*amountNitrogen;
+    double producedNH3 = fertInput.bouwmanNH3*amountNitrogen;
 
 }
 
