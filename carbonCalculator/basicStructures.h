@@ -7,7 +7,7 @@
 
     struct TcropResidueParameter{
 
-        int residueWeight;
+        //int residueWeight;
         int cropType = 1;
         int residueType = 1;
         double dryMatterFraction = 0.9; //default parameter
@@ -72,7 +72,7 @@
         double fromFuelWood = 0;
         double fromFuelCoal = 0;
         double fromFuelOil = 0;
-        double fromFuelLiquidPropane = 0;
+        double fromFuelLPG = 0;
     };
 
 
@@ -96,6 +96,20 @@
         double bouwmanNH3;
         double emissionPerKgOfProduct;
         TcontentElements contentElement;
+    };
+
+    struct TBouwmanIndex{
+        double modelParameter;
+        double cropType;
+        double soilTexture;
+        double soilOrganicCarbon;
+        double pH;
+        double cationicExchangeCapacity;
+        double drainage;
+        double climate;
+        double applicationMethod;
+
+
     };
 
 

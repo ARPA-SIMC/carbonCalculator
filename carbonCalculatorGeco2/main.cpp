@@ -113,110 +113,79 @@ int main(int argc, char *argv[])
     }
 
     // read fertilizer
-    QString idFertiliser = "Ammonium_nitrate";
+    QString idFertiliser = "Ammonium_nitrate"; // input from .csv
+    calculatorCO2.fertiliser.amountFertiliser = 142; // kg/ha input from .csv
     if (! readFertilizer(idFertiliser, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
-    calculatorCO2.fertiliser.amountFertiliser = 50; // kg/ha
 
     // ****************************************************************
-    // TODO: create functions in dbQueries and remove setInput
     //read residue_treatment table
-    QString idResidue = "biochar";
-    QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue + "'";
-    QSqlQuery query = db.exec(queryString);
-    query.last();
-    if (! query.isValid())
+    QString idResidue = "biochar"; //input from .csv
+    if (! readResidue(idResidue, db, calculatorCO2, error))
     {
-        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
-    double emissionMethane, emissionN2O, dryMatterToCO2Percentage;
-    if (! getValue(query.value("emission_methane"), &emissionMethane))
-    {
-        std::cout << "Error: missing emission of Methane data" << std::endl;
-        return -1;
-    }
-    if (! getValue(query.value("emission_n2o"), &emissionN2O))
-    {
-        std::cout << "Error: missing emission of N2O data" << std::endl;
-        return -1;
-    }
-    if (! getValue(query.value("dry_matter_to_co2"), &dryMatterToCO2Percentage))
-    {
-        std::cout << "Error: missing emission of dry matter to CO2 data" << std::endl;
-        return -1;
-    }
-    query.clear();
 
     // read crop_parameters table
-    QString idCrop = "BARLEY";
-    double abovegroundNitrogen, belowAboveRatio, dryMatterFraction;
+    QString idCrop = "BARLEY"; //input from .csv
+    if (! readCropParameters(idCrop, db, calculatorCO2, error))
+    {
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
+        return -1;
+    }
 
-    queryString = "SELECT * FROM crop_parameters WHERE id_fine_classification='" + idCrop + "'";
-    query = db.exec(queryString);
-    query.last();
-    if (! query.isValid())
+    // read bouwmanNH4 table
+    QString idFeature = "field2"; //input from .csv
+    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error))
     {
-        std::cout << "Error reading data: " + query.lastError().text().toStdString() << std::endl;
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
-    if (! getValue(query.value("drymatter_fraction_harvested"), &dryMatterFraction))
-    {
-        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
-        return -1;
-    }
-    if (! getValue(query.value("nitrogen_content_aboveground"), &abovegroundNitrogen))
-    {
-        std::cout << "Error: missing emission of dry matter fraction data" << std::endl;
-        return -1;
-    }
-    if (! getValue(query.value("below_above_ratio"), &belowAboveRatio))
-    {
-        std::cout << "Error: missing emission of above/below ratio data" << std::endl;
-        return -1;
-    }
-    query.clear();
 
 
     // *********************************************************************
-    double residueWeight = 5;
-    calculatorCO2.energy.input.fromElectricityGrid = 50; // kWh
-    calculatorCO2.energy.input.fromElectricityOwnHydropower = 50; // kWh
-    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 50; // kWh
-    calculatorCO2.energy.input.fromElectricityOwnWind = 50; // kWh
-    calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l
-    calculatorCO2.energy.input.fromFuelBioethanol = 1; // l
-    calculatorCO2.energy.input.fromFuelCoal = 1; // kg
-    calculatorCO2.energy.input.fromFuelDiesel = 1; // l
-    calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg
-    calculatorCO2.energy.input.fromFuelLiquidPropane = 1; // l
-    calculatorCO2.energy.input.fromFuelOil = 1; // l
-    calculatorCO2.energy.input.fromFuelPetrol = 1; // l
-    calculatorCO2.energy.input.fromFuelWood = 1; // kg
-
+    calculatorCO2.cropResidue.residueWeight = 5; //(t/ha) fresh weight of residue input from .csv
+    calculatorCO2.energy.input.fromElectricityGrid = 50; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnHydropower = 50; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 50; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnWind = 50; // kWh input from .csv
+    calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelBioethanol = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelCoal = 1; // kg input from .csv
+    calculatorCO2.energy.input.fromFuelDiesel = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg input from .csv
+    calculatorCO2.energy.input.fromFuelLPG = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelOil = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelPetrol = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelWood = 1; // kg input from .csv
 
     // **********************************************************************
+    calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv
+    // **********************************************************************
+
+
     // print parameters
-    std::cout << "Country: " << calculatorCO2.energy.country.toStdString() << std::endl;
-    std::cout << "Avg temperature: " << avgTemperature << std::endl;
-    std::cout << "Renewables percentage: " << calculatorCO2.energy.percentageRenewablesInGrid << std::endl;
-    std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;
-    std::cout << "N2O emission conversion: " << emissionN2O << std::endl;
-    std::cout << "dry matter to CO2: " << dryMatterToCO2Percentage << std::endl;
+    //std::cout << "Country: " << calculatorCO2.energy.country.toStdString() << std::endl;
+    //std::cout << "Avg temperature: " << avgTemperature << std::endl;
+    //std::cout << "Renewables percentage: " << calculatorCO2.energy.percentageRenewablesInGrid << std::endl;
+    //std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;
+    //std::cout << "N2O emission conversion: " << emissionN2O << std::endl;
+    //std::cout << "dry matter to CO2: " << dryMatterToCO2Percentage << std::endl;
 
-    calculatorCO2.energy.computeEmissions();
+    //calculatorCO2.energy.computeEmissions();
 
-    calculatorCO2.cropResidue.setInput(emissionMethane,emissionN2O,dryMatterToCO2Percentage);
-    calculatorCO2.cropResidue.computeEmissions(residueWeight);
+    //calculatorCO2.cropResidue.setInput(emissionMethane,emissionN2O,dryMatterToCO2Percentage);
+    //calculatorCO2.cropResidue.computeEmissions();
 
-    calculatorCO2.pesticide.setInput(15.4, calculatorCO2.energy.percentageRenewablesInGrid);
-    calculatorCO2.pesticide.computeEmissions();
+    //calculatorCO2.pesticide.setInput(calculatorCO2.pesticide.weightOfActivePrinciple, calculatorCO2.energy.percentageRenewablesInGrid);
+    //calculatorCO2.pesticide.computeEmissions();
 
-    calculatorCO2.fertiliser.computeEmissions();
+    //calculatorCO2.fertiliser.computeEmissions();
 
-
+    calculatorCO2.computeEmissions();
     return 0;
 }

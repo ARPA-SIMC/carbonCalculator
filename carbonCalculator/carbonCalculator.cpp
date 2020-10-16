@@ -11,9 +11,9 @@ void CropResidueManagement::setInput(double emissionCH4, double emissionN2O, dou
 
 }
 
-void CropResidueManagement::computeEmissions(double residueWeight)
+void CropResidueManagement::computeEmissions()
 {
-    aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  *residueWeight;
+    aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  * residueWeight;
     belowGroundResidue = cropResidueParameter.belowAboveRatio*residueWeight;
     emissionCH4inCH4Units = cropResidueParameter.emissionCH4*residueWeight*1000;
     emissionN2OinN2OUnits = cropResidueParameter.emissionN2O*residueWeight*1000;
@@ -23,10 +23,6 @@ void CropResidueManagement::computeEmissions(double residueWeight)
     kgCO2Equivalent.total = kgCO2Equivalent.fromCH4 + kgCO2Equivalent.fromN2O + kgCO2Equivalent.fromCO2;
 }
 
-void CropResidueManagement::getEquivalentCO2()
-{
-
-}
 
 
 void AppliedPesticides::setInput(double myWeightOfActivePrinciple,double renewablePercentageInOwnCountry)
@@ -68,7 +64,17 @@ void FertiliserApplication::computeEmissions()
     double amountCarbon = amountFertiliser*fertInput.contentElement.carbon;
     double producedN2O = fertInput.bouwmanN2O*amountNitrogen;
     double producedNO = fertInput.bouwmanNO*amountNitrogen;
-    double producedNH3 = fertInput.bouwmanNH3*amountNitrogen;
+
+    // qui ne manca un pezzo ancora!!!!!
+    double producedNH3 = exp(bouwmanParameterNH4.applicationMethod + fertInput.bouwmanNH3)*amountNitrogen;
 
 }
 
+
+void CarbonCalculator::computeEmissions()
+{
+    energy.computeEmissions();
+    pesticide.computeEmissions();
+    cropResidue.computeEmissions();
+    fertiliser.computeEmissions();
+}

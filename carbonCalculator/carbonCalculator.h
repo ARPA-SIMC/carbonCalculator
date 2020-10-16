@@ -7,7 +7,7 @@
 
 
     class AppliedPesticides{
-    private:
+    public:
         double renewablesInCountry;
         double emissionDueToProduction;
         double weightOfActivePrinciple;
@@ -21,23 +21,25 @@
 
 
     class CropResidueManagement {
-    private:
+    public:
         // functions
 
         // variables
         TkgCO2Equivalent kgCO2Equivalent;
-        TcropResidueParameter cropResidueParameter;
+
         double aboveGroundNitrogen;
         double belowGroundResidue;
         double emissionCH4inCH4Units;
         double emissionN2OinN2OUnits;
+        double residueWeight;
 
     public:
         // functions
         void setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2);
-        void getEquivalentCO2();
-        void computeEmissions(double residueWeight);
+        //void getEquivalentCO2();
+        void computeEmissions();
         // variables
+        TcropResidueParameter cropResidueParameter;
     };
 
 
@@ -62,6 +64,10 @@
     public:
         TfertInput fertInput;
         double amountFertiliser;
+        TBouwmanIndex bouwmanParameterNH4;
+        TBouwmanIndex bouwmanParameterNO;
+        TBouwmanIndex bouwmanParameterN2O;
+
 
         void computeEmissions();
 
@@ -78,15 +84,15 @@
 
     public:
         // classes
+
             CropResidueManagement cropResidue;
             EnergyManagement energy;
             AppliedPesticides pesticide;
             FertiliserApplication fertiliser;
 
         // functions
-
+            void computeEmissions();
         //variables
-
     };
 
 #endif // CARBONCALCULATOR_H
