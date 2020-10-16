@@ -26,6 +26,7 @@ void CropResidueManagement::computeEmissions()
 
 
 /* class AppliedPesticides */
+// constructor
 AppliedPesticides::AppliedPesticides()
 {
     renewablesInCountry = NODATA;
@@ -34,6 +35,7 @@ AppliedPesticides::AppliedPesticides()
     energyPerMassOfActivePrinciple = 217.3;             // [MJ/kg]
     electricalEnergyPerMassOfActivePrinciple = 70.83;   // [MJ/kg]
 }
+
 
 void AppliedPesticides::setInput(double myWeightOfActivePrinciple,double renewablePercentageInOwnCountry)
 {

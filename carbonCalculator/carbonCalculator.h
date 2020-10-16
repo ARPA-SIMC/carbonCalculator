@@ -15,6 +15,7 @@
         double electricalEnergyPerMassOfActivePrinciple; // [MJ/kg]
 
     public:
+        // constructor
         AppliedPesticides();
 
         void setInput(double myWeigthOfActivePrinciple, double myRenewablePercentage);
