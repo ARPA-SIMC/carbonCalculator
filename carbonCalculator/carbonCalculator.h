@@ -11,10 +11,12 @@
         double renewablesInCountry;
         double emissionDueToProduction;
         double weightOfActivePrinciple;
-        double energyPerMassOfActivePrinciple = 217.3; // [MJ/kg]
-        double electricalEnergyPerMassOfActivePrinciple = 70.83; // [MJ/kg]
+        double energyPerMassOfActivePrinciple; // [MJ/kg]
+        double electricalEnergyPerMassOfActivePrinciple; // [MJ/kg]
 
     public:
+        AppliedPesticides();
+
         void setInput(double myWeigthOfActivePrinciple, double myRenewablePercentage);
         void computeEmissions();
     };

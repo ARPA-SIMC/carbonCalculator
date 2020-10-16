@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
     char dummyComma;
     do
     {
-        dummyComma = getc(fp);
+        dummyComma = char(getc(fp));
         if (dummyComma == ',') numberOfFields++;
     } while (dummyComma != '\n' && dummyComma != EOF);
     fclose(fp);
@@ -121,7 +121,6 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // ****************************************************************
     //read residue_treatment table
     QString idResidue = "biochar"; //input from .csv
     if (! readResidue(idResidue, db, calculatorCO2, error))

@@ -109,7 +109,6 @@
         double climate;
         double applicationMethod;
 
-
     };
 
 

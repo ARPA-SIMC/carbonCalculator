@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 
+/* class CropResidueManagement */
 void CropResidueManagement::setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2)
 {
     cropResidueParameter.residueReconvertedToCO2 = dryMatterToCO2;
@@ -24,6 +25,15 @@ void CropResidueManagement::computeEmissions()
 }
 
 
+/* class AppliedPesticides */
+AppliedPesticides::AppliedPesticides()
+{
+    renewablesInCountry = NODATA;
+    emissionDueToProduction = NODATA;
+    weightOfActivePrinciple = NODATA;
+    energyPerMassOfActivePrinciple = 217.3;             // [MJ/kg]
+    electricalEnergyPerMassOfActivePrinciple = 70.83;   // [MJ/kg]
+}
 
 void AppliedPesticides::setInput(double myWeightOfActivePrinciple,double renewablePercentageInOwnCountry)
 {
@@ -39,6 +49,7 @@ void AppliedPesticides::computeEmissions()
 }
 
 
+/* class FertiliserApplication */
 void FertiliserApplication::setNitrogenInhibitorsTable()
 {
     nitrogenInhibitorN2O.none[0] = 1;

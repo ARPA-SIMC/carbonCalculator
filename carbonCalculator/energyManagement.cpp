@@ -1,6 +1,13 @@
 #include "energyManagement.h"
 
 
+EnergyManagement::EnergyManagement()
+{
+    country = "";
+    percentageRenewablesInGrid = NODATA;
+}
+
+
 double EnergyManagement::electricityEmissionComputation(double input,double parameterConversionInput)
 {
     double output = input*3.6*parameterConversionInput; // convert from kWh to MJ
