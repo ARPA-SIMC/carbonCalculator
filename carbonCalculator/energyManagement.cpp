@@ -1,6 +1,7 @@
 #include "energyManagement.h"
 
 
+// constructor
 EnergyManagement::EnergyManagement()
 {
     country = "";
@@ -40,6 +41,7 @@ void EnergyManagement::computeEmissions()
     emissions.fromFuelOil = input.fromFuelOil * 0.8* parameterFuel.oilPerEnergyUnit*parameterFuel.heavyOilHeatPower;
     emissions.fromFuelLPG = input.fromFuelLPG * 0.582 *parameterFuel.lpgPerEnergyUnit * parameterFuel.propaneHeatPower;
 }
+
 
 /*void EnergyManagement::getEmissions()
 {
