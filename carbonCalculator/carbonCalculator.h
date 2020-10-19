@@ -95,7 +95,16 @@
 
         // functions
             void computeEmissions();
+            void initializeBouwmanTables();
         //variables
+            TbouwmanTable bouwmanTableN2O;
+            TbouwmanTable bouwmanTableNO;
+            TbouwmanTable bouwmanTableNH4;
+            int bouwmanEquivalentTag;
+
+
+
+
     };
 
 #endif // CARBONCALCULATOR_H

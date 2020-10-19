@@ -84,6 +84,141 @@ void FertiliserApplication::computeEmissions()
 }
 
 
+void CarbonCalculator::initializeBouwmanTables()
+{
+   bouwmanTableNH4.elementParameter = 0;
+   bouwmanTableN2O.elementParameter = -0.4136;
+   bouwmanTableNO.elementParameter = -1.527;
+
+   for (int i=0;i<6;i++)
+   {
+        bouwmanTableN2O.cationicExchangeCapacity[i] = NODATA;
+        bouwmanTableNO.cationicExchangeCapacity[i] = NODATA;
+        bouwmanTableNH4.cationicExchangeCapacity[i] = NODATA;
+
+        bouwmanTableN2O.climate[i] = NODATA;
+        bouwmanTableNO.climate[i] = NODATA;
+        bouwmanTableNH4.climate[i] = NODATA;
+
+        bouwmanTableN2O.croptype[i] = NODATA;
+        bouwmanTableNO.croptype[i] = NODATA;
+        bouwmanTableNH4.croptype[i] = NODATA;
+
+        bouwmanTableN2O.drainage[i] = NODATA;
+        bouwmanTableNO.drainage[i] = NODATA;
+        bouwmanTableNH4.drainage[i] = NODATA;
+
+        bouwmanTableN2O.pH[i] = NODATA;
+        bouwmanTableNO.pH[i] = NODATA;
+        bouwmanTableNH4.pH[i] = NODATA;
+
+        bouwmanTableN2O.soilOrganicCarbon[i] = NODATA;
+        bouwmanTableNO.soilOrganicCarbon[i] = NODATA;
+        bouwmanTableNH4.soilOrganicCarbon[i] = NODATA;
+
+        bouwmanTableN2O.soilTexture[i] = NODATA;
+        bouwmanTableNO.soilTexture[i] = NODATA;
+        bouwmanTableNH4.soilTexture[i] = NODATA;
+   }
+   int i = 0;
+   bouwmanTableNH4.croptype[i++] = -0.158;
+   bouwmanTableNH4.croptype[i++] = -0.158;
+   bouwmanTableNH4.croptype[i++] = -0.045;
+   bouwmanTableNH4.croptype[i++] = -0.045;
+   bouwmanTableNH4.croptype[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.soilTexture[i++] = 0;
+   bouwmanTableNH4.soilTexture[i++] = 0;
+   bouwmanTableNH4.soilTexture[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.soilOrganicCarbon[i++] = 0;
+   bouwmanTableNH4.soilOrganicCarbon[i++] = 0;
+   bouwmanTableNH4.soilOrganicCarbon[i++] = 0;
+   bouwmanTableNH4.soilOrganicCarbon[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.pH[i++] = -1.072;
+   bouwmanTableNH4.pH[i++] = -0.933;
+   bouwmanTableNH4.pH[i++] = -0.608;
+   bouwmanTableNH4.pH[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.cationicExchangeCapacity[i++] = 0.088;
+   bouwmanTableNH4.cationicExchangeCapacity[i++] = 0.012;
+   bouwmanTableNH4.cationicExchangeCapacity[i++] = 0.163;
+   bouwmanTableNH4.cationicExchangeCapacity[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.drainage[i++] = 0;
+   bouwmanTableNH4.drainage[i++] = 0;
+   i = 0;
+   bouwmanTableNH4.climate[i++] = -0.402;
+   bouwmanTableNH4.climate[i++] = 0;
+
+
+   i = 0;
+   bouwmanTableN2O.croptype[i++] = -1.268;
+   bouwmanTableN2O.croptype[i++] = -1.242;
+   bouwmanTableN2O.croptype[i++] = -0.023;
+   bouwmanTableN2O.croptype[i++] = 0;
+   bouwmanTableN2O.croptype[i++] = -2.536;
+   i = 0;
+   bouwmanTableN2O.soilTexture[i++] = 0;
+   bouwmanTableN2O.soilTexture[i++] = -0.472;
+   bouwmanTableN2O.soilTexture[i++] = -0.008;
+   i = 0;
+   bouwmanTableN2O.soilOrganicCarbon[i++] = 0;
+   bouwmanTableN2O.soilOrganicCarbon[i++] = 0.14;
+   bouwmanTableN2O.soilOrganicCarbon[i++] = 0.58;
+   bouwmanTableN2O.soilOrganicCarbon[i++] = 1.045;
+   i = 0;
+   bouwmanTableN2O.pH[i++] = 0;
+   bouwmanTableN2O.pH[i++] = 0.109;
+   bouwmanTableN2O.pH[i++] = -0.352;
+   bouwmanTableN2O.pH[i++] = -0.352;
+   i = 0;
+   bouwmanTableN2O.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableN2O.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableN2O.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableN2O.cationicExchangeCapacity[i++] = 0;
+   i = 0;
+   bouwmanTableN2O.drainage[i++] = 0;
+   bouwmanTableN2O.drainage[i++] = -0.42;
+   i = 0;
+   bouwmanTableN2O.climate[i++] = 0;
+   bouwmanTableN2O.climate[i++] = 0.824;
+
+   i = 0;
+   bouwmanTableNO.croptype[i++] = 0;
+   bouwmanTableNO.croptype[i++] = 0;
+   bouwmanTableNO.croptype[i++] = 0;
+   bouwmanTableNO.croptype[i++] = 0;
+   bouwmanTableNO.croptype[i++] = 0;
+   i = 0;
+   bouwmanTableNO.soilTexture[i++] = 0;
+   bouwmanTableNO.soilTexture[i++] = 0;
+   bouwmanTableNO.soilTexture[i++] = 0;
+   i = 0;
+   bouwmanTableNO.soilOrganicCarbon[i++] = 0;
+   bouwmanTableNO.soilOrganicCarbon[i++] = 0;
+   bouwmanTableNO.soilOrganicCarbon[i++] = 2.571;
+   bouwmanTableNO.soilOrganicCarbon[i++] = 2.571;
+   i = 0;
+   bouwmanTableNO.pH[i++] = 0;
+   bouwmanTableNO.pH[i++] = 0;
+   bouwmanTableNO.pH[i++] = 0;
+   bouwmanTableNO.pH[i++] = 0;
+   i = 0;
+   bouwmanTableNO.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableNO.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableNO.cationicExchangeCapacity[i++] = 0.;
+   bouwmanTableNO.cationicExchangeCapacity[i++] = 0;
+   i = 0;
+   bouwmanTableNO.drainage[i++] = 0;
+   bouwmanTableNO.drainage[i++] = 0.946;
+   i = 0;
+   bouwmanTableNO.climate[i++] = 0;
+   bouwmanTableNO.climate[i++] = 0;
+
+}
+
 void CarbonCalculator::computeEmissions()
 {
     energy.computeEmissions();

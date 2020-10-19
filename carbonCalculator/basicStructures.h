@@ -111,5 +111,16 @@
 
     };
 
+    struct TbouwmanTable{
+        double elementParameter;
+        double croptype[6];
+        double soilTexture[6];
+        double soilOrganicCarbon[6];
+        double pH[6];
+        double cationicExchangeCapacity[6];
+        double drainage[6];
+        double climate[6];
+    };
+
 
 #endif // BASICSTRUCTURES_H

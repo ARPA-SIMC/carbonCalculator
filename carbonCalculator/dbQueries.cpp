@@ -185,19 +185,39 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         return false;
     }
     calculator.cropResidue.cropResidueParameter.belowAboveRatio = value;
+
+
+    QString stringValue;
+    if (! getValue(query.value("bouwman_equivalent"), &stringValue))
+    {
+        error = "Error: missing emission of Bouwman equivalent macrotype ratio data";
+        return false;
+    }
+    if (stringValue == "grass" )
+        calculator.bouwmanEquivalentTag = 0;
+    else if (stringValue == "grass_clover")
+        calculator.bouwmanEquivalentTag = 1;
+    else if (stringValue == "legume")
+        calculator.bouwmanEquivalentTag = 2;
+    else if (stringValue == "other_crop")
+        calculator.bouwmanEquivalentTag = 3;
+    else if (stringValue == "wetland_rice")
+        calculator.bouwmanEquivalentTag = 4;
+    else
+    {
+        error = "Error: wrong tag for crop";
+        return false;
+    }
+    calculator.fertiliser.bouwmanParameterN2O.cropType = calculator.bouwmanTableN2O[calculator.bouwmanEquivalentTag];
+    calculator.fertiliser.bouwmanParameterNO.cropType = calculator.bouwmanTableNO[calculator.bouwmanEquivalentTag];
+    calculator.fertiliser.bouwmanParameterNH4.cropType = calculator.bouwmanTableNH4[calculator.bouwmanEquivalentTag];
+
+
     query.clear();
+
     return true;
 }
 
-bool readBouwmanNO2(QString idFeature, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
-{
-    return true;
-}
-
-bool readBouwmanNO(QString idFeature, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
-{
-    return true;
-}
 
 bool readBouwmanNH4(QString idFeature, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
 {
@@ -218,6 +238,31 @@ bool readBouwmanNH4(QString idFeature, QSqlDatabase &db, CarbonCalculator &calcu
     }
     calculator.fertiliser.bouwmanParameterNH4.applicationMethod = value;
 
+
+    query.clear();
+    return true;
+}
+
+bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
+{
+    double value;
+    QString queryString = "SELECT * FROM climate_type WHERE id_climate='" + idClimate + "'";
+    QSqlQuery query = db.exec(queryString);
+    query.last();
+    if (! query.isValid())
+    {
+        error = query.lastError().text();
+        return false;
+    }
+
+    if (! getValue(query.value("climate_code"), value))
+    {
+        error = "Error: missing climate data";
+        return false;
+    }
+    calculator.fertiliser.bouwmanParameterN2O.climate = calculator.bouwmanTableN2O.climate[value-1];
+    calculator.fertiliser.bouwmanParameterNO.climate = calculator.bouwmanTableNO.climate[value-1];
+    calculator.fertiliser.bouwmanParameterNH4.climate = calculator.bouwmanTableNH4.climate[value-1];
 
     query.clear();
     return true;
