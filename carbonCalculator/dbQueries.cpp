@@ -208,9 +208,9 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         error = "Error: wrong tag for crop";
         return false;
     }
-    calculator.fertiliser.bouwmanParameterN2O.cropType = calculator.bouwmanTableN2O[calculator.bouwmanEquivalentTag];
-    calculator.fertiliser.bouwmanParameterNO.cropType = calculator.bouwmanTableNO[calculator.bouwmanEquivalentTag];
-    calculator.fertiliser.bouwmanParameterNH4.cropType = calculator.bouwmanTableNH4[calculator.bouwmanEquivalentTag];
+    //calculator.fertiliser.bouwmanParameterN2O.cropType = calculator.bouwmanTableN2O[calculator.bouwmanEquivalentTag];
+    //calculator.fertiliser.bouwmanParameterNO.cropType = calculator.bouwmanTableNO[calculator.bouwmanEquivalentTag];
+    //calculator.fertiliser.bouwmanParameterNH4.cropType = calculator.bouwmanTableNH4[calculator.bouwmanEquivalentTag];
 
 
     query.clear();
@@ -254,15 +254,15 @@ bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculat
         error = query.lastError().text();
         return false;
     }
-
-    if (! getValue(query.value("climate_code"), value))
+    int valueInt;
+    /*if (! getValue(query.value("climate_code"), valueInt))
     {
         error = "Error: missing climate data";
         return false;
-    }
-    calculator.fertiliser.bouwmanParameterN2O.climate = calculator.bouwmanTableN2O.climate[value-1];
-    calculator.fertiliser.bouwmanParameterNO.climate = calculator.bouwmanTableNO.climate[value-1];
-    calculator.fertiliser.bouwmanParameterNH4.climate = calculator.bouwmanTableNH4.climate[value-1];
+    }*/
+    //calculator.fertiliser.bouwmanParameterN2O.climate = calculator.bouwmanTableN2O.climate[valueInt-1];
+    //calculator.fertiliser.bouwmanParameterNO.climate = calculator.bouwmanTableNO.climate[valueInt-1];
+    //calculator.fertiliser.bouwmanParameterNH4.climate = calculator.bouwmanTableNH4.climate[valueInt-1];
 
     query.clear();
     return true;

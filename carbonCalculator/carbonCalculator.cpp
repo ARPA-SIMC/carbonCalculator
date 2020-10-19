@@ -4,13 +4,13 @@
 
 
 /* class CropResidueManagement */
-void CropResidueManagement::setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2)
+/*void CropResidueManagement::setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2)
 {
     cropResidueParameter.residueReconvertedToCO2 = dryMatterToCO2;
     cropResidueParameter.emissionCH4 = emissionCH4;
     cropResidueParameter.emissionN2O = emissionN2O;
 
-}
+}*/
 
 void CropResidueManagement::computeEmissions()
 {
@@ -226,3 +226,78 @@ void CarbonCalculator::computeEmissions()
     cropResidue.computeEmissions();
     fertiliser.computeEmissions();
 }
+
+bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC)
+{
+    initializeBouwmanTables();
+
+    if (idDrainage == "POOR")
+    {
+        fertiliser.bouwmanParameterN2O.drainage = bouwmanTableN2O.drainage[0];
+        fertiliser.bouwmanParameterNO.drainage = bouwmanTableNO.drainage[0];
+        fertiliser.bouwmanParameterNH4.drainage = bouwmanTableNH4.drainage[0];
+    }
+    else
+    {
+        fertiliser.bouwmanParameterN2O.drainage = bouwmanTableN2O.drainage[1];
+        fertiliser.bouwmanParameterNO.drainage = bouwmanTableNO.drainage[1];
+        fertiliser.bouwmanParameterNH4.drainage = bouwmanTableNH4.drainage[1];
+    }
+    if (pH < 0 ) return false;
+    if (pH > 14) return false;
+
+    if(pH < 5.5)
+    {
+        fertiliser.bouwmanParameterN2O.pH = bouwmanTableN2O.pH[0];
+        fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[0];
+        fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[0];
+    }
+    else if (pH >= 5.5 && pH < 7.3)
+    {
+        fertiliser.bouwmanParameterN2O.pH = bouwmanTableN2O.pH[1];
+        fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[1];
+        fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[1];
+    }
+    else if (pH >= 7.3 && pH < 8.5)
+    {
+        fertiliser.bouwmanParameterN2O.pH = bouwmanTableN2O.pH[2];
+        fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[2];
+        fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[2];
+    }
+    else
+    {
+        fertiliser.bouwmanParameterN2O.pH = bouwmanTableN2O.pH[3];
+        fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[3];
+        fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[3];
+    }
+
+    if (CEC < 16)
+    {
+        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[0];
+        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[0];
+        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[0];
+    }
+    else if (CEC >= 16 && CEC < 24)
+    {
+        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[1];
+        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[1];
+        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[1];
+    }
+    else if (CEC >= 24 && CEC < 32)
+    {
+        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[2];
+        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[2];
+        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[2];
+    }
+    else if (CEC >= 32)
+    {
+        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[3];
+        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[3];
+        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[3];
+    }
+
+
+
+    return true;
+}
+

@@ -96,6 +96,7 @@
         // functions
             void computeEmissions();
             void initializeBouwmanTables();
+            bool initialiazeVariables(QString idDrainage,double pH,double CEC);
         //variables
             TbouwmanTable bouwmanTableN2O;
             TbouwmanTable bouwmanTableNO;

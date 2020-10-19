@@ -111,7 +111,13 @@ int main(int argc, char *argv[])
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
+    // read soil drainage
+    QString idDrainage = "POOR";
+    // read pH
+    double pHSoil;
+    double CEC;
 
+    //calculatorCO2.
     // read fertilizer
     QString idFertiliser = "Ammonium_nitrate"; // input from .csv
     calculatorCO2.fertiliser.amountFertiliser = 142; // kg/ha input from .csv
