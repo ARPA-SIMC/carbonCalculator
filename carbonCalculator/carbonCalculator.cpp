@@ -227,10 +227,11 @@ void CarbonCalculator::computeEmissions()
     fertiliser.computeEmissions();
 }
 
-bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC)
+bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC,QString idSoilTexture,QString idSoilOrganicCarbon)
 {
     initializeBouwmanTables();
-
+    // ***********************************************************************
+    // drainage
     if (idDrainage == "POOR")
     {
         fertiliser.bouwmanParameterN2O.drainage = bouwmanTableN2O.drainage[0];
@@ -243,6 +244,43 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         fertiliser.bouwmanParameterNO.drainage = bouwmanTableNO.drainage[1];
         fertiliser.bouwmanParameterNH4.drainage = bouwmanTableNH4.drainage[1];
     }
+    // *************************************************************************
+    //SOM
+
+
+    double somParameterForCec;
+    if(idSoilOrganicCarbon == "SOM<=1.72")
+    {
+        fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[0];
+        fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[0];
+        fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[0];
+        somParameterForCec = 30;
+    }
+    else if (idSoilOrganicCarbon == "1.72<SOM<=5.16")
+    {
+        fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[1];
+        fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[1];
+        fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[1];
+        somParameterForCec = 60;
+    }
+    else if (idSoilOrganicCarbon == "5.16<SOM<=10.32")
+    {
+        fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[2];
+        fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[2];
+        fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[2];
+        somParameterForCec = 135;
+    }
+    else if (idSoilOrganicCarbon == "SOM>10.32")
+    {
+        fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[3];
+        fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[3];
+        fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[3];
+        somParameterForCec = 180;
+    }
+
+    //**************************************************************************
+    // pH
+
     if (pH < 0 ) return false;
     if (pH > 14) return false;
 
@@ -270,33 +308,66 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[3];
         fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[3];
     }
+    // ***********************************************************************
 
-    if (CEC < 16)
+    // ******************************************************************************
+    // soil Texture
+    int index;
+    double textureParameterForCec;
+    if (idSoilTexture == "FINE")
     {
-        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[0];
-        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[0];
-        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[0];
+        index = 0;
+        textureParameterForCec = 0.6;
     }
-    else if (CEC >= 16 && CEC < 24)
+    else if (idSoilTexture == "MEDIUM")
     {
-        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[1];
-        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[1];
-        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[1];
+        index = 1;
+        textureParameterForCec = 0.3;
     }
-    else if (CEC >= 24 && CEC < 32)
+    else if (idSoilTexture == "COARSE")
     {
-        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[2];
-        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[2];
-        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[2];
+        index = 2;
+        textureParameterForCec = 0.15;
     }
-    else if (CEC >= 32)
+    else
     {
-        fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[3];
-        fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[3];
-        fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[3];
+        return false;
     }
 
+        fertiliser.bouwmanParameterN2O.soilTexture = bouwmanTableN2O.soilTexture[index];
+        fertiliser.bouwmanParameterNO.soilTexture = bouwmanTableNO.soilTexture[index];
+        fertiliser.bouwmanParameterNH4.soilTexture = bouwmanTableNH4.soilTexture[index];
+// *********************************************************************
+        // cationic exchange capacity
+        double cec;
 
+        cec = 59 - 51*(somParameterForCec)/3000 + (30 + 4.4)*textureParameterForCec;
+
+        if (cec < 16)
+        {
+            fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[0];
+            fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[0];
+            fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[0];
+        }
+        else if (cec >= 16 && cec < 24)
+        {
+            fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[1];
+            fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[1];
+            fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[1];
+        }
+        else if (cec >= 24 && cec < 32)
+        {
+            fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[2];
+            fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[2];
+            fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[2];
+        }
+        else if (cec >= 32)
+        {
+            fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[3];
+            fertiliser.bouwmanParameterNO.cationicExchangeCapacity = bouwmanTableNO.cationicExchangeCapacity[3];
+            fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[3];
+        }
+// *********************************************************************
 
     return true;
 }

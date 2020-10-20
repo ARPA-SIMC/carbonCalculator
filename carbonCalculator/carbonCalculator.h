@@ -96,12 +96,13 @@
         // functions
             void computeEmissions();
             void initializeBouwmanTables();
-            bool initialiazeVariables(QString idDrainage,double pH,double CEC);
+            bool initialiazeVariables(QString idDrainage, double pH, double CEC, QString idSoilTexture,QString idSoilOrganicCarbon);
         //variables
             TbouwmanTable bouwmanTableN2O;
             TbouwmanTable bouwmanTableNO;
             TbouwmanTable bouwmanTableNH4;
             int bouwmanEquivalentTag;
+            TsoilTexture soilTexture;
 
 
 

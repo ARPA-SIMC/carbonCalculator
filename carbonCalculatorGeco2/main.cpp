@@ -112,12 +112,23 @@ int main(int argc, char *argv[])
         return -1;
     }
     // read soil drainage
-    QString idDrainage = "POOR";
+    QString idDrainage = "POOR"; // input from .csv
     // read pH
-    double pHSoil;
-    double CEC;
+    double pHSoil = 5.7; // input from .csv
+    double CEC = 15; // to be computed somehow from .csv data
+    QString idSoilTexture = "MEDIUM"; // input from .csv
+    QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
 
-    //calculatorCO2.
+    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,CEC,idSoilTexture,idSoilOrganicCarbon);
+    // read climate
+    QString idClimate = "TEMPERATE_MOIST"; // input from .csv
+    if (! readClimate(idClimate, db, calculatorCO2, error))
+    {
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
+        return -1;
+    }
+
+
     // read fertilizer
     QString idFertiliser = "Ammonium_nitrate"; // input from .csv
     calculatorCO2.fertiliser.amountFertiliser = 142; // kg/ha input from .csv

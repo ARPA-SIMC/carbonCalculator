@@ -122,5 +122,10 @@
         double climate[6];
     };
 
+    struct TsoilTexture{
+        double parameter1[3] = {0.6,0.3,0.15};
+        int index[3] = {1,2,3};
+        double bulkDensity[3] = {1.5,1.3,1.7};
+    };
 
 #endif // BASICSTRUCTURES_H
