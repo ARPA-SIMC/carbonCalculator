@@ -62,7 +62,7 @@
 
         double emissionsByProduction;
 
-        void setNitrogenInhibitorsTable();
+
 
     public:
         TfertInput fertInput;
@@ -73,7 +73,7 @@
 
 
         void computeEmissions();
-
+        void setNitrogenInhibitorsTable();
     };
 
 

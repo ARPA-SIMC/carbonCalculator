@@ -81,6 +81,29 @@ void FertiliserApplication::computeEmissions()
     // qui ne manca un pezzo ancora!!!!!
     double producedNH3 = exp(bouwmanParameterNH4.applicationMethod + fertInput.bouwmanNH3)*amountNitrogen;
 
+    double subTotalEmissionN2OBackground;
+    double subTotalEmissionNOBackground;
+    double subTotalEmissionN2OFertilisers;
+    double subTotalEmissionNOFertilisers;
+    double subTotalEmissionNH4Fertilisers;
+    double subTotalEmissionLeachingFertilisers;
+
+    double totalEmissionSoilFertiliser;
+
+    subTotalEmissionN2OBackground = exp(bouwmanParameterN2O.modelParameter + bouwmanParameterN2O.drainage
+                                        + bouwmanParameterN2O.drainage + bouwmanParameterN2O.cationicExchangeCapacity
+                                        + bouwmanParameterN2O.climate + bouwmanParameterN2O.cropType
+                                        + bouwmanParameterN2O.pH + bouwmanParameterN2O.soilOrganicCarbon
+                                        + bouwmanParameterN2O.soilTexture);
+
+    subTotalEmissionNOBackground = exp(bouwmanParameterNO.modelParameter + bouwmanParameterNO.drainage
+                                        + bouwmanParameterNO.drainage + bouwmanParameterNO.cationicExchangeCapacity
+                                        + bouwmanParameterNO.climate + bouwmanParameterNO.cropType
+                                        + bouwmanParameterNO.pH + bouwmanParameterNO.soilOrganicCarbon
+                                        + bouwmanParameterNO.soilTexture);
+
+
+
 }
 
 
@@ -230,6 +253,10 @@ void CarbonCalculator::computeEmissions()
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC,QString idSoilTexture,QString idSoilOrganicCarbon)
 {
     initializeBouwmanTables();
+    fertiliser.setNitrogenInhibitorsTable();
+    fertiliser.bouwmanParameterN2O.modelParameter = bouwmanTableN2O.elementParameter;
+    fertiliser.bouwmanParameterNO.modelParameter = bouwmanTableNO.elementParameter;
+    fertiliser.bouwmanParameterNH4.modelParameter = bouwmanTableNH4.elementParameter;
     // ***********************************************************************
     // drainage
     if (idDrainage == "POOR")
@@ -368,6 +395,11 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
             fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[3];
         }
 // *********************************************************************
+// cropType
+        //fertiliser.bouwmanParameterN2O.cropType = bouwmanTableN2O.croptype[0];
+        //fertiliser.bouwmanParameterNO.cropType = bouwmanTableNO.croptype[0];
+        //fertiliser.bouwmanParameterNH4.cropType = bouwmanTableNH4.croptype[0];
+
 
     return true;
 }
