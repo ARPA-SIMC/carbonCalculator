@@ -72,15 +72,44 @@ void FertiliserApplication::setNitrogenInhibitorsTable()
 void FertiliserApplication::computeEmissions()
 {
 
-    double amountNitrogen = amountFertiliser*fertInput.contentElement.nitrogen;
-    double amountOtherElements = amountFertiliser * (fertInput.contentElement.phosphorus + fertInput.contentElement.potassium);
-    double amountCarbon = amountFertiliser*fertInput.contentElement.carbon;
-    double producedN2O = fertInput.bouwmanN2O*amountNitrogen;
-    double producedNO = fertInput.bouwmanNO*amountNitrogen;
+    double amountNitrogen[4];
+    double amountOtherElements[4];
+    double amountCarbon[4];
+    double producedN2O[4];
+    double producedNO[4];
 
+    for (int i=0;i<4;i++)
+    {
+        amountNitrogen[i] = 0;
+        amountOtherElements[i] = 0;
+        amountCarbon[i] = 0;
+        producedN2O[i] = 0;
+        producedNO[i] = 0;
+
+    }
+
+    for (int i=0;i<4;i++)
+    {
+        amountNitrogen[i] = amountFertiliser[i]*fertInput[i].contentElement.nitrogen;
+        amountOtherElements[i] = amountFertiliser[i] * (fertInput[i].contentElement.phosphorus + fertInput[i].contentElement.potassium);
+        amountCarbon[i] = amountFertiliser[i]*fertInput[i].contentElement.carbon;
+        producedN2O[i] = fertInput[i].bouwmanN2O*amountNitrogen[i];
+        producedNO[i] = fertInput[i].bouwmanNO*amountNitrogen[i];
+    }
     // qui ne manca un pezzo ancora!!!!!
-    double producedNH3 = exp(bouwmanParameterNH4.applicationMethod + fertInput.bouwmanNH3)*amountNitrogen;
-
+    double producedNH3[4];
+    double sumOfEnvironmentalFactorsToComputeNH3;
+    sumOfEnvironmentalFactorsToComputeNH3 = bouwmanParameterNH4.modelParameter + bouwmanParameterNH4.drainage
+            + bouwmanParameterNH4.drainage + bouwmanParameterNH4.cationicExchangeCapacity
+            + bouwmanParameterNH4.climate + bouwmanParameterNH4.cropType
+            + bouwmanParameterNH4.pH + bouwmanParameterNH4.soilOrganicCarbon
+            + bouwmanParameterNH4.soilTexture;
+    for (int i=0;i<4;i++)
+    {
+        producedNH3[i] = exp(bouwmanParameterNH4ApplicationMethod[i]
+                             + fertInput[i].bouwmanNH3 + sumOfEnvironmentalFactorsToComputeNH3);
+        producedNH3[i] *= amountNitrogen[i];
+    }
     double subTotalEmissionN2OBackground;
     double subTotalEmissionNOBackground;
     double subTotalEmissionN2OFertilisers;
@@ -271,9 +300,9 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         fertiliser.bouwmanParameterNO.drainage = bouwmanTableNO.drainage[1];
         fertiliser.bouwmanParameterNH4.drainage = bouwmanTableNH4.drainage[1];
     }
+
     // *************************************************************************
     //SOM
-
 
     double somParameterForCec;
     if(idSoilOrganicCarbon == "SOM<=1.72")
@@ -335,7 +364,6 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         fertiliser.bouwmanParameterNO.pH = bouwmanTableNO.pH[3];
         fertiliser.bouwmanParameterNH4.pH = bouwmanTableNH4.pH[3];
     }
-    // ***********************************************************************
 
     // ******************************************************************************
     // soil Texture
@@ -395,10 +423,7 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
             fertiliser.bouwmanParameterNH4.cationicExchangeCapacity = bouwmanTableNH4.cationicExchangeCapacity[3];
         }
 // *********************************************************************
-// cropType
-        //fertiliser.bouwmanParameterN2O.cropType = bouwmanTableN2O.croptype[0];
-        //fertiliser.bouwmanParameterNO.cropType = bouwmanTableNO.croptype[0];
-        //fertiliser.bouwmanParameterNH4.cropType = bouwmanTableNH4.croptype[0];
+// cropType is filled in dbQueries.cpp
 
 
     return true;

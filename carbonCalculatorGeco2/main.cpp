@@ -130,9 +130,34 @@ int main(int argc, char *argv[])
 
 
     // read fertilizer
-    QString idFertiliser = "Ammonium_nitrate"; // input from .csv
-    calculatorCO2.fertiliser.amountFertiliser = 142; // kg/ha input from .csv
-    if (! readFertilizer(idFertiliser, db, calculatorCO2, error))
+    int nrFertilizers = 4;
+    QString idFertiliser[4];
+    idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
+    idFertiliser[1] = "Ammonium_Bicarbonate"; // input from .csv
+    idFertiliser[2] = "Ammonium_sulphate"; // input from .csv
+    idFertiliser[3] = "Lime_52CaO"; // input from .csv
+
+    calculatorCO2.fertiliser.amountFertiliser[0] = 142; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[1] = 100; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[2] = 25; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
+
+
+
+
+    if (! readFertilizer(idFertiliser, db, calculatorCO2, error,nrFertilizers))
+    {
+        std::cout << "ERROR: " + error.toStdString() << std::endl;
+        return -1;
+    }
+
+    // read bouwmanNH4 table
+    QString idFeature[4];
+    idFeature[0] = "field2"; //input from .csv
+    idFeature[1] = "field2"; //input from .csv
+    idFeature[2] = "field3"; //input from .csv
+    idFeature[3] = "field2"; //input from .csv
+    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error,nrFertilizers))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
@@ -154,13 +179,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // read bouwmanNH4 table
-    QString idFeature = "field2"; //input from .csv
-    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
+
 
 
     // *********************************************************************

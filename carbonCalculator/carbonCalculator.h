@@ -65,8 +65,9 @@
 
 
     public:
-        TfertInput fertInput;
-        double amountFertiliser;
+        TfertInput fertInput[4];
+        double amountFertiliser[4];
+        double bouwmanParameterNH4ApplicationMethod[4];
         TBouwmanIndex bouwmanParameterNH4;
         TBouwmanIndex bouwmanParameterNO;
         TBouwmanIndex bouwmanParameterN2O;

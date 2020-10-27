@@ -107,7 +107,7 @@
         double cationicExchangeCapacity;
         double drainage;
         double climate;
-        double applicationMethod;
+        //double applicationMethod;
 
     };
 
