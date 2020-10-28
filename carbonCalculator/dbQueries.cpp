@@ -47,73 +47,88 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
 {
     for (int i=0 ; i<nrFertiliserApplied; i++)
     {
-        QString queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser[i] + "'";
-        QSqlQuery query = db.exec(queryString);
-        query.last();
-        if (! query.isValid())
+        if (idFertiliser[i] != "NONE")
         {
-            error = query.lastError().text();
-            return false;
-        }
+            QString queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser[i] + "'";
+            QSqlQuery query = db.exec(queryString);
+            query.last();
+            if (! query.isValid())
+            {
+                error = query.lastError().text();
+                return false;
+            }
 
-        double value;
-        if (! getValue(query.value("bouwman_n2o"), &value))
+            double value;
+            if (! getValue(query.value("bouwman_n2o"), &value))
+            {
+                error = "missing emission of Bouwman index for N2O";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].bouwmanN2O = value;
+
+            if (! getValue(query.value("bouwman_no"), &value))
+            {
+                error = "missing emission of Bouwman index for NO";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].bouwmanNO = value;
+
+            if (! getValue(query.value("bouwman_nh3"), &value))
+            {
+                error = "missing emission of Bouwman index for NH3";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].bouwmanNH3 = value;
+
+            if (! getValue(query.value("N"), &value))
+            {
+                error = "missing emission of nitrogen content";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].contentElement.nitrogen = value;
+
+            if (! getValue(query.value("P"), &value))
+            {
+                error = "missing emission of phosphorus content";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].contentElement.phosphorus = value;
+
+            if (! getValue(query.value("K"), &value))
+            {
+                error = "missing emission of potassium content";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].contentElement.potassium = value;
+
+            if (! getValue(query.value("C"), &value))
+            {
+                error = "missing emission of carbon content";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].contentElement.carbon = value;
+
+            if (! getValue(query.value("current_tech"), &value))
+            {
+                error = "missing emission per kg of product";
+                return false;
+            }
+            calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
+
+            query.clear();
+        }
+        else
         {
-            error = "missing emission of Bouwman index for N2O";
-            return false;
+            int value=0;
+            calculator.fertiliser.fertInput[i].bouwmanN2O = value;
+            calculator.fertiliser.fertInput[i].bouwmanNO = value;
+            calculator.fertiliser.fertInput[i].bouwmanNH3 = value;
+            calculator.fertiliser.fertInput[i].contentElement.nitrogen = value;
+            calculator.fertiliser.fertInput[i].contentElement.phosphorus = value;
+            calculator.fertiliser.fertInput[i].contentElement.potassium = value;
+            calculator.fertiliser.fertInput[i].contentElement.carbon = value;
+            calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
         }
-        calculator.fertiliser.fertInput[i].bouwmanN2O = value;
-
-        if (! getValue(query.value("bouwman_no"), &value))
-        {
-            error = "missing emission of Bouwman index for NO";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].bouwmanNO = value;
-
-        if (! getValue(query.value("bouwman_nh3"), &value))
-        {
-            error = "missing emission of Bouwman index for NH3";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].bouwmanNH3 = value;
-
-        if (! getValue(query.value("N"), &value))
-        {
-            error = "missing emission of nitrogen content";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].contentElement.nitrogen = value;
-
-        if (! getValue(query.value("P"), &value))
-        {
-            error = "missing emission of phosphorus content";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].contentElement.phosphorus = value;
-
-        if (! getValue(query.value("K"), &value))
-        {
-            error = "missing emission of potassium content";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].contentElement.potassium = value;
-
-        if (! getValue(query.value("C"), &value))
-        {
-            error = "missing emission of carbon content";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].contentElement.carbon = value;
-
-        if (! getValue(query.value("current_tech"), &value))
-        {
-            error = "missing emission per kg of product";
-            return false;
-        }
-        calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
-
-        query.clear();
     }
     return true;
 }
@@ -196,8 +211,12 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         error = "Error: missing emission of Bouwman equivalent macrotype ratio data";
         return false;
     }
+
     if (stringValue == "grass" )
+    {
         calculator.bouwmanEquivalentTag = 0;
+        calculator.fertiliser.inhibitorClass = calculator.bouwmanEquivalentTag;
+    }
     else if (stringValue == "grass_clover")
         calculator.bouwmanEquivalentTag = 1;
     else if (stringValue == "legume")
@@ -246,7 +265,7 @@ bool readBouwmanNH4(QString* idFeature, QSqlDatabase &db, CarbonCalculator &calc
     {
         if (! getValue(query.value(idFeature[i]), &value))
         {
-            error = "missing emission of above/below ratio data";
+            error = "missing parameter for application method data";
             return false;
         }
         calculator.fertiliser.bouwmanParameterNH4ApplicationMethod[i] = value;
@@ -275,6 +294,14 @@ bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculat
     calculator.fertiliser.bouwmanParameterN2O.climate = calculator.bouwmanTableN2O.climate[valueInt-1];
     calculator.fertiliser.bouwmanParameterNO.climate = calculator.bouwmanTableNO.climate[valueInt-1];
     calculator.fertiliser.bouwmanParameterNH4.climate = calculator.bouwmanTableNH4.climate[valueInt-1];
+    if (! getValue(query.value("climate_parameter_leaching"), &value))
+    {
+        error = "Error: missing climate data";
+        return false;
+    }
+    calculator.fertiliser.leachingParameterDueToClimate = value;
+
+
 
     query.clear();
     return true;

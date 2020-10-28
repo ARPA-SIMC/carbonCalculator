@@ -53,8 +53,8 @@
         int applicationMethod;
         int kindOfInhibitor;
         int kindOfFertiliserProduction;
-        TnitrogenInhibitors nitrogenInhibitorNO;
-        TnitrogenInhibitors nitrogenInhibitorN2O;
+
+
 
         double indexBouwmanN2O;
         double indexBouwmanNO;
@@ -71,6 +71,16 @@
         TBouwmanIndex bouwmanParameterNH4;
         TBouwmanIndex bouwmanParameterNO;
         TBouwmanIndex bouwmanParameterN2O;
+        TnitrogenInhibitors nitrogenInhibitorNO;
+        TnitrogenInhibitors nitrogenInhibitorN2O;
+        int inhibitorClass = 1;
+        double inhibitorN2O[4];
+        double inhibitorNO[4];
+        double leachingParameterDueToClimate = 0;
+
+        double emissionDueToFertiliserProduction;
+        double emissionDueToFertiliserApplication;
+        double emissionDueToSoil;
 
 
         void computeEmissions();
@@ -97,7 +107,7 @@
         // functions
             void computeEmissions();
             void initializeBouwmanTables();
-            bool initialiazeVariables(QString idDrainage, double pH, double CEC, QString idSoilTexture,QString idSoilOrganicCarbon);
+            bool initialiazeVariables(QString idDrainage, double pH, double CEC, QString idSoilTexture, QString idSoilOrganicCarbon, QString *idInhibitor);
         //variables
             TbouwmanTable bouwmanTableN2O;
             TbouwmanTable bouwmanTableNO;

@@ -77,6 +77,8 @@ void FertiliserApplication::computeEmissions()
     double amountCarbon[4];
     double producedN2O[4];
     double producedNO[4];
+    double sumProducedN2O = 0;
+    double sumProducedNO = 0;
 
     for (int i=0;i<4;i++)
     {
@@ -95,42 +97,85 @@ void FertiliserApplication::computeEmissions()
         amountCarbon[i] = amountFertiliser[i]*fertInput[i].contentElement.carbon;
         producedN2O[i] = fertInput[i].bouwmanN2O*amountNitrogen[i];
         producedNO[i] = fertInput[i].bouwmanNO*amountNitrogen[i];
+        sumProducedN2O += producedN2O[i];
+        sumProducedNO += producedNO[i];
+
     }
-    // qui ne manca un pezzo ancora!!!!!
+
     double producedNH3[4];
+    double sumProducedNH3=0;
     double sumOfEnvironmentalFactorsToComputeNH3;
     sumOfEnvironmentalFactorsToComputeNH3 = bouwmanParameterNH4.modelParameter + bouwmanParameterNH4.drainage
             + bouwmanParameterNH4.drainage + bouwmanParameterNH4.cationicExchangeCapacity
             + bouwmanParameterNH4.climate + bouwmanParameterNH4.cropType
             + bouwmanParameterNH4.pH + bouwmanParameterNH4.soilOrganicCarbon
             + bouwmanParameterNH4.soilTexture;
+
     for (int i=0;i<4;i++)
     {
         producedNH3[i] = exp(bouwmanParameterNH4ApplicationMethod[i]
                              + fertInput[i].bouwmanNH3 + sumOfEnvironmentalFactorsToComputeNH3);
         producedNH3[i] *= amountNitrogen[i];
+        sumProducedNH3 += producedNH3[i];
     }
+
     double subTotalEmissionN2OBackground;
     double subTotalEmissionNOBackground;
     double subTotalEmissionN2OFertilisers;
     double subTotalEmissionNOFertilisers;
-    double subTotalEmissionNH4Fertilisers;
+    double subTotalEmissionNH3Fertilisers;
     double subTotalEmissionLeachingFertilisers;
+    double totalEmissionSoilNitrogen;
 
-    double totalEmissionSoilFertiliser;
+    double sumOfEnvironmentalFactorsToComputeN2O,sumOfEnvironmentalFactorsToComputeNO;
+    sumOfEnvironmentalFactorsToComputeN2O = bouwmanParameterN2O.modelParameter + bouwmanParameterN2O.drainage
+            + bouwmanParameterN2O.drainage + bouwmanParameterN2O.cationicExchangeCapacity
+            + bouwmanParameterN2O.climate + bouwmanParameterN2O.cropType
+            + bouwmanParameterN2O.pH + bouwmanParameterN2O.soilOrganicCarbon
+            + bouwmanParameterN2O.soilTexture;
+    subTotalEmissionN2OBackground = exp(sumOfEnvironmentalFactorsToComputeN2O);
+    sumOfEnvironmentalFactorsToComputeNO = bouwmanParameterNO.modelParameter + bouwmanParameterNO.drainage
+            + bouwmanParameterNO.drainage + bouwmanParameterNO.cationicExchangeCapacity
+            + bouwmanParameterNO.climate + bouwmanParameterNO.cropType
+            + bouwmanParameterNO.pH + bouwmanParameterNO.soilOrganicCarbon
+            + bouwmanParameterNO.soilTexture;
+    subTotalEmissionNOBackground = 0.01*exp(sumOfEnvironmentalFactorsToComputeNO);
 
-    subTotalEmissionN2OBackground = exp(bouwmanParameterN2O.modelParameter + bouwmanParameterN2O.drainage
-                                        + bouwmanParameterN2O.drainage + bouwmanParameterN2O.cationicExchangeCapacity
-                                        + bouwmanParameterN2O.climate + bouwmanParameterN2O.cropType
-                                        + bouwmanParameterN2O.pH + bouwmanParameterN2O.soilOrganicCarbon
-                                        + bouwmanParameterN2O.soilTexture);
+    double inhibitorWeightN2O = 1;
+    double inhibitorWeightNO = 1;
+    double sumAmountNitrogenFromFertilizer = 0;
+    sumAmountNitrogenFromFertilizer = (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
+    if (sumAmountNitrogenFromFertilizer > 0.00001)
+    {
+        inhibitorWeightN2O = 0;
+        inhibitorWeightNO = 0;
+        for (int i=0;i<4;i++)
+        {
+            inhibitorWeightN2O += inhibitorN2O[i]*amountNitrogen[i];
+            inhibitorWeightNO += inhibitorNO[i]*amountNitrogen[i];
+        }
+        inhibitorWeightN2O /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
+        inhibitorWeightNO /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
+    }
+    subTotalEmissionN2OFertilisers = exp(sumOfEnvironmentalFactorsToComputeN2O + sumProducedN2O)*inhibitorWeightN2O - subTotalEmissionN2OBackground;
+    subTotalEmissionNOFertilisers = 0.01*exp(sumOfEnvironmentalFactorsToComputeNO + sumProducedNO)*inhibitorWeightNO - subTotalEmissionNOBackground;
 
-    subTotalEmissionNOBackground = exp(bouwmanParameterNO.modelParameter + bouwmanParameterNO.drainage
-                                        + bouwmanParameterNO.drainage + bouwmanParameterNO.cationicExchangeCapacity
-                                        + bouwmanParameterNO.climate + bouwmanParameterNO.cropType
-                                        + bouwmanParameterNO.pH + bouwmanParameterNO.soilOrganicCarbon
-                                        + bouwmanParameterNO.soilTexture);
+    subTotalEmissionNH3Fertilisers = 0.01*sumProducedNH3;
+    subTotalEmissionLeachingFertilisers = 0.01*sumAmountNitrogenFromFertilizer*leachingParameterDueToClimate;
+    totalEmissionSoilNitrogen = subTotalEmissionLeachingFertilisers + subTotalEmissionNH3Fertilisers
+            + subTotalEmissionNOFertilisers + subTotalEmissionN2OFertilisers
+            + subTotalEmissionNOBackground + subTotalEmissionN2OBackground;
 
+    emissionDueToSoil = subTotalEmissionNOBackground + subTotalEmissionN2OBackground;
+    emissionDueToFertiliserApplication = totalEmissionSoilNitrogen - emissionDueToSoil;
+
+    // emission due to fertiliser Production
+
+    emissionDueToFertiliserProduction = 0; // initialization
+    for (int i=0;i<4;i++)
+    {
+        emissionDueToFertiliserProduction += amountFertiliser[i]*fertInput[i].emissionPerKgOfProduct;
+    }
 
 
 }
@@ -279,10 +324,10 @@ void CarbonCalculator::computeEmissions()
     fertiliser.computeEmissions();
 }
 
-bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC,QString idSoilTexture,QString idSoilOrganicCarbon)
+bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
 {
+    // bouwman model initialization
     initializeBouwmanTables();
-    fertiliser.setNitrogenInhibitorsTable();
     fertiliser.bouwmanParameterN2O.modelParameter = bouwmanTableN2O.elementParameter;
     fertiliser.bouwmanParameterNO.modelParameter = bouwmanTableNO.elementParameter;
     fertiliser.bouwmanParameterNH4.modelParameter = bouwmanTableNH4.elementParameter;
@@ -424,6 +469,30 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         }
 // *********************************************************************
 // cropType is filled in dbQueries.cpp
+
+
+        fertiliser.setNitrogenInhibitorsTable();
+        // default initialization
+
+        for (int i=0;i<4;i++)
+        {
+            if (idInhibitor[i] == "polymer_coated")
+            {
+                fertiliser.inhibitorN2O[i] = fertiliser.nitrogenInhibitorN2O.polymerCoated[fertiliser.inhibitorClass];
+                fertiliser.inhibitorNO[i] = fertiliser.nitrogenInhibitorNO.polymerCoated[fertiliser.inhibitorClass];
+            }
+            else if (idInhibitor[i] == "nitrification_inhibitor")
+            {
+                fertiliser.inhibitorN2O[i] = fertiliser.nitrogenInhibitorN2O.nitrificationInhibitor[fertiliser.inhibitorClass];
+                fertiliser.inhibitorNO[i] = fertiliser.nitrogenInhibitorNO.nitrificationInhibitor[fertiliser.inhibitorClass];
+            }
+            else
+            {
+                fertiliser.inhibitorN2O[i] = fertiliser.nitrogenInhibitorN2O.none[fertiliser.inhibitorClass];
+                fertiliser.inhibitorNO[i] = fertiliser.nitrogenInhibitorNO.none[fertiliser.inhibitorClass];
+            }
+        }
+
 
 
     return true;

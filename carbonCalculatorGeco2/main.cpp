@@ -118,10 +118,33 @@ int main(int argc, char *argv[])
     double CEC = 15; // to be computed somehow from .csv data
     QString idSoilTexture = "MEDIUM"; // input from .csv
     QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
-
-    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,CEC,idSoilTexture,idSoilOrganicCarbon);
-    // read climate
     QString idClimate = "TEMPERATE_MOIST"; // input from .csv
+    int nrFertilizers = 4;
+    QString idFertiliser[4];
+    idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
+    idFertiliser[1] = "Ammonium_Bicarbonate"; // input from .csv
+    idFertiliser[2] = "Lime_52CaO"; // input from .csv
+    idFertiliser[3] = "NONE"; // input from .csv
+    QString inhibitor[4];
+    inhibitor[0] = "nitrification_inhibitor"; // input from .csv
+    inhibitor[1] = "nitrification_inhibitor";
+    inhibitor[2] = "none";
+    inhibitor[3] = "none";
+    QString idFeature[4];
+    for (int i=0;i<nrFertilizers;i++)
+        idFeature[i] = "field2"; // initialization - default value
+
+    idFeature[0] = "field2"; //input from .csv
+    idFeature[1] = "field2"; //input from .csv
+    idFeature[2] = "field3"; //input from .csv
+    idFeature[3] = "field2"; //input from .csv
+    QString idCrop = "BARLEY"; //input from .csv
+
+    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,CEC,idSoilTexture,idSoilOrganicCarbon,inhibitor);
+
+
+    // read climate
+
     if (! readClimate(idClimate, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -130,17 +153,13 @@ int main(int argc, char *argv[])
 
 
     // read fertilizer
-    int nrFertilizers = 4;
-    QString idFertiliser[4];
-    idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
-    idFertiliser[1] = "Ammonium_Bicarbonate"; // input from .csv
-    idFertiliser[2] = "Ammonium_sulphate"; // input from .csv
-    idFertiliser[3] = "Lime_52CaO"; // input from .csv
+    for (int i=0; i<4;i++)
+        calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
 
     calculatorCO2.fertiliser.amountFertiliser[0] = 142; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[1] = 100; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[2] = 25; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
+    //calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
 
 
 
@@ -152,11 +171,8 @@ int main(int argc, char *argv[])
     }
 
     // read bouwmanNH4 table
-    QString idFeature[4];
-    idFeature[0] = "field2"; //input from .csv
-    idFeature[1] = "field2"; //input from .csv
-    idFeature[2] = "field3"; //input from .csv
-    idFeature[3] = "field2"; //input from .csv
+
+
     if (! readBouwmanNH4(idFeature, db, calculatorCO2, error,nrFertilizers))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -172,7 +188,6 @@ int main(int argc, char *argv[])
     }
 
     // read crop_parameters table
-    QString idCrop = "BARLEY"; //input from .csv
     if (! readCropParameters(idCrop, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
