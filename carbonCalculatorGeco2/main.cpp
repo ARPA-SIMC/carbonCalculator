@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 
     // ****************************************************************
     // read DB
+    avgTemperature = 12; // to quit
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
     {
@@ -114,8 +115,8 @@ int main(int argc, char *argv[])
     // read soil drainage
     QString idDrainage = "POOR"; // input from .csv
     // read pH
-    double pHSoil = 5.7; // input from .csv
-    double CEC = 15; // to be computed somehow from .csv data
+    double pHSoil = 7.9; // input from .csv
+    //double CEC = 15; // to be computed somehow from .csv data
     QString idSoilTexture = "MEDIUM"; // input from .csv
     QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
     QString idClimate = "TEMPERATE_MOIST"; // input from .csv
@@ -136,11 +137,11 @@ int main(int argc, char *argv[])
 
     idFeature[0] = "field2"; //input from .csv
     idFeature[1] = "field2"; //input from .csv
-    idFeature[2] = "field3"; //input from .csv
+    idFeature[2] = "field2"; //input from .csv
     idFeature[3] = "field2"; //input from .csv
     QString idCrop = "BARLEY"; //input from .csv
 
-    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,CEC,idSoilTexture,idSoilOrganicCarbon,inhibitor);
+    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
 
 
     // read climate
@@ -156,9 +157,9 @@ int main(int argc, char *argv[])
     for (int i=0; i<4;i++)
         calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
 
-    calculatorCO2.fertiliser.amountFertiliser[0] = 142; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[0] = 100; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[1] = 100; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[2] = 25; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[2] = 100; // kg/ha input from .csv
     //calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
 
 

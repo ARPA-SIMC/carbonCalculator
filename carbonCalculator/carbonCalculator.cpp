@@ -157,6 +157,8 @@ void FertiliserApplication::computeEmissions()
         inhibitorWeightN2O /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
         inhibitorWeightNO /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
     }
+    subTotalEmissionN2OBackground *= inhibitorWeightN2O;
+    subTotalEmissionNOBackground *= inhibitorWeightNO;
     subTotalEmissionN2OFertilisers = exp(sumOfEnvironmentalFactorsToComputeN2O + sumProducedN2O)*inhibitorWeightN2O - subTotalEmissionN2OBackground;
     subTotalEmissionNOFertilisers = 0.01*exp(sumOfEnvironmentalFactorsToComputeNO + sumProducedNO)*inhibitorWeightNO - subTotalEmissionNOBackground;
 
@@ -165,8 +167,8 @@ void FertiliserApplication::computeEmissions()
     totalEmissionSoilNitrogen = subTotalEmissionLeachingFertilisers + subTotalEmissionNH3Fertilisers
             + subTotalEmissionNOFertilisers + subTotalEmissionN2OFertilisers
             + subTotalEmissionNOBackground + subTotalEmissionN2OBackground;
-
-    emissionDueToSoil = subTotalEmissionNOBackground + subTotalEmissionN2OBackground;
+    totalEmissionSoilNitrogen *= 1.571428571; // conversion into kg of N2O units
+    emissionDueToSoil = (subTotalEmissionNOBackground + subTotalEmissionN2OBackground)*1.571428571;
     emissionDueToFertiliserApplication = totalEmissionSoilNitrogen - emissionDueToSoil;
 
     // emission due to fertiliser Production
@@ -324,7 +326,7 @@ void CarbonCalculator::computeEmissions()
     fertiliser.computeEmissions();
 }
 
-bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double CEC,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
+bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
 {
     // bouwman model initialization
     initializeBouwmanTables();
@@ -381,6 +383,11 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
 
     //**************************************************************************
     // pH
+    //double referencepH;
+    //5
+    //6.4
+    //7.9
+    //9
 
     if (pH < 0 ) return false;
     if (pH > 14) return false;
@@ -414,20 +421,24 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
     // soil Texture
     int index;
     double textureParameterForCec;
+    double bulkDensity;
     if (idSoilTexture == "FINE")
     {
         index = 0;
         textureParameterForCec = 0.6;
+        bulkDensity = 1.5;
     }
     else if (idSoilTexture == "MEDIUM")
     {
         index = 1;
         textureParameterForCec = 0.3;
+        bulkDensity = 1.3;
     }
     else if (idSoilTexture == "COARSE")
     {
         index = 2;
         textureParameterForCec = 0.15;
+        bulkDensity = 1.7;
     }
     else
     {
@@ -439,10 +450,10 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,double 
         fertiliser.bouwmanParameterNH4.soilTexture = bouwmanTableNH4.soilTexture[index];
 // *********************************************************************
         // cationic exchange capacity
+        double carbonInTop30CmSoil = somParameterForCec*1000*bulkDensity;
         double cec;
-
-        cec = 59 - 51*(somParameterForCec)/3000 + (30 + 4.4)*textureParameterForCec;
-
+        //cec = 59 - 51*(somParameterForCec)/3000 + (30 + 4.4)*textureParameterForCec;
+        cec = (59 - 51*pH)*(carbonInTop30CmSoil)/3000000/bulkDensity + (30 + 4.4*pH)*textureParameterForCec;
         if (cec < 16)
         {
             fertiliser.bouwmanParameterN2O.cationicExchangeCapacity = bouwmanTableN2O.cationicExchangeCapacity[0];
