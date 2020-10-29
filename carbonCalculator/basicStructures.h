@@ -1,6 +1,7 @@
 #ifndef BASICSTRUCTURES_H
 #define BASICSTRUCTURES_H
 
+    #define FROM_C_TO_CO2 3.67
     #define EQUIVALENTCH4TOCO2 25
     #define EQUIVALENTN2OTOCO2 296
     #define NODATA -9999

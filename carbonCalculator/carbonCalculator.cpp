@@ -170,7 +170,8 @@ void FertiliserApplication::computeEmissions()
     totalEmissionSoilNitrogen *= 1.571428571; // conversion into kg of N2O units
     emissionDueToSoil = (subTotalEmissionNOBackground + subTotalEmissionN2OBackground)*1.571428571;
     emissionDueToFertiliserApplication = totalEmissionSoilNitrogen - emissionDueToSoil;
-
+    emissionDueToSoil *= EQUIVALENTN2OTOCO2; // conversion to kg CO2Eq
+    emissionDueToFertiliserApplication *= EQUIVALENTN2OTOCO2; // conversion to kg CO2Eq
     // emission due to fertiliser Production
 
     emissionDueToFertiliserProduction = 0; // initialization
@@ -178,8 +179,12 @@ void FertiliserApplication::computeEmissions()
     {
         emissionDueToFertiliserProduction += amountFertiliser[i]*fertInput[i].emissionPerKgOfProduct;
     }
-
-
+    sequestrationDueToFertiliserApplication = 0;
+    for (int i=0;i<4;i++)
+    {
+        sequestrationDueToFertiliserApplication += amountCarbon[i];
+    }
+    sequestrationDueToFertiliserApplication *= FROM_C_TO_CO2;
 }
 
 

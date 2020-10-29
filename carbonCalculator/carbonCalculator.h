@@ -82,6 +82,8 @@
         double emissionDueToFertiliserApplication;
         double emissionDueToSoil;
 
+        double sequestrationDueToFertiliserApplication;
+
 
         void computeEmissions();
         void setNitrogenInhibitorsTable();
