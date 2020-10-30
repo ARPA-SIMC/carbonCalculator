@@ -29,7 +29,9 @@ SOURCES += \
     csvUtilities.cpp \
     dbQueries.cpp \
     dbUtilities.cpp \
-    energyManagement.cpp
+    energyManagement.cpp \
+    fertilisationAndSoil.cpp \
+    soilmanagement.cpp
 
 HEADERS += \
     basicStructures.h \
@@ -37,4 +39,6 @@ HEADERS += \
     csvUtilities.h \
     dbQueries.h \
     dbUtilities.h \
-    energyManagement.h
+    energyManagement.h \
+    fertilisationAndSoil.h \
+    soilManagement.h

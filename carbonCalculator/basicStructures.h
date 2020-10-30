@@ -5,6 +5,7 @@
     #define EQUIVALENTCH4TOCO2 25
     #define EQUIVALENTN2OTOCO2 296
     #define NODATA -9999
+    #define EPSILON 0.00001
 
     struct TcropResidueParameter{
 
