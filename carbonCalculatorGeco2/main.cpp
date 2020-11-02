@@ -215,8 +215,25 @@ int main(int argc, char *argv[])
     calculatorCO2.energy.input.fromFuelWood = 1; // kg input from .csv
 
     // **********************************************************************
-    calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv
+    calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv kg active principle
     // **********************************************************************
+
+    calculatorCO2.soilManage.percentage.noTillage = 52; // input from .csv
+    calculatorCO2.soilManage.percentage.minimumTillage = 22; // input from .csv
+    calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
+
+    calculatorCO2.soilManage.percentage.coverCropping = 33; // input from .csv
+
+    calculatorCO2.soilManage.percentage.forest = 10; // input from .csv
+    calculatorCO2.soilManage.percentage.permanentGrass = 15; // input from .csv
+    calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
+
+
+    // *********************************************************************
+
+
+
+    //
 
 
     // print parameters

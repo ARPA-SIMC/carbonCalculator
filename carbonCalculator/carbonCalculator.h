@@ -4,6 +4,7 @@
     #include "basicStructures.h"
     #include "energyManagement.h"
     #include "fertilisationandsoil.h"
+    #include "soilmanagement.h"
     #include <QString>
 
 
@@ -63,6 +64,7 @@
             EnergyManagement energy;
             AppliedPesticides pesticide;
             FertiliserApplication fertiliser;
+            SoilManagement soilManage;
 
         // functions
             void computeEmissions();
@@ -75,6 +77,7 @@
             int bouwmanEquivalentTag;
             TsoilTexture soilTexture;
             double carbonInTop30CmSoil;
+            int idClimate;
     };
 
 #endif // CARBONCALCULATOR_H

@@ -121,58 +121,75 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(Tpercentage myPercentage, double carbonInSoil)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate)
 {
-    double sequestration;
-    percentage.forest = myPercentage.forest;
-    percentage.permanentGrass = myPercentage.permanentGrass;
-    percentage.minimumTillage = myPercentage.minimumTillage;
-    percentage.noTillage = myPercentage.noTillage;
+    double sequestrationOfCarbon;
     double incrementTillage=1;
     double incrementResidue=1;
     double incrementOrganicAmendment=1;
     double incrementCoverCrop=1;
+    double incrementLandUse = 1;
     double incrementTotal;
+
+    setMatrix();
     //SoilManagement::computeSequestrationLandUse();
-    incrementTillage = SoilManagement::computeSequestrationTillage();
-    incrementTotal = incrementTillage*incrementCoverCrop*incrementOrganicAmendment*incrementResidue;
-    sequestration = -1*carbonInSoil*(incrementTotal-1);
-    //SoilManagement::computeSequestrationCoverCropping();
+    incrementTillage = computeSequestrationTillage(myIdClimate);
+    incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
+    incrementLandUse = computeSequestrationLandUse(myIdClimate);
+
+    incrementTotal = incrementTillage*incrementCoverCrop
+            *incrementOrganicAmendment*incrementResidue*incrementLandUse;
+    sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
+    sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
 }
 
-double SoilManagement::computeSequestrationTillage()
+double SoilManagement::computeSequestrationTillage(int myIdClimate)
 {
     double matrixElement;
     double incrementNoTillage;
     //double incrementNoTillagePercentage;
     double incrementMinimumTillage;
     double incrementTillage;
-
-    matrixElement = soilTillage[0].matrix[2][1];
+    // no Tillage
+    matrixElement = soilTillage[myIdClimate].matrix[2][0];
     incrementNoTillage = 1 + 1./20.*(matrixElement - 1);
-    //incrementNoTillagePercentage = incrementNoTillage*percentage.noTillage/100 + (100 - percentage.noTillage)/100.;
-
-
-    matrixElement = soilTillage[0].matrix[2][1];
+    // minimum Tillage
+    matrixElement = soilTillage[myIdClimate].matrix[2][1];
     incrementMinimumTillage =  1 + 1./20.*(matrixElement - 1);
-    //incrementMinimumTillagePercentage = incrementMinimumTillage*percentage.minimumTillage/100 + (100 - percentage.minimumTillage)/100.;
 
     return incrementTillage = incrementNoTillage*percentage.noTillage/100. + incrementMinimumTillage*percentage.minimumTillage/100. + (100 - percentage.noTillage - percentage.minimumTillage)/100.;
 
 
 }
 
-
-
-/*void SoilManagement::computeSequestrationLandUse()
+double SoilManagement::computeSequestrationLandUse(int myIdClimate)
 {
-    if (percentage.forest > EPSILON)
-    {
-        int deltaLandUse;
+    double matrixElement;
+    double incrementForest;
+    double incrementGrass;
+    double incrementLandUse;
+    // area dedicated to forestry
+    matrixElement = soilLandUse[myIdClimate].matrix[2][0];
+    incrementForest = 1 + 1./20.*(matrixElement - 1);
 
+    matrixElement = soilLandUse[myIdClimate].matrix[2][1];
+    incrementGrass =  1 + 1./20.*(matrixElement - 1);
 
-    }
+    return incrementLandUse = incrementForest*percentage.forest/100. + incrementGrass*percentage.permanentGrass/100. + (100 - percentage.forest - percentage.permanentGrass)/100.;
 
 
 }
-*/
+
+
+double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
+{
+    double matrixElement;
+    double increment;
+    double incrementCoverCropping;
+
+    matrixElement = soilCoverCropping[myIdClimate].matrix[0][1];
+    increment = 1 + 1./20.*(matrixElement - 1);
+
+    return incrementCoverCropping = increment*percentage.coverCropping /100. + (100 - percentage.coverCropping)/100.;
+}
+

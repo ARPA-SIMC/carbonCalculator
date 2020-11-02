@@ -301,7 +301,12 @@ bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculat
     }
     calculator.fertiliser.leachingParameterDueToClimate = value;
 
-
+    if (! getValue(query.value("climate_tag"), &valueInt))
+    {
+        error = "Error: missing climate data";
+        return false;
+    }
+    calculator.idClimate = value;
 
     query.clear();
     return true;

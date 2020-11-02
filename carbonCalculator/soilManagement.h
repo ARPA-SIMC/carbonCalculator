@@ -16,24 +16,29 @@ struct Tpercentage{
     double minimumTillage;
     double noTillage;
 
+    double coverCropping;
+
 };
 
 class SoilManagement{
 private:
-    Tpercentage percentage;
     TsoilManagement soilTillage[4];
     TsoilManagement soilLandUse[4];
     TsoilManagement soilCoverCropping[4];
     double carbonFromAmendmentManagement[4][3];
+    double sequestrationCarbonCO2Eq;
 
     void setMatrix();
 
 public:
 
-    void computeSequestration(Tpercentage myPercentage, double carbonInSoil);
-    double computeSequestrationTillage();
-    double computeSequestrationLandUse();
-    double computeSequestrationCoverCropping();
+    Tpercentage percentage;
+
+
+    void computeSequestration(double carbonInSoil, int myIdClimate);
+    double computeSequestrationTillage(int myIdClimate);
+    double computeSequestrationLandUse(int myIdClimate);
+    double computeSequestrationCoverCropping(int myIdClimate);
 
 };
 
