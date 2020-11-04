@@ -47,7 +47,7 @@ void AppliedPesticides::setInput(double myWeightOfActivePrinciple,double renewab
 void AppliedPesticides::computeEmissions()
 {
     double nonElectricalEnergyRequired = weightOfActivePrinciple * (energyPerMassOfActivePrinciple - electricalEnergyPerMassOfActivePrinciple); // requirement in MJ
-    double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple*(100. - renewablesInCountry)/100.; // requirement in MJ
+    double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple * 0.01 * (100. - renewablesInCountry); // requirement in MJ
     emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired); // kgCO2eq
 }
 

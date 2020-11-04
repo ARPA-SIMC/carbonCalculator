@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
     }
 
     //read residue_treatment table
-    QString idResidue = "biochar"; //input from .csv
+    QString idResidue = "removed_forced_aeration_compost"; //input from .csv
     if (! readResidue(idResidue, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -200,14 +200,17 @@ int main(int argc, char *argv[])
 
     // *********************************************************************
     calculatorCO2.cropResidue.residueWeight = 5; //(t/ha) fresh weight of residue input from .csv
-    calculatorCO2.energy.input.fromElectricityGrid = 50; // kWh input from .csv
+
+    // **********************************************************************
+
+    calculatorCO2.energy.input.fromElectricityGrid = 350; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnHydropower = 50; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 50; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnWind = 50; // kWh input from .csv
     calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelBioethanol = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelCoal = 1; // kg input from .csv
-    calculatorCO2.energy.input.fromFuelDiesel = 1; // l input from .csv
+    calculatorCO2.energy.input.fromFuelDiesel = 151; // l input from .csv
     calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg input from .csv
     calculatorCO2.energy.input.fromFuelLPG = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelOil = 1; // l input from .csv
@@ -255,5 +258,18 @@ int main(int argc, char *argv[])
     //calculatorCO2.fertiliser.computeEmissions();
 
     calculatorCO2.computeEmissions();
+    std::cout << "values are in kgCO2Eq " << std::endl;
+    std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
+    std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
+    std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
+    std::cout << "emissions due to type of soil: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
+    std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
+    std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
+    std::cout << "sequestration due to minimum tillage and crop covering: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
+    // ***************************************************************************************
+    // print results
+
+
+
     return 0;
 }

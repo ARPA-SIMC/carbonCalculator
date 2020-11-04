@@ -26,14 +26,14 @@ private:
     TsoilManagement soilLandUse[4];
     TsoilManagement soilCoverCropping[4];
     double carbonFromAmendmentManagement[4][3];
-    double sequestrationCarbonCO2Eq;
+
 
     void setMatrix();
 
 public:
 
     Tpercentage percentage;
-
+    double sequestrationCarbonCO2Eq;
 
     void computeSequestration(double carbonInSoil, int myIdClimate);
     double computeSequestrationTillage(int myIdClimate);

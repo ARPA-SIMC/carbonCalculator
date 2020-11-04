@@ -75,6 +75,8 @@
         double fromFuelCoal = 0;
         double fromFuelOil = 0;
         double fromFuelLPG = 0;
+
+        double total = 0;
     };
 
 

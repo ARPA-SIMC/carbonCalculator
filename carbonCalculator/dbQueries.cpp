@@ -21,24 +21,28 @@ bool readRenewables(QString idCountry, int year, QSqlDatabase &db, CarbonCalcula
     {
         //error = "missing renewables percentage data";
         //return false;
-        renewablesPercentage = 24.;
+        //renewablesPercentage = 24.;
     }
     query.clear();
 
     calculator.energy.country = idCountry;
-    calculator.energy.percentageRenewablesInGrid = renewablesPercentage;
+    calculator.energy.percentageRenewablesInGrid = renewablesPercentage;// + (year-2016);
 
     //check
     if (calculator.energy.percentageRenewablesInGrid == NODATA)
     {
         calculator.energy.percentageRenewablesInGrid = 24 + (year-2016);
     }
+    else
+    {
+        calculator.energy.percentageRenewablesInGrid += (year-2016);
+    }
 
     if (calculator.energy.percentageRenewablesInGrid > 100)
     {
         calculator.energy.percentageRenewablesInGrid = 100;
     }
-
+    calculator.pesticide.renewablesInCountry = calculator.energy.percentageRenewablesInGrid;
     return true;
 }
 
