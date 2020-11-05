@@ -225,7 +225,7 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
     // *************************************************************************
     //SOM
 
-    double somParameterForCec;
+    double somParameterForCec = 30;
     if(idSoilOrganicCarbon == "SOM<=1.72")
     {
         fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[0];
