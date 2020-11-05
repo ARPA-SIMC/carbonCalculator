@@ -121,7 +121,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double residues , double dryMatterResidues)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -136,6 +136,8 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate)
     incrementTillage = computeSequestrationTillage(myIdClimate);
     incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
     incrementLandUse = computeSequestrationLandUse(myIdClimate);
+    incrementOrganicAmendment = computeSequestrationOrganicAmendments(carbonFromAmendments);
+    incrementResidue = computeSequestrationResidueIncorporation(residues,dryMatterResidues);
 
     incrementTotal = incrementTillage*incrementCoverCrop
             *incrementOrganicAmendment*incrementResidue*incrementLandUse;
@@ -191,5 +193,22 @@ double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
     increment = 1 + 1./20.*(matrixElement - 1);
 
     return incrementCoverCropping = increment*percentage.coverCropping /100. + (100 - percentage.coverCropping)/100.;
+}
+
+double SoilManagement::computeSequestrationOrganicAmendments(double amountOfCFromAmendments)
+{
+    double increment;
+    increment = 1 + 0.00036* amountOfCFromAmendments * 10; // assuming carbon is 10% of weight
+    return increment;
+
+}
+
+double SoilManagement::computeSequestrationResidueIncorporation(double residueIncorporated, double percentageDryMatter)
+{
+    double increment;
+    double slopeFreshWeight;
+    slopeFreshWeight = 0.00002 * percentageDryMatter + 0.0015;
+    increment =1 + slopeFreshWeight*residueIncorporated;
+    return increment;
 }
 
