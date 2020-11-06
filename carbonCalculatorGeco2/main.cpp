@@ -181,7 +181,15 @@ int main(int argc, char *argv[])
     }
 
     //read residue_treatment table
-    QString idResidue = "removed_forced_aeration_compost"; //input from .csv
+    QString idResidue = "left_on_field_incorporated_or_mulch"; //input from .csv
+    if (idResidue == "left_on_field_incorporated_or_mulch")
+    {
+        calculatorCO2.cropResidue.residueLeftOnField = true;
+    }
+    else
+    {
+        calculatorCO2.cropResidue.residueLeftOnField = false;
+    }
     if (! readResidue(idResidue, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -233,7 +241,26 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
+    // erosion
+    calculatorCO2.averageTemperature = avgTemperature;
+    calculatorCO2.annualRainfall = 700; // input from .csv
+    calculatorCO2.erosion.erosionFactor.rainfall = calculatorCO2.annualRainfall;
+    if (idSoilTexture == "MEDIUM")
+        calculatorCO2.erosion.erosionFactor.texture = 0.3;
+    else if (idSoilTexture == "FINE")
+        calculatorCO2.erosion.erosionFactor.texture = 0.2;
+    else
+        calculatorCO2.erosion.erosionFactor.texture = 0.05;
 
+    double slope = 15.3; // input from .csv
+    calculatorCO2.erosion.erosionFactor.slope = slope;
+    // cover factor
+    calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);
+
+    calculatorCO2.erosion.erosionFactor.soilManagement = 0.01*calculatorCO2.soilManage.percentage.coverCropping*0.26;
+    calculatorCO2.erosion.erosionFactor.soilManagement += (100. - calculatorCO2.soilManage.percentage.coverCropping)*0.01 *(0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
+
+    // **********************************************************************
 
 
     //
@@ -265,6 +292,7 @@ int main(int argc, char *argv[])
     std::cout << "emissions due to type of soil: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
     std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
     std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
+    std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
     std::cout << "sequestration due to minimum tillage and crop covering: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
     // ***************************************************************************************
     // print results

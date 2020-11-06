@@ -79,6 +79,15 @@
         double total = 0;
     };
 
+    struct TerosionFactor{
+        double slope;
+        double rainfall;
+        double texture;
+        double cover;
+        double soilManagement;
+
+    };
+
 
     struct TnitrogenInhibitors{
         double none[2];

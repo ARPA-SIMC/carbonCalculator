@@ -37,6 +37,7 @@
         double emissionCH4inCH4Units;
         double emissionN2OinN2OUnits;
         double residueWeight;
+        bool residueLeftOnField = false;
 
     public:
         // functions
@@ -45,6 +46,18 @@
         void computeEmissions();
         // variables
         TcropResidueParameter cropResidueParameter;
+    };
+
+    class SoilErosion{
+
+
+
+    public:
+        TerosionFactor erosionFactor;
+        double organicMatter;
+        double computeSoilLoss();
+        void computeCarbonLoss();
+        double lostCO2;
     };
 
 
@@ -65,7 +78,7 @@
             AppliedPesticides pesticide;
             FertiliserApplication fertiliser;
             SoilManagement soilManage;
-
+            SoilErosion erosion;
         // functions
             void computeEmissions();
             void initializeBouwmanTables();
@@ -78,6 +91,8 @@
             TsoilTexture soilTexture;
             double carbonInTop30CmSoil;
             int idClimate;
+            double averageTemperature;
+            double annualRainfall;
     };
 
 #endif // CARBONCALCULATOR_H

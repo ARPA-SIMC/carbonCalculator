@@ -5,13 +5,6 @@
 
 
 /* class CropResidueManagement */
-/*void CropResidueManagement::setInput(double emissionCH4, double emissionN2O, double dryMatterToCO2)
-{
-    cropResidueParameter.residueReconvertedToCO2 = dryMatterToCO2;
-    cropResidueParameter.emissionCH4 = emissionCH4;
-    cropResidueParameter.emissionN2O = emissionN2O;
-
-}*/
 
 void CropResidueManagement::computeEmissions()
 {
@@ -51,8 +44,22 @@ void AppliedPesticides::computeEmissions()
     emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired); // kgCO2eq
 }
 
+double SoilErosion::computeSoilLoss()
+{
+    double R,K,LS,C,P;
+    R = 38.5 + 0.35 * erosionFactor.rainfall; // tonnes/ha Merritt et al. (2004)
+    K = erosionFactor.texture;
+    LS = 0.1 + 0.21 * pow(erosionFactor.slope, 1.33); // David 1988
+    C = erosionFactor.cover;
+    P = erosionFactor.soilManagement;
+    double loss = 1000*R*K*LS*C*P;
+    return loss;
+}
 
-/* class FertiliserApplication */
+void SoilErosion::computeCarbonLoss()
+{
+    lostCO2 = FROM_C_TO_CO2 * 0.01*computeSoilLoss(); // assuming 1% of organic matter in soil
+}
 
 
 
@@ -197,7 +204,9 @@ void CarbonCalculator::computeEmissions()
     pesticide.computeEmissions();
     cropResidue.computeEmissions();
     fertiliser.computeEmissions();
-    soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.sequestrationDueToFertiliserApplication,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction);
+    erosion.computeCarbonLoss();
+    soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.sequestrationDueToFertiliserApplication,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField );
+
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
