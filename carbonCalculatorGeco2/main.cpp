@@ -299,7 +299,7 @@ int main(int argc, char *argv[])
 
     //calculatorCO2.fertiliser.computeEmissions();
 
-    calculatorCO2.computeEmissions();
+    calculatorCO2.computeBalance();
     std::cout << "values are in kgCO2Eq " << std::endl;
     std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
     std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;

@@ -80,7 +80,7 @@
             SoilManagement soilManage;
             SoilErosion erosion;
         // functions
-            void computeEmissions();
+            void computeBalance();
             void initializeBouwmanTables();
             bool initialiazeVariables(QString idDrainage, double pH, QString idSoilTexture, QString idSoilOrganicCarbon, QString *idInhibitor);
         //variables

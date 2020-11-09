@@ -208,7 +208,7 @@ void CarbonCalculator::initializeBouwmanTables()
 
 }
 
-void CarbonCalculator::computeEmissions()
+void CarbonCalculator::computeBalance()
 {
     energy.computeEmissions();
     pesticide.computeEmissions();

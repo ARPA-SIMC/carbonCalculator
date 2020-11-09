@@ -39,7 +39,7 @@ public:
     double computeSequestrationTillage(int myIdClimate);
     double computeSequestrationLandUse(int myIdClimate);
     double computeSequestrationCoverCropping(int myIdClimate);
-    double computeSequestrationOrganicAmendments(double amountOfCFromAmendments);
+    double computeSequestrationOrganicAmendments(double amountOfAmendments);
     double computeSequestrationResidueIncorporation(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue);
 
 };

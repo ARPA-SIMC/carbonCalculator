@@ -196,10 +196,11 @@ double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
     return incrementCoverCropping = increment*percentage.coverCropping /100. + (100 - percentage.coverCropping)/100.;
 }
 
-double SoilManagement::computeSequestrationOrganicAmendments(double amountOfCFromAmendments)
+double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments)
 {
     double increment;
-    increment = 1 + 0.00036* amountOfCFromAmendments * 10; // assuming carbon is 10% of weight
+    // increment = 1 + 0.00036* amountOfCFromAmendments * 10; // assuming carbon is 10% of weight
+    increment = 1 + 0.00036* amountOfAmendments;
     return increment;
 
 }
