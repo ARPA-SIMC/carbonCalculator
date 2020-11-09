@@ -35,7 +35,7 @@ public:
     Tpercentage percentage;
     double sequestrationCarbonCO2Eq;
 
-    void computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double residues, double dryMatterResidues,bool incorporatedResidue);
+    void computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
     double computeSequestrationTillage(int myIdClimate);
     double computeSequestrationLandUse(int myIdClimate);
     double computeSequestrationCoverCropping(int myIdClimate);

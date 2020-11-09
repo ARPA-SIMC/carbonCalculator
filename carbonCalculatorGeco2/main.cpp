@@ -123,8 +123,8 @@ int main(int argc, char *argv[])
     int nrFertilizers = 4;
     QString idFertiliser[4];
     idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
-    idFertiliser[1] = "Ammonium_Bicarbonate"; // input from .csv
-    idFertiliser[2] = "Lime_52CaO"; // input from .csv
+    idFertiliser[1] = "Compost_fully_aerated_production_1N"; // input from .csv
+    idFertiliser[2] = "Biochar"; // input from .csv
     idFertiliser[3] = "NONE"; // input from .csv
     QString inhibitor[4];
     inhibitor[0] = "nitrification_inhibitor"; // input from .csv
@@ -158,8 +158,8 @@ int main(int argc, char *argv[])
         calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
 
     calculatorCO2.fertiliser.amountFertiliser[0] = 100; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[1] = 100; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[2] = 100; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[1] = 5000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[2] = 5000; // kg/ha input from .csv
     //calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
 
 
@@ -181,15 +181,27 @@ int main(int argc, char *argv[])
     }
 
     //read residue_treatment table
-    QString idResidue = "left_on_field_incorporated_or_mulch"; //input from .csv
-    if (idResidue == "left_on_field_incorporated_or_mulch")
+    QString idResidue[2]; //input from .csv
+    idResidue[0] = "biochar"; //input from .csv
+    idResidue[1] = "left_on_field_incorporated_or_mulch"; //input from .csv
+
+    if (idResidue[0] == "left_on_field_incorporated_or_mulch")
     {
-        calculatorCO2.cropResidue.residueLeftOnField = true;
+        calculatorCO2.cropResidue.residueLeftOnField[0] = true;
     }
     else
     {
-        calculatorCO2.cropResidue.residueLeftOnField = false;
+        calculatorCO2.cropResidue.residueLeftOnField[0] = false;
     }
+    if (idResidue[1] == "left_on_field_incorporated_or_mulch")
+    {
+        calculatorCO2.cropResidue.residueLeftOnField[1] = true;
+    }
+    else
+    {
+        calculatorCO2.cropResidue.residueLeftOnField[1] = false;
+    }
+
     if (! readResidue(idResidue, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -207,7 +219,10 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
-    calculatorCO2.cropResidue.residueWeight = 5; //(t/ha) fresh weight of residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[0] = 5; //(t/ha) fresh weight of woody residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[1] = NODATA; //(t/ha) fresh weight of green residue input from .csv
+    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
+    if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
     // **********************************************************************
 

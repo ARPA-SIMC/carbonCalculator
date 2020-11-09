@@ -7,7 +7,7 @@
 
     bool readRenewables(QString idCountry, int year, QSqlDatabase &db, CarbonCalculator &carbonCalculator, QString &error);
     bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &calculator, QString &error, int nrFertiliserApplied);
-    bool readResidue(QString idResidue, QSqlDatabase &db, CarbonCalculator &calculator, QString &error);
+    bool readResidue(QString *idResidue, QSqlDatabase &db, CarbonCalculator &calculator, QString &error);
     bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calculator, QString &error);
     bool readBouwmanNH4(QString* idFeature, QSqlDatabase &db, CarbonCalculator &calculator, QString &error, int nrFertiliserApplied);
     bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculator, QString &error);

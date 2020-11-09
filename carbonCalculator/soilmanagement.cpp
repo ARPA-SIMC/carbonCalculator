@@ -121,7 +121,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double residues , double dryMatterResidues,bool incorporatedResidue)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double* residues , double* dryMatterResidues,bool* isIncorporatedResidue)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -136,8 +136,9 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     incrementTillage = computeSequestrationTillage(myIdClimate);
     incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
     incrementLandUse = computeSequestrationLandUse(myIdClimate);
-    incrementOrganicAmendment = computeSequestrationOrganicAmendments(carbonFromAmendments);
-    incrementResidue = computeSequestrationResidueIncorporation(residues,dryMatterResidues,incorporatedResidue);
+    //incrementOrganicAmendment = computeSequestrationOrganicAmendments(carbonFromAmendments);
+    incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
+    incrementResidue *= computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
 
     incrementTotal = incrementTillage*incrementCoverCrop
             *incrementOrganicAmendment*incrementResidue*incrementLandUse;

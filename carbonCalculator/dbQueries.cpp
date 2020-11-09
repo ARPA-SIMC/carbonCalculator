@@ -138,40 +138,43 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
 }
 
 
-bool readResidue(QString idResidue, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
+bool readResidue(QString* idResidue, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
 {
-    QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue + "'";
-    QSqlQuery query = db.exec(queryString);
-    query.last();
-    if (! query.isValid())
+    for (int i=0;i<2;i++)
     {
-        error = query.lastError().text();
-        return false;
-    }
-    double value;
+        QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue[0] + "'";
+        QSqlQuery query = db.exec(queryString);
+        query.last();
+        if (! query.isValid())
+        {
+            error = query.lastError().text();
+            return false;
+        }
+        double value;
 
-    if (! getValue(query.value("emission_methane"), &value))
-    {
-        error =  "missing emission of Methane data";
-        return false;
-    }
-    calculator.cropResidue.cropResidueParameter.emissionCH4 = value;
+        if (! getValue(query.value("emission_methane"), &value))
+        {
+            error =  "missing emission of Methane data";
+            return false;
+        }
+        calculator.cropResidue.cropResidueParameter.emissionCH4[i] = value;
 
-    if (! getValue(query.value("emission_n2o"), &value))
-    {
-        error = "Error: missing emission of N2O data";
-        return false;
-    }
-    calculator.cropResidue.cropResidueParameter.emissionN2O = value;
+        if (! getValue(query.value("emission_n2o"), &value))
+        {
+            error = "Error: missing emission of N2O data";
+            return false;
+        }
+        calculator.cropResidue.cropResidueParameter.emissionN2O[i] = value;
 
-    if (! getValue(query.value("dry_matter_to_co2"), &value))
-    {
-        error =  "missing emission of dry matter to CO2 data";
-        return false;
-    }
-    calculator.cropResidue.cropResidueParameter.residueReconvertedToCO2 = value;
+        if (! getValue(query.value("dry_matter_to_co2"), &value))
+        {
+            error =  "missing emission of dry matter to CO2 data";
+            return false;
+        }
+        calculator.cropResidue.cropResidueParameter.residueReconvertedToCO2[i] = value;
 
-    query.clear();
+        query.clear();
+    }
     return true;
 }
 
@@ -186,14 +189,14 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         error = query.lastError().text();
         return false;
     }
-
+    /*
     if (! getValue(query.value("drymatter_fraction_harvested"), &value))
     {
         error =  "missing emission of dry matter fraction data";
         return false;
     }
     calculator.cropResidue.cropResidueParameter.dryMatterFraction  = value;
-
+    */
     if (! getValue(query.value("nitrogen_content_aboveground"), &value))
     {
         error = "Error: missing emission of dry matter fraction data";
