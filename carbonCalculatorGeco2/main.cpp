@@ -131,9 +131,9 @@ int main(int argc, char *argv[])
     idFertiliser[6] = "Volcanic_rock_dust"; // input from .csv
     idFertiliser[7] = "NONE"; // input from .csv
 
-    idFertiliser[4] = "NONE"; // input from .csv
-    idFertiliser[5] = "NONE"; // input from .csv
-    idFertiliser[6] = "NONE"; // input from .csv
+    //idFertiliser[4] = "NONE"; // input from .csv
+    //idFertiliser[5] = "NONE"; // input from .csv
+    //idFertiliser[6] = "NONE"; // input from .csv
 
     QString inhibitor[8];
     inhibitor[0] = "nitrification_inhibitor"; // input from .csv
