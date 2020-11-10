@@ -180,10 +180,10 @@ int main(int argc, char *argv[])
 
     calculatorCO2.fertiliser.amountFertiliser[0] = 100; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[1] = 1000; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[2] = 5000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[2] = 5; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[3] = 1000; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[4] = 1000; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[5] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[4] = 5; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[5] = 5; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[6] = 1000; // kg/ha input from .csv
 
 
@@ -331,7 +331,9 @@ int main(int argc, char *argv[])
     std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
     std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
     std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
-    std::cout << "sequestration due to minimum tillage and crop covering: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
+    std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
+    std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
+
     // ***************************************************************************************
     // print results
 

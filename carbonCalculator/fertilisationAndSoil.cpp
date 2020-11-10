@@ -138,7 +138,7 @@ void FertiliserApplication::computeEmissions()
     sequestrationDueToFertiliserApplication = 0;
     for (int i=0;i<8;i++)
     {
-        sequestrationDueToFertiliserApplication += amountFertiliser[i]*recalcitrantCarbonIndex[i];
+        sequestrationDueToFertiliserApplication -= amountFertiliser[i]*recalcitrantCarbonIndex[i];
     }
     sequestrationDueToFertiliserApplication *= FROM_C_TO_CO2; // in CO2 Units
 }
