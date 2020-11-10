@@ -121,7 +121,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double carbonFromAmendments, double* residues , double* dryMatterResidues,bool* isIncorporatedResidue)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -136,7 +136,10 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     incrementTillage = computeSequestrationTillage(myIdClimate);
     incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
     incrementLandUse = computeSequestrationLandUse(myIdClimate);
-    //incrementOrganicAmendment = computeSequestrationOrganicAmendments(carbonFromAmendments);
+    for (int i=0; i<8; i++)
+    {
+        incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
+    }
     incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
     incrementResidue *= computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
 
@@ -196,11 +199,10 @@ double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
     return incrementCoverCropping = increment*percentage.coverCropping /100. + (100 - percentage.coverCropping)/100.;
 }
 
-double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments)
+double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment)
 {
     double increment;
-    // increment = 1 + 0.00036* amountOfCFromAmendments * 10; // assuming carbon is 10% of weight
-    increment = 1 + 0.00036* amountOfAmendments;
+    increment = 1 + incrementalParameterAmendment* amountOfAmendments/1000;
     return increment;
 
 }
@@ -211,7 +213,7 @@ double SoilManagement::computeSequestrationResidueIncorporation(double residueIn
     double increment;
     double slopeFreshWeight;
     slopeFreshWeight = 0.00002 * percentageDryMatter + 0.0015;
-    increment =1 + slopeFreshWeight*residueIncorporated;
+    increment =1 + slopeFreshWeight*residueIncorporated/1000;
     return increment;
 }
 

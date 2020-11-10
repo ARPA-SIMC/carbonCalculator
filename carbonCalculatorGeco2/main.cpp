@@ -120,18 +120,32 @@ int main(int argc, char *argv[])
     QString idSoilTexture = "MEDIUM"; // input from .csv
     QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
     QString idClimate = "TEMPERATE_MOIST"; // input from .csv
-    int nrFertilizers = 4;
-    QString idFertiliser[4];
+    int nrFertilizers = 8;
+    QString idFertiliser[8];
     idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
     idFertiliser[1] = "Compost_fully_aerated_production_1N"; // input from .csv
     idFertiliser[2] = "Biochar"; // input from .csv
-    idFertiliser[3] = "NONE"; // input from .csv
-    QString inhibitor[4];
+    idFertiliser[3] = "Digestate_6percent_drymatter"; // input from .csv
+    idFertiliser[4] = "Straw"; // input from .csv
+    idFertiliser[5] = "Wood_chips"; // input from .csv
+    idFertiliser[6] = "Volcanic_rock_dust"; // input from .csv
+    idFertiliser[7] = "NONE"; // input from .csv
+
+    idFertiliser[4] = "NONE"; // input from .csv
+    idFertiliser[5] = "NONE"; // input from .csv
+    idFertiliser[6] = "NONE"; // input from .csv
+
+    QString inhibitor[8];
     inhibitor[0] = "nitrification_inhibitor"; // input from .csv
     inhibitor[1] = "nitrification_inhibitor";
     inhibitor[2] = "none";
     inhibitor[3] = "none";
-    QString idFeature[4];
+    inhibitor[4] = "none";
+    inhibitor[5] = "none";
+    inhibitor[6] = "none";
+    inhibitor[7] = "none";
+
+    QString idFeature[8];
     for (int i=0;i<nrFertilizers;i++)
         idFeature[i] = "field2"; // initialization - default value
 
@@ -139,6 +153,13 @@ int main(int argc, char *argv[])
     idFeature[1] = "field2"; //input from .csv
     idFeature[2] = "field2"; //input from .csv
     idFeature[3] = "field2"; //input from .csv
+    idFeature[4] = "field2"; //input from .csv
+    idFeature[5] = "field2"; //input from .csv
+    idFeature[6] = "field2"; //input from .csv
+    idFeature[7] = "field2"; //input from .csv
+
+
+
     QString idCrop = "BARLEY"; //input from .csv
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
@@ -154,14 +175,16 @@ int main(int argc, char *argv[])
 
 
     // read fertilizer
-    for (int i=0; i<4;i++)
+    for (int i=0; i<nrFertilizers;i++)
         calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
 
     calculatorCO2.fertiliser.amountFertiliser[0] = 100; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[1] = 5000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[1] = 1000; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[2] = 5000; // kg/ha input from .csv
-    //calculatorCO2.fertiliser.amountFertiliser[3] = 80; // kg/ha input from .csv
-
+    calculatorCO2.fertiliser.amountFertiliser[3] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[4] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[5] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[6] = 1000; // kg/ha input from .csv
 
 
 

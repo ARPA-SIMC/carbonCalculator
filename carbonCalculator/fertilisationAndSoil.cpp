@@ -25,15 +25,15 @@ void FertiliserApplication::setNitrogenInhibitorsTable()
 void FertiliserApplication::computeEmissions()
 {
 
-    double amountNitrogen[4];
-    double amountOtherElements[4];
-    double amountCarbon[4];
-    double producedN2O[4];
-    double producedNO[4];
+    double amountNitrogen[8];
+    double amountOtherElements[8];
+    double amountCarbon[8];
+    double producedN2O[8];
+    double producedNO[8];
     double sumProducedN2O = 0;
     double sumProducedNO = 0;
 
-    for (int i=0;i<4;i++)
+    for (int i=0;i<8;i++)
     {
         amountNitrogen[i] = 0;
         amountOtherElements[i] = 0;
@@ -43,7 +43,7 @@ void FertiliserApplication::computeEmissions()
 
     }
 
-    for (int i=0;i<4;i++)
+    for (int i=0;i<8;i++)
     {
         amountNitrogen[i] = amountFertiliser[i]*fertInput[i].contentElement.nitrogen;
         amountOtherElements[i] = amountFertiliser[i] * (fertInput[i].contentElement.phosphorus + fertInput[i].contentElement.potassium);
@@ -55,7 +55,7 @@ void FertiliserApplication::computeEmissions()
 
     }
 
-    double producedNH3[4];
+    double producedNH3[8];
     double sumProducedNH3=0;
     double sumOfEnvironmentalFactorsToComputeNH3;
     sumOfEnvironmentalFactorsToComputeNH3 = bouwmanParameterNH4.modelParameter + bouwmanParameterNH4.drainage
@@ -64,7 +64,7 @@ void FertiliserApplication::computeEmissions()
             + bouwmanParameterNH4.pH + bouwmanParameterNH4.soilOrganicCarbon
             + bouwmanParameterNH4.soilTexture;
 
-    for (int i=0;i<4;i++)
+    for (int i=0;i<8;i++)
     {
         producedNH3[i] = exp(bouwmanParameterNH4ApplicationMethod[i]
                              + fertInput[i].bouwmanNH3 + sumOfEnvironmentalFactorsToComputeNH3);
@@ -97,18 +97,21 @@ void FertiliserApplication::computeEmissions()
     double inhibitorWeightN2O = 1;
     double inhibitorWeightNO = 1;
     double sumAmountNitrogenFromFertilizer = 0;
-    sumAmountNitrogenFromFertilizer = (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
+    sumAmountNitrogenFromFertilizer = (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]
+            + amountNitrogen[4] + amountNitrogen[5] + amountNitrogen[6] + amountNitrogen[7]);
     if (sumAmountNitrogenFromFertilizer > 0.00001)
     {
         inhibitorWeightN2O = 0;
         inhibitorWeightNO = 0;
-        for (int i=0;i<4;i++)
+        for (int i=0;i<8;i++)
         {
             inhibitorWeightN2O += inhibitorN2O[i]*amountNitrogen[i];
             inhibitorWeightNO += inhibitorNO[i]*amountNitrogen[i];
         }
-        inhibitorWeightN2O /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
-        inhibitorWeightNO /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]);
+        inhibitorWeightN2O /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]
+                + amountNitrogen[4] + amountNitrogen[5] + amountNitrogen[6] + amountNitrogen[7]);
+        inhibitorWeightNO /= (amountNitrogen[0] + amountNitrogen[1] + amountNitrogen[2] + amountNitrogen[3]
+                + amountNitrogen[4] + amountNitrogen[5] + amountNitrogen[6] + amountNitrogen[7]);
     }
     subTotalEmissionN2OBackground *= inhibitorWeightN2O;
     subTotalEmissionNOBackground *= inhibitorWeightNO;
@@ -128,14 +131,14 @@ void FertiliserApplication::computeEmissions()
     // emission due to fertiliser Production
 
     emissionDueToFertiliserProduction = 0; // initialization
-    for (int i=0;i<4;i++)
+    for (int i=0;i<8;i++)
     {
         emissionDueToFertiliserProduction += amountFertiliser[i]*fertInput[i].emissionPerKgOfProduct;
     }
     sequestrationDueToFertiliserApplication = 0;
-    for (int i=0;i<4;i++)
+    for (int i=0;i<8;i++)
     {
-        sequestrationDueToFertiliserApplication += amountCarbon[i];
+        sequestrationDueToFertiliserApplication += amountFertiliser[i]*recalcitrantCarbonIndex[i];
     }
     sequestrationDueToFertiliserApplication *= FROM_C_TO_CO2; // in CO2 Units
 }

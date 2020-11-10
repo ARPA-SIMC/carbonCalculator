@@ -119,6 +119,20 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
             }
             calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
 
+
+            if (! getValue(query.value("incremental_index_som"), &value))
+            {
+                error = "missing incremental factor";
+                return false;
+            }
+            calculator.fertiliser.incrementalParameter[i] = value;
+
+            if (! getValue(query.value("recalcitrant_carbon_index"), &value))
+            {
+                error = "missing recalcitrant carbon index";
+                return false;
+            }
+            calculator.fertiliser.recalcitrantCarbonIndex[i] = value;
             query.clear();
         }
         else
@@ -132,6 +146,8 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
             calculator.fertiliser.fertInput[i].contentElement.potassium = value;
             calculator.fertiliser.fertInput[i].contentElement.carbon = value;
             calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
+            calculator.fertiliser.incrementalParameter[i] = value;
+            calculator.fertiliser.recalcitrantCarbonIndex[i] = value;
         }
     }
     return true;
