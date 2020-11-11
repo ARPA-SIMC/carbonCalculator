@@ -112,6 +112,11 @@ int main(int argc, char *argv[])
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
+    double cropYield = 5 ; // t/ha input from .csv
+    double fieldExtension = 2.8; // ha input from .csv
+    double surfaceSparseTreesSchrubsHedgeFallow = 300.456; // m2 of sparse vegetation
+
+
     // read soil drainage
     QString idDrainage = "POOR"; // input from .csv
     // read pH
