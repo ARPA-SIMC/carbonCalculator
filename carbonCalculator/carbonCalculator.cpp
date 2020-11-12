@@ -215,6 +215,7 @@ void CarbonCalculator::computeBalance()
     cropResidue.computeEmissions();
     fertiliser.computeEmissions();
     erosion.computeCarbonLoss();
+    soilManage.computeEmissions();
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField );
 
 }

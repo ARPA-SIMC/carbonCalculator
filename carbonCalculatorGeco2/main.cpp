@@ -112,10 +112,13 @@ int main(int argc, char *argv[])
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
+    bool isOrganic = false; // input from .csv
+    calculatorCO2.soilManage.isOrganic = isOrganic;
     double cropYield = 5 ; // t/ha input from .csv
     double fieldExtension = 2.8; // ha input from .csv
-    double surfaceSparseTreesSchrubsHedgeFallow = 300.456; // m2 of sparse vegetation
-
+    double surfaceSparseTreesSchrubsHedgeFallow = 300.456; // m2 of sparse vegetation input from csv
+    double ratioFallowExtension;
+    ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (fieldExtension * 10000);
 
     // read soil drainage
     QString idDrainage = "POOR"; // input from .csv
@@ -278,8 +281,11 @@ int main(int argc, char *argv[])
 
     calculatorCO2.soilManage.percentage.coverCropping = 33; // input from .csv
 
-    calculatorCO2.soilManage.percentage.forest = 10; // input from .csv
-    calculatorCO2.soilManage.percentage.permanentGrass = 15; // input from .csv
+    calculatorCO2.soilManage.percentage.forest = 0 ; // input from .csv
+    calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
+    calculatorCO2.soilManage.percentage.permanentGrass = 0; // input from .csv
+    calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
+
     calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
 
 
@@ -332,12 +338,14 @@ int main(int argc, char *argv[])
     std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
     std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
     std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
-    std::cout << "emissions due to type of soil: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
+    std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
+    std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions() << std::endl;
     std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
     std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
     std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
     std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
     std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
+    std::cout << "sequestration due to carbon of roots: " <<-calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
 
     // ***************************************************************************************
     // print results

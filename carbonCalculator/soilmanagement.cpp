@@ -4,6 +4,21 @@
 #include "basicStructures.h"
 
 
+double SoilManagement::computeEmissions()
+{
+    double emissions;
+    emissions = FROM_C_TO_CO2 * 460 * percentage.arable * 0.01; // from Haddaway et al. 2017
+    return emissions;
+}
+
+double SoilManagement::computeSequestrationRootBiomass()
+{
+
+    if (!isOrganic) return FROM_C_TO_CO2*370;
+    else return FROM_C_TO_CO2*695;
+    // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
+}
+
 void SoilManagement::setMatrix()
 {
 
