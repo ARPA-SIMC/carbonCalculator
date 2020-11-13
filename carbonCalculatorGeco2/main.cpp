@@ -90,7 +90,8 @@ int main(int argc, char *argv[])
 
     // ****************************************************************
     // read DB
-    avgTemperature = 12; // to quit
+    float avgRainfall = 700; // input from .csv
+    avgTemperature = 12; // to quit // input from .csv
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
     {
@@ -115,8 +116,8 @@ int main(int argc, char *argv[])
     bool isOrganic = false; // input from .csv
     calculatorCO2.soilManage.isOrganic = isOrganic;
     double cropYield = 5 ; // t/ha input from .csv
-    double fieldExtension = 2.8; // ha input from .csv
-    double surfaceSparseTreesSchrubsHedgeFallow = 300.456; // m2 of sparse vegetation input from csv
+    double fieldExtension = 1; // ha input from .csv
+    double surfaceSparseTreesSchrubsHedgeFallow = 3.456; // m2 of sparse vegetation input from csv
     double ratioFallowExtension;
     ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (fieldExtension * 10000);
 
@@ -127,7 +128,17 @@ int main(int argc, char *argv[])
     //double CEC = 15; // to be computed somehow from .csv data
     QString idSoilTexture = "MEDIUM"; // input from .csv
     QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
-    QString idClimate = "TEMPERATE_MOIST"; // input from .csv
+    QString idClimate;
+    double yearETP = 1000 + 100*(avgTemperature - 13);
+    if (avgTemperature > 20 && avgRainfall > yearETP)
+        idClimate = "TROPICAL_MOIST";
+    else if (avgTemperature > 20 && avgRainfall <= yearETP)
+        idClimate = "TROPICAL_DRY";
+    else if (avgTemperature <= 20 && avgRainfall > yearETP)
+        idClimate = "TEMPERATE_MOIST";
+    else
+        idClimate  = "TEMPERATE_DRY";
+
     int nrFertilizers = 8;
     QString idFertiliser[8];
     idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
@@ -186,13 +197,13 @@ int main(int argc, char *argv[])
     for (int i=0; i<nrFertilizers;i++)
         calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
 
-    calculatorCO2.fertiliser.amountFertiliser[0] = 100; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[1] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[0] = 200; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[1] = 5; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[2] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[3] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[3] = 1; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[4] = 5; // kg/ha input from .csv
     calculatorCO2.fertiliser.amountFertiliser[5] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[6] = 1000; // kg/ha input from .csv
+    calculatorCO2.fertiliser.amountFertiliser[6] = 1; // kg/ha input from .csv
 
 
 
@@ -213,7 +224,7 @@ int main(int argc, char *argv[])
 
     //read residue_treatment table
     QString idResidue[2]; //input from .csv
-    idResidue[0] = "biochar"; //input from .csv
+    idResidue[0] = "left_on_field_incorporated_or_mulch"; //input from .csv
     idResidue[1] = "left_on_field_incorporated_or_mulch"; //input from .csv
 
     if (idResidue[0] == "left_on_field_incorporated_or_mulch")
@@ -250,21 +261,21 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
-    calculatorCO2.cropResidue.residueWeight[0] = 5; //(t/ha) fresh weight of woody residue input from .csv
-    calculatorCO2.cropResidue.residueWeight[1] = NODATA; //(t/ha) fresh weight of green residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[0] = 0.1; //(t/ha) dry weight of woody residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[1] = 0.1; //(t/ha) dry weight of green residue input from .csv
     if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
     if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
     // **********************************************************************
 
-    calculatorCO2.energy.input.fromElectricityGrid = 350; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnHydropower = 50; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 50; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnWind = 50; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityGrid = 3; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnHydropower = 5; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 5; // kWh input from .csv
+    calculatorCO2.energy.input.fromElectricityOwnWind = 5; // kWh input from .csv
     calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelBioethanol = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelCoal = 1; // kg input from .csv
-    calculatorCO2.energy.input.fromFuelDiesel = 151; // l input from .csv
+    calculatorCO2.energy.input.fromFuelDiesel = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg input from .csv
     calculatorCO2.energy.input.fromFuelLPG = 1; // l input from .csv
     calculatorCO2.energy.input.fromFuelOil = 1; // l input from .csv
@@ -275,11 +286,11 @@ int main(int argc, char *argv[])
     calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv kg active principle
     // **********************************************************************
 
-    calculatorCO2.soilManage.percentage.noTillage = 52; // input from .csv
-    calculatorCO2.soilManage.percentage.minimumTillage = 22; // input from .csv
+    calculatorCO2.soilManage.percentage.noTillage = 0; // input from .csv
+    calculatorCO2.soilManage.percentage.minimumTillage = 0; // input from .csv
     calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
 
-    calculatorCO2.soilManage.percentage.coverCropping = 33; // input from .csv
+    calculatorCO2.soilManage.percentage.coverCropping = 0; // input from .csv
 
     calculatorCO2.soilManage.percentage.forest = 0 ; // input from .csv
     calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
@@ -292,7 +303,7 @@ int main(int argc, char *argv[])
     // *********************************************************************
     // erosion
     calculatorCO2.averageTemperature = avgTemperature;
-    calculatorCO2.annualRainfall = 700; // input from .csv
+    calculatorCO2.annualRainfall = avgRainfall; // input from .csv
     calculatorCO2.erosion.erosionFactor.rainfall = calculatorCO2.annualRainfall;
     if (idSoilTexture == "MEDIUM")
         calculatorCO2.erosion.erosionFactor.texture = 0.3;
@@ -301,7 +312,7 @@ int main(int argc, char *argv[])
     else
         calculatorCO2.erosion.erosionFactor.texture = 0.05;
 
-    double slope = 15.3; // input from .csv
+    double slope = 0.3; // input from .csv
     calculatorCO2.erosion.erosionFactor.slope = slope;
     // cover factor
     calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);

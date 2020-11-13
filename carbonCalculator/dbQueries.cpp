@@ -197,6 +197,7 @@ bool readResidue(QString* idResidue, QSqlDatabase &db, CarbonCalculator &calcula
 bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
 {
     double value;
+    QString valueString;
     QString queryString = "SELECT * FROM crop_parameters WHERE id_fine_classification='" + idCrop + "'";
     QSqlQuery query = db.exec(queryString);
     query.last();
@@ -205,14 +206,24 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         error = query.lastError().text();
         return false;
     }
-    /*
-    if (! getValue(query.value("drymatter_fraction_harvested"), &value))
+
+    if (! getValue(query.value("gross_classification"), &valueString))
     {
         error =  "missing emission of dry matter fraction data";
         return false;
     }
-    calculator.cropResidue.cropResidueParameter.dryMatterFraction  = value;
-    */
+    if (valueString == "grass")
+        calculator.soilManage.rootDecayParameter  = 1.27; // The decomposition of fine and coarse roots: their global patterns and controlling factors Xinyue Zhang & Wei Wang NATURE Scientific Reports volume 5, Article number: 9940 (2015)
+    else if (valueString == "shrub")
+        calculator.soilManage.rootDecayParameter  = 1.02;
+    else if (valueString == "tree_broadleaf")
+        calculator.soilManage.rootDecayParameter  = 0.71;
+    else if (valueString == "tree_conifer")
+        calculator.soilManage.rootDecayParameter  = 0.41;
+    else
+        calculator.soilManage.rootDecayParameter  = 1.02;
+
+
     if (! getValue(query.value("nitrogen_content_aboveground"), &value))
     {
         error = "Error: missing emission of dry matter fraction data";

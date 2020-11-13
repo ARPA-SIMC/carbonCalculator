@@ -35,6 +35,7 @@ public:
     Tpercentage percentage;
     double sequestrationCarbonCO2Eq;
     bool isOrganic;
+    double rootDecayParameter;
 
     void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
     double computeEmissions();

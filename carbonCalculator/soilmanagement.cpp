@@ -14,8 +14,8 @@ double SoilManagement::computeEmissions()
 double SoilManagement::computeSequestrationRootBiomass()
 {
 
-    if (!isOrganic) return FROM_C_TO_CO2*370;
-    else return FROM_C_TO_CO2*695;
+    if (!isOrganic) return FROM_C_TO_CO2*370*exp(-rootDecayParameter);
+    else return FROM_C_TO_CO2*695*exp(-rootDecayParameter);
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
@@ -147,7 +147,6 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     double incrementTotal;
 
     setMatrix();
-    //SoilManagement::computeSequestrationLandUse();
     incrementTillage = computeSequestrationTillage(myIdClimate);
     incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
     incrementLandUse = computeSequestrationLandUse(myIdClimate);
@@ -156,7 +155,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
     }
     incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
-    incrementResidue *= computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
+    incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
 
     incrementTotal = incrementTillage*incrementCoverCrop
             *incrementOrganicAmendment*incrementResidue*incrementLandUse;
@@ -228,7 +227,7 @@ double SoilManagement::computeSequestrationResidueIncorporation(double residueIn
     double increment;
     double slopeFreshWeight;
     slopeFreshWeight = 0.00002 * percentageDryMatter + 0.0015;
-    increment =1 + slopeFreshWeight*residueIncorporated/1000;
+    increment =1 + slopeFreshWeight*residueIncorporated;
     return increment;
 }
 
