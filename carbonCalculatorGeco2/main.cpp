@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
     }
-    bool isOrganic = false; // input from .csv
+    bool isOrganic = true; // input from .csv
     calculatorCO2.soilManage.isOrganic = isOrganic;
     double cropYield = 5 ; // t/ha input from .csv
     double fieldExtension = 1; // ha input from .csv
@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
 
 
 
-    QString idCrop = "BARLEY"; //input from .csv
+    QString idCrop = "APPLE_TREE"; //input from .csv
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
 
@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 
     // *********************************************************************
     calculatorCO2.cropResidue.residueWeight[0] = 0.1; //(t/ha) dry weight of woody residue input from .csv
-    calculatorCO2.cropResidue.residueWeight[1] = 0.1; //(t/ha) dry weight of green residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[1] = 2; //(t/ha) dry weight of green residue input from .csv
     if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
     if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
@@ -286,11 +286,11 @@ int main(int argc, char *argv[])
     calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv kg active principle
     // **********************************************************************
 
-    calculatorCO2.soilManage.percentage.noTillage = 0; // input from .csv
+    calculatorCO2.soilManage.percentage.noTillage = 100; // input from .csv
     calculatorCO2.soilManage.percentage.minimumTillage = 0; // input from .csv
     calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
 
-    calculatorCO2.soilManage.percentage.coverCropping = 0; // input from .csv
+    calculatorCO2.soilManage.percentage.coverCropping = 1; // input from .csv
 
     calculatorCO2.soilManage.percentage.forest = 0 ; // input from .csv
     calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
