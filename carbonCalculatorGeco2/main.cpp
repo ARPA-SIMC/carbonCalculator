@@ -268,6 +268,7 @@ int main(int argc, char *argv[])
 
     // **********************************************************************
 
+    calculatorCO2.energy.percentageRenewablesInGrid = 38.2; // % input from .csv
     calculatorCO2.energy.input.fromElectricityGrid = 3; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnHydropower = 5; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 5; // kWh input from .csv
