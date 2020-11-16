@@ -90,6 +90,8 @@
             int bouwmanEquivalentTag;
             TsoilTexture soilTexture;
             double carbonInTop30CmSoil;
+            double skeleton;
+            double soilDepth;
             int idClimate;
             double averageTemperature;
             double annualRainfall;

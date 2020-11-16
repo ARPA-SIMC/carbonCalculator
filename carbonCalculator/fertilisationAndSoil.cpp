@@ -45,7 +45,7 @@ void FertiliserApplication::computeEmissions()
 
     for (int i=0;i<8;i++)
     {
-        amountNitrogen[i] = amountFertiliser[i]*fertInput[i].contentElement.nitrogen;
+        amountNitrogen[i] = amountFertiliser[i]*fertInput[i].contentElement.nitrogen * (100. - volatilizationFraction[i])/100.;
         amountOtherElements[i] = amountFertiliser[i] * (fertInput[i].contentElement.phosphorus + fertInput[i].contentElement.potassium);
         amountCarbon[i] = amountFertiliser[i]*fertInput[i].contentElement.carbon;
         producedN2O[i] = fertInput[i].bouwmanN2O*amountNitrogen[i];
@@ -63,6 +63,13 @@ void FertiliserApplication::computeEmissions()
             + bouwmanParameterNH4.climate + bouwmanParameterNH4.cropType
             + bouwmanParameterNH4.pH + bouwmanParameterNH4.soilOrganicCarbon
             + bouwmanParameterNH4.soilTexture;
+
+
+    for (int i=0;i<8;i++)
+    {
+        sumProducedNH3 += amountNitrogen[i]*volatilizationFraction[i]/100.;
+    }
+
 
     for (int i=0;i<8;i++)
     {

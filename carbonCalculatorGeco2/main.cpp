@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
     int nrFertilizers = 8;
     QString idFertiliser[8];
-    idFertiliser[0] = "Ammonium_nitrate"; // input from .csv
+    idFertiliser[0] = "Urea_46_4N"; // input from .csv
     idFertiliser[1] = "Compost_fully_aerated_production_1N"; // input from .csv
     idFertiliser[2] = "Biochar"; // input from .csv
     idFertiliser[3] = "Digestate_6percent_drymatter"; // input from .csv
@@ -267,8 +267,11 @@ int main(int argc, char *argv[])
     if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
     // **********************************************************************
-
-    calculatorCO2.energy.percentageRenewablesInGrid = 38.2; // % input from .csv
+    QString idPercentageEnergyInGrid = "38.4";  // % input from .csv
+    if (idPercentageEnergyInGrid != "UNKNOWN")
+    {
+        calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid.toDouble();
+    }
     calculatorCO2.energy.input.fromElectricityGrid = 3; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnHydropower = 5; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 5; // kWh input from .csv
@@ -302,6 +305,8 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
+    calculatorCO2.soilDepth = 28; // [cm] input from .csv
+    calculatorCO2.skeleton = 3; // [%] input from .csv
     // erosion
     calculatorCO2.averageTemperature = avgTemperature;
     calculatorCO2.annualRainfall = avgRainfall; // input from .csv

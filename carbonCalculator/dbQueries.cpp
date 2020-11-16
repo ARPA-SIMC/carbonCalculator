@@ -133,6 +133,15 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
                 return false;
             }
             calculator.fertiliser.recalcitrantCarbonIndex[i] = value;
+
+            if (! getValue(query.value("volatilization_fraction"), &value))
+            {
+                error = "missing volatilization fraction";
+                return false;
+            }
+            calculator.fertiliser.volatilizationFraction[i] = value;
+
+
             query.clear();
         }
         else

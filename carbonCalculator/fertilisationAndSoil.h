@@ -23,6 +23,7 @@ private:
 
 public:
     TfertInput fertInput[8];
+    double volatilizationFraction[8];
     double amountFertiliser[8];
     double incrementalParameter[8];
     double recalcitrantCarbonIndex[8]; // [0-1] ratio of recalcitrant carbon for special amendments biochar,rock dust ...

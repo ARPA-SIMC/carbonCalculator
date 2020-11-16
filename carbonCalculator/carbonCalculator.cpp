@@ -344,8 +344,12 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
 // *********************************************************************
         // cationic exchange capacity
         carbonInTop30CmSoil = somParameterForCec*1000*bulkDensity;
+        carbonInTop30CmSoil *= (100.0 - skeleton)*0.01; // reduction due to presence of skeleton
+        if (soilDepth < 30)
+        {
+            carbonInTop30CmSoil *= (soilDepth/30.);
+        }
         double cec;
-        //cec = 59 - 51*(somParameterForCec)/3000 + (30 + 4.4)*textureParameterForCec;
         cec = (59 - 51*pH)*(carbonInTop30CmSoil)/3000000/bulkDensity + (30 + 4.4*pH)*textureParameterForCec;
         if (cec < 16)
         {
