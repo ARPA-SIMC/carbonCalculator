@@ -18,7 +18,80 @@
 #define TEST
 
 static CarbonCalculator calculatorCO2;
+struct Tgeneral{
+    QString enterpriseName;
+    QString idCountry;
+    int year;
+    float latitude;
+    float longitude;
+    float fieldSize;
+    float fieldSlope;
+};
+struct Tclimate{
+    float meanTemperature;
+    float annualRainfall;
+};
+struct Tsoil{
+    float depth;
+    QString drainage;
+    float pH;
+    QString texture;
+    float organicMatter;
+    float skeleton;
+};
+struct TcropFieldManagement{
+    QString cropName;
+    QString isOrganic;
+    float yield;
+    float noTillage;
+    float minTillage;
+    float coverCrop;
+    float permanentGrass;
+    float forest;
+    float sparseVegetation;
+    QString woodyResidueTreatment;
+    float woodyResidueWeight;
+    QString greenResidueTreatment;
+    float greenResidueWeight;
+};
 
+struct TagronomicInput{
+    float pesticideWeight;
+    QString fertilizerName[4];
+    float fertilizerAmount[4];
+    QString fertilizerApplicationMethod[4];
+    QString fertilizerInhibitor[4];
+    QString amendmentName[4];
+    float amendmentAmount[4];
+    QString amendmentApplicationMethod[4];
+    QString amendmentInhibitor[4];
+};
+
+struct Tenergy{
+    float biodiesel;
+    float bioethanol;
+    float diesel;
+    float oil;
+    float petrol;
+    float LPG;
+    float coal;
+    float highEnergyDensityBiomass;
+    float wood;
+    float electricityGridAmount;
+    float electricityGridPercentageRenewables;
+    float electricitySolar;
+    float electricityEolic;
+    float electricityHydro;
+};
+
+struct TinputData{
+    Tgeneral general;
+    Tclimate climate;
+    Tsoil soil;
+    TcropFieldManagement cropFieldManagement;
+    TagronomicInput agronomicInput;
+    Tenergy energy;
+};
 
 void usage()
 {
@@ -40,7 +113,7 @@ int main(int argc, char *argv[])
     }
 
     // read argument
-    QString csvFileName;
+    /*QString csvFileName;
     if (argc < 2)
     {
         #ifdef TEST
@@ -83,15 +156,178 @@ int main(int argc, char *argv[])
     }
 
     // read values (remove quotes)
-    QString idCountry = data[0].value(2).remove("\"");
-    float avgTemperature = data[0].value(3).remove("\"").toFloat();
+    QString idCountry = data[iExp].value(2).remove("\"");
+    float avgTemperature = data[iExp].value(3).remove("\"").toFloat();
     // ... read other values
+
+    */
+    // read the .csv file final
+
+    // read argument
+    QString csvFileName;
+
+    if (argc < 2)
+    {
+        #ifdef TEST
+            csvFileName = dataPath + "prova1.csv";
+        #else
+            usage();
+            return 1;
+        #endif
+    }
+    else
+    {
+        csvFileName = argv[1];
+    }
+
+    // ****************************************************************
+    // read CSV
+    if (! QFile(csvFileName).exists())
+    {
+        std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
+        return -1;
+    }
+
+    // check numberOfFields
+    FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    int numberOfFields = 1;
+    char dummyComma;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyComma = char(getc(fp));
+    } while (dummyComma != '\n' && dummyComma != EOF);
+
+    do
+    {
+        dummyComma = char(getc(fp));
+        if (dummyComma == ',') numberOfFields++;
+    } while (dummyComma != '\n' && dummyComma != EOF);
+    fclose(fp);
+
+    // check numberOfExperiments
+    //FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    int numberOfExperiments = 0;
+    char dummyLine;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyLine = char(getc(fp));
+    } while (dummyLine != '\n' && dummyLine != EOF);
+    do
+    {
+        dummyLine = char(getc(fp));
+        if (dummyLine == '\n' || dummyLine == EOF) numberOfExperiments++;
+    } while (dummyLine != EOF);
+    fclose(fp);
+
+    // read data
+    std::vector<QStringList> data;
+    if (! importCsvData(csvFileName, numberOfFields, true, data, error))
+    {
+        std::cout << "Error: " << error.toStdString() << std::endl;
+    }
+    //std::cout << data[1].value(2).remove("\"").toStdString << std::endl;
+    TinputData* inputData;
+    inputData = (TinputData*)calloc(numberOfExperiments, sizeof(TinputData));
+    // read values (remove quotes)
+    for (int iExp=0;iExp<numberOfExperiments;iExp++)
+    {
+        int label=1;
+        inputData[iExp].general.enterpriseName = data[iExp].value(label++).remove("\"");
+        inputData[iExp].general.idCountry = data[iExp].value(label++).remove("\"");
+        inputData[iExp].general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
+        inputData[iExp].general.latitude = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].general.longitude = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].general.fieldSize = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].general.fieldSlope = data[iExp].value(label++).remove("\"").toFloat();
+
+        inputData[iExp].climate.meanTemperature = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].climate.annualRainfall = data[iExp].value(label++).remove("\"").toFloat();
+
+        inputData[iExp].soil.depth = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].soil.drainage = data[iExp].value(label++).remove("\"");
+        inputData[iExp].soil.pH = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].soil.texture = data[iExp].value(label++).remove("\"");
+        inputData[iExp].soil.organicMatter = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].soil.skeleton = data[iExp].value(label++).remove("\"").toFloat();
+
+        inputData[iExp].cropFieldManagement.cropName = data[iExp].value(label++).remove("\"");
+        inputData[iExp].cropFieldManagement.isOrganic = data[iExp].value(label++).remove("\"");
+        inputData[iExp].cropFieldManagement.yield = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.noTillage = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.minTillage = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.coverCrop = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
+        inputData[iExp].cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
+
+        inputData[iExp].agronomicInput.pesticideWeight = data[iExp].value(label++).remove("\"").toFloat();
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerName[i] = data[iExp].value(label++).remove("\"");
+        }
+        for (int i=0;i<4;i++)
+        {
+             inputData[iExp].agronomicInput.fertilizerAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] = data[iExp].value(label++).remove("\"");
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerInhibitor[i] = data[iExp].value(label++).remove("\"");
+        }
+
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentName[i] = data[iExp].value(label++).remove("\"");
+        }
+        for (int i=0;i<4;i++)
+        {
+             inputData[iExp].agronomicInput.amendmentAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentApplicationMethod[i] = data[iExp].value(label++).remove("\"");
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++).remove("\"");
+        }
+
+        inputData[iExp].energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.oil = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+
+
+        std::cout << inputData[iExp].general.idCountry.toStdString() << std::endl;
+    }
+
+
 
 
     // ****************************************************************
     // read DB
-    float avgRainfall = 700; // input from .csv
-    avgTemperature = 12; // to quit // input from .csv
+
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
     {
@@ -106,9 +342,13 @@ int main(int argc, char *argv[])
         return -1;
     }
 
+
+    float avgRainfall = 700; // input from .csv
+    float avgTemperature = 12; // to quit // input from .csv
+
     // read renewables
-    int year = 2020;
-    if (! readRenewables(idCountry, year, db, calculatorCO2, error))
+
+    if (! readRenewables(inputData[0].general.idCountry,inputData[0].general.year, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
@@ -180,6 +420,8 @@ int main(int argc, char *argv[])
 
 
     QString idCrop = "APPLE_TREE"; //input from .csv
+    calculatorCO2.soilDepth = 28; // [cm] input from .csv
+    calculatorCO2.skeleton = 3; // [%] input from .csv
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
 
@@ -261,16 +503,16 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
-    calculatorCO2.cropResidue.residueWeight[0] = 0.1; //(t/ha) dry weight of woody residue input from .csv
+    calculatorCO2.cropResidue.residueWeight[0] = 10; //(t/ha) dry weight of woody residue input from .csv
     calculatorCO2.cropResidue.residueWeight[1] = 2; //(t/ha) dry weight of green residue input from .csv
     if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
     if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
     // **********************************************************************
-    QString idPercentageEnergyInGrid = "38.4";  // % input from .csv
-    if (idPercentageEnergyInGrid != "UNKNOWN")
+    double idPercentageEnergyInGrid = 38.4;  // % input from .csv
+    if (idPercentageEnergyInGrid != NODATA)
     {
-        calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid.toDouble();
+        calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid;
     }
     calculatorCO2.energy.input.fromElectricityGrid = 3; // kWh input from .csv
     calculatorCO2.energy.input.fromElectricityOwnHydropower = 5; // kWh input from .csv
@@ -305,8 +547,6 @@ int main(int argc, char *argv[])
 
 
     // *********************************************************************
-    calculatorCO2.soilDepth = 28; // [cm] input from .csv
-    calculatorCO2.skeleton = 3; // [%] input from .csv
     // erosion
     calculatorCO2.averageTemperature = avgTemperature;
     calculatorCO2.annualRainfall = avgRainfall; // input from .csv
@@ -328,27 +568,6 @@ int main(int argc, char *argv[])
 
     // **********************************************************************
 
-
-    //
-
-
-    // print parameters
-    //std::cout << "Country: " << calculatorCO2.energy.country.toStdString() << std::endl;
-    //std::cout << "Avg temperature: " << avgTemperature << std::endl;
-    //std::cout << "Renewables percentage: " << calculatorCO2.energy.percentageRenewablesInGrid << std::endl;
-    //std::cout << "CH4 emission conversion: " << emissionMethane << std::endl;
-    //std::cout << "N2O emission conversion: " << emissionN2O << std::endl;
-    //std::cout << "dry matter to CO2: " << dryMatterToCO2Percentage << std::endl;
-
-    //calculatorCO2.energy.computeEmissions();
-
-    //calculatorCO2.cropResidue.setInput(emissionMethane,emissionN2O,dryMatterToCO2Percentage);
-    //calculatorCO2.cropResidue.computeEmissions();
-
-    //calculatorCO2.pesticide.setInput(calculatorCO2.pesticide.weightOfActivePrinciple, calculatorCO2.energy.percentageRenewablesInGrid);
-    //calculatorCO2.pesticide.computeEmissions();
-
-    //calculatorCO2.fertiliser.computeEmissions();
 
     calculatorCO2.computeBalance();
     std::cout << "values are in kgCO2Eq " << std::endl;
