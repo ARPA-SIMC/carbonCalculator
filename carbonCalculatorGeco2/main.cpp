@@ -231,95 +231,96 @@ int main(int argc, char *argv[])
     }
     //std::cout << data[1].value(2).remove("\"").toStdString << std::endl;
     TinputData* inputData;
+    TinputData inputData2;
     inputData = (TinputData*)calloc(numberOfExperiments, sizeof(TinputData));
     // read values (remove quotes)
     for (int iExp=0;iExp<numberOfExperiments;iExp++)
     {
         int label=1;
-        inputData[iExp].general.enterpriseName = data[iExp].value(label++).remove("\"");
-        inputData[iExp].general.idCountry = data[iExp].value(label++).remove("\"");
-        inputData[iExp].general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
-        inputData[iExp].general.latitude = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].general.longitude = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].general.fieldSize = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].general.fieldSlope = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.general.enterpriseName = data[iExp].value(label++).remove("\"");
+        inputData2.general.idCountry = data[iExp].value(label++).remove("\"");
+        inputData2.general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
+        inputData2.general.latitude = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.general.longitude = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.general.fieldSize = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.general.fieldSlope = data[iExp].value(label++).remove("\"").toFloat();
 
-        inputData[iExp].climate.meanTemperature = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].climate.annualRainfall = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.climate.meanTemperature = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.climate.annualRainfall = data[iExp].value(label++).remove("\"").toFloat();
 
-        inputData[iExp].soil.depth = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].soil.drainage = data[iExp].value(label++).remove("\"");
-        inputData[iExp].soil.pH = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].soil.texture = data[iExp].value(label++).remove("\"");
-        inputData[iExp].soil.organicMatter = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].soil.skeleton = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.soil.depth = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.soil.drainage = data[iExp].value(label++).remove("\"");
+        inputData2.soil.pH = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.soil.texture = data[iExp].value(label++).remove("\"");
+        inputData2.soil.organicMatter = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.soil.skeleton = data[iExp].value(label++).remove("\"").toFloat();
 
-        inputData[iExp].cropFieldManagement.cropName = data[iExp].value(label++).remove("\"");
-        inputData[iExp].cropFieldManagement.isOrganic = data[iExp].value(label++).remove("\"");
-        inputData[iExp].cropFieldManagement.yield = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.noTillage = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.minTillage = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.coverCrop = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
-        inputData[iExp].cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
+        inputData2.cropFieldManagement.cropName = data[iExp].value(label++).remove("\"");
+        inputData2.cropFieldManagement.isOrganic = data[iExp].value(label++).remove("\"");
+        inputData2.cropFieldManagement.yield = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.noTillage = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.minTillage = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.coverCrop = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.permanentGrass = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.forest = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.sparseVegetation = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
+        inputData2.cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
 
-        inputData[iExp].agronomicInput.pesticideWeight = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.agronomicInput.pesticideWeight = data[iExp].value(label++).remove("\"").toFloat();
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.fertilizerName[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.fertilizerName[i] = data[iExp].value(label++).remove("\"");
         }
         for (int i=0;i<4;i++)
         {
-             inputData[iExp].agronomicInput.fertilizerAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
+             inputData2.agronomicInput.fertilizerAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
         }
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.fertilizerApplicationMethod[i] = data[iExp].value(label++).remove("\"");
         }
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.fertilizerInhibitor[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.fertilizerInhibitor[i] = data[iExp].value(label++).remove("\"");
         }
 
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.amendmentName[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.amendmentName[i] = data[iExp].value(label++).remove("\"");
         }
         for (int i=0;i<4;i++)
         {
-             inputData[iExp].agronomicInput.amendmentAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
+             inputData2.agronomicInput.amendmentAmount[i] = data[iExp].value(label++).remove("\"").toFloat();
         }
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.amendmentApplicationMethod[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.amendmentApplicationMethod[i] = data[iExp].value(label++).remove("\"");
         }
         for (int i=0;i<4;i++)
         {
-            inputData[iExp].agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++).remove("\"");
+            inputData2.agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++).remove("\"");
         }
 
-        inputData[iExp].energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.oil = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.oil = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.coal = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.wood = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
+        inputData2.energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
 
 
-        std::cout << inputData[iExp].general.idCountry.toStdString() << std::endl;
+        std::cout << inputData2.general.idCountry.toStdString() << std::endl;
     }
 
 
@@ -348,7 +349,7 @@ int main(int argc, char *argv[])
 
     // read renewables
 
-    if (! readRenewables(inputData[0].general.idCountry,inputData[0].general.year, db, calculatorCO2, error))
+    if (! readRenewables(inputData2.general.idCountry,inputData2.general.year, db, calculatorCO2, error))
     {
         std::cout << "ERROR: " + error.toStdString() << std::endl;
         return -1;
