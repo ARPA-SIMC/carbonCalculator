@@ -51,7 +51,7 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
 {
     for (int i=0 ; i<nrFertiliserApplied; i++)
     {
-        if (idFertiliser[i] != "NONE")
+        if (idFertiliser[i] != "None")
         {
             QString queryString = "SELECT * FROM fertiliser WHERE name='" + idFertiliser[i] + "'";
             QSqlQuery query = db.exec(queryString);

@@ -14,8 +14,8 @@ double SoilManagement::computeEmissions()
 double SoilManagement::computeSequestrationRootBiomass()
 {
 
-    if (!isOrganic) return FROM_C_TO_CO2*370*exp(-rootDecayParameter);
-    else return FROM_C_TO_CO2*695*exp(-rootDecayParameter);
+    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter);
+    else return -FROM_C_TO_CO2*695*exp(-rootDecayParameter);
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 

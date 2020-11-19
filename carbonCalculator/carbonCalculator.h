@@ -46,6 +46,7 @@
         void computeEmissions();
         // variables
         TcropResidueParameter cropResidueParameter;
+        double balance;
     };
 
     class SoilErosion{
@@ -95,6 +96,7 @@
             int idClimate;
             double averageTemperature;
             double annualRainfall;
+            double carbonBudget;
     };
 
 #endif // CARBONCALCULATOR_H

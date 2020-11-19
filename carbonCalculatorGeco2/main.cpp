@@ -114,57 +114,6 @@ int main(int argc, char *argv[])
     }
 
     // read argument
-    /*QString csvFileName;
-    if (argc < 2)
-    {
-        #ifdef TEST
-            csvFileName = dataPath + "geco2ModuloRisposte.csv";
-        #else
-            usage();
-            return 1;
-        #endif
-    }
-    else
-    {
-        csvFileName = argv[1];
-    }
-
-    // ****************************************************************
-    // read CSV
-    if (! QFile(csvFileName).exists())
-    {
-        std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
-        return -1;
-    }
-
-    // check numberOfFields
-    FILE *fp;
-    fp = fopen(csvFileName.toStdString().c_str(),"r");
-    int numberOfFields = 1;
-    char dummyComma;
-    do
-    {
-        dummyComma = char(getc(fp));
-        if (dummyComma == ',') numberOfFields++;
-    } while (dummyComma != '\n' && dummyComma != EOF);
-    fclose(fp);
-
-    // read data
-    std::vector<QStringList> data;
-    if (! importCsvData(csvFileName, numberOfFields, true, data, error))
-    {
-        std::cout << "Error: " << error.toStdString() << std::endl;
-    }
-
-    // read values (remove quotes)
-    QString idCountry = data[iExp].value(2).remove("\"");
-    float avgTemperature = data[iExp].value(3).remove("\"").toFloat();
-    // ... read other values
-
-    */
-    // read the .csv file final
-
-    // read argument
     QString csvFileName;
 
     if (argc < 2)
@@ -342,250 +291,313 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-
-    float avgRainfall = 700; // input from .csv
-    float avgTemperature = 12; // to quit // input from .csv
-
-    // read renewables
-
-    if (! readRenewables(inputData[0].general.idCountry,inputData[0].general.year, db, calculatorCO2, error))
+    for (int iExp=0; iExp<numberOfExperiments; iExp++)
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
+        float avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
+        float avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
+
+        // read renewables
+
+        if (! readRenewables(inputData[iExp].general.idCountry,inputData[iExp].general.year, db, calculatorCO2, error))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+        bool isOrganic = false; // input from .csv
+        if (inputData[iExp].cropFieldManagement.isOrganic == "Yes")
+        {
+            isOrganic = true; // input from .csv
+        }
+        calculatorCO2.soilManage.isOrganic = isOrganic;
+        double cropYield = inputData[iExp].cropFieldManagement.yield ; // t/ha input from .csv
+        double fieldExtension = inputData[iExp].general.fieldSize; // ha input from .csv
+        double surfaceSparseTreesSchrubsHedgeFallow = inputData[iExp].cropFieldManagement.sparseVegetation; // m2 of sparse vegetation input from csv
+        double ratioFallowExtension;
+        ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (fieldExtension * 10000);
+
+        // read soil drainage
+        QString idDrainage = inputData[iExp].soil.drainage; // input from .csv
+        // read pH
+        double pHSoil = inputData[iExp].soil.pH; // input from .csv
+        QString idSoilTexture = inputData[iExp].soil.texture; // input from .csv
+        QString idSoilOrganicCarbon;
+        if (inputData[iExp].soil.organicMatter <= 1.72)
+        {
+            idSoilOrganicCarbon = "SOM<=1.72";
+        }
+        else if (inputData[iExp].soil.organicMatter > 1.72 && inputData[iExp].soil.organicMatter <= 5.16)
+        {
+            idSoilOrganicCarbon = "1.72<SOM<=5.16";
+        }
+        else if (inputData[iExp].soil.organicMatter < 5.16 && inputData[iExp].soil.organicMatter <= 10.32)
+        {
+            idSoilOrganicCarbon = "5.16<SOM<=10.32";
+        }
+        else
+        {
+            idSoilOrganicCarbon = "SOM>10.32";
+        }
+
+        QString idClimate;
+        double yearETP = 1000 + 100*(avgTemperature - 13);
+        if (avgTemperature > 20 && avgRainfall > yearETP)
+            idClimate = "TROPICAL_MOIST";
+        else if (avgTemperature > 20 && avgRainfall <= yearETP)
+            idClimate = "TROPICAL_DRY";
+        else if (avgTemperature <= 20 && avgRainfall > yearETP)
+            idClimate = "TEMPERATE_MOIST";
+        else
+            idClimate  = "TEMPERATE_DRY";
+
+        int nrFertilizers = 8;
+        QString idFertiliser[8];
+        idFertiliser[0] = inputData[iExp].agronomicInput.fertilizerName[0];
+        idFertiliser[1] = inputData[iExp].agronomicInput.fertilizerName[1];
+        idFertiliser[2] = inputData[iExp].agronomicInput.fertilizerName[2];
+        idFertiliser[3] = inputData[iExp].agronomicInput.fertilizerName[3];
+        idFertiliser[4] = inputData[iExp].agronomicInput.amendmentName[0];
+        idFertiliser[5] = inputData[iExp].agronomicInput.amendmentName[1];
+        idFertiliser[6] = inputData[iExp].agronomicInput.amendmentName[2];
+        idFertiliser[7] = inputData[iExp].agronomicInput.amendmentName[3];
+
+        QString inhibitor[8];
+        inhibitor[0] = inputData[iExp].agronomicInput.fertilizerInhibitor[0];
+        inhibitor[1] = inputData[iExp].agronomicInput.fertilizerInhibitor[1];
+        inhibitor[2] = inputData[iExp].agronomicInput.fertilizerInhibitor[2];
+        inhibitor[3] = inputData[iExp].agronomicInput.fertilizerInhibitor[3];
+        inhibitor[4] = inputData[iExp].agronomicInput.amendmentInhibitor[0];
+        inhibitor[5] = inputData[iExp].agronomicInput.amendmentInhibitor[1];
+        inhibitor[6] = inputData[iExp].agronomicInput.amendmentInhibitor[2];
+        inhibitor[7] = inputData[iExp].agronomicInput.amendmentInhibitor[3];
+
+        QString idFeature[8];
+        for (int i=0;i<nrFertilizers;i++)
+            idFeature[i] = "field2"; // initialization - default value
+
+
+        for (int i=0;i<nrFertilizers/2;i++)
+        {
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Apply_in_solution")
+            {
+                idFeature[i] = "field2";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Apply_in_solution")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field2";
+            }
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Spread")
+            {
+                idFeature[i] = "field3";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Spread")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field3";
+            }
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Spread_or_incorporate_then_flood")
+            {
+                idFeature[i] = "field4";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Spread_or_incorporate_then_flood")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field4";
+            }
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Spread_to_floodwater_at_panicle_initiation")
+            {
+                idFeature[i] = "field5";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Spread_to_floodwater_at_panicle_initiation")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field5";
+            }
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Incorporate")
+            {
+                idFeature[i] = "field6";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Incorporate")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field6";
+            }
+            if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Subsurface_drip")
+            {
+                idFeature[i] = "field7";
+            }
+            if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Subsurface_drip")
+            {
+                idFeature[i+(nrFertilizers/2)] = "field7";
+            }
+        }
+
+
+        QString idCrop = inputData[iExp].cropFieldManagement.cropName; //input from .csv
+        calculatorCO2.soilDepth = inputData[iExp].soil.depth;
+        calculatorCO2.skeleton = inputData[iExp].soil.skeleton;
+
+        calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
+
+
+        // read climate
+
+        if (! readClimate(idClimate, db, calculatorCO2, error))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+
+
+        // read fertilizer
+        for (int i=0; i<nrFertilizers;i++)
+            calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
+
+        calculatorCO2.fertiliser.amountFertiliser[0] = inputData[iExp].agronomicInput.fertilizerAmount[0];
+        calculatorCO2.fertiliser.amountFertiliser[1] = inputData[iExp].agronomicInput.fertilizerAmount[1];
+        calculatorCO2.fertiliser.amountFertiliser[2] = inputData[iExp].agronomicInput.fertilizerAmount[2];
+        calculatorCO2.fertiliser.amountFertiliser[3] = inputData[iExp].agronomicInput.fertilizerAmount[3];
+        calculatorCO2.fertiliser.amountFertiliser[4] = inputData[iExp].agronomicInput.amendmentAmount[0];
+        calculatorCO2.fertiliser.amountFertiliser[5] = inputData[iExp].agronomicInput.amendmentAmount[1];
+        calculatorCO2.fertiliser.amountFertiliser[6] = inputData[iExp].agronomicInput.amendmentAmount[2];
+        calculatorCO2.fertiliser.amountFertiliser[7] = inputData[iExp].agronomicInput.amendmentAmount[3];
+
+
+        if (! readFertilizer(idFertiliser, db, calculatorCO2, error,nrFertilizers))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+
+        // read bouwmanNH4 table
+
+
+        if (! readBouwmanNH4(idFeature, db, calculatorCO2, error,nrFertilizers))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+
+        //read residue_treatment table
+        QString idResidue[2]; //input from .csv
+        idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment;
+        idResidue[1] = inputData[iExp].cropFieldManagement.greenResidueTreatment;
+        idResidue[1] = idResidue[0] = "Left_on_field_incorporated_or_mulch";
+        if (idResidue[0] == "Left_on_field_incorporated_or_mulch")
+        {
+            calculatorCO2.cropResidue.residueLeftOnField[0] = true;
+        }
+        else
+        {
+            calculatorCO2.cropResidue.residueLeftOnField[0] = false;
+        }
+        if (idResidue[1] == "Left_on_field_incorporated_or_mulch")
+        {
+            calculatorCO2.cropResidue.residueLeftOnField[1] = true;
+        }
+        else
+        {
+            calculatorCO2.cropResidue.residueLeftOnField[1] = false;
+        }
+
+        if (! readResidue(idResidue, db, calculatorCO2, error))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+
+        // read crop_parameters table
+        if (! readCropParameters(idCrop, db, calculatorCO2, error))
+        {
+            std::cout << "ERROR: " + error.toStdString() << std::endl;
+            return -1;
+        }
+
+
+
+
+        // *********************************************************************
+        calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of woody residue input from .csv
+        calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of green residue input from .csv
+        if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
+        if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
+
+        // **********************************************************************
+        double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
+        if (idPercentageEnergyInGrid != NODATA)
+        {
+            calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid;
+        }
+        calculatorCO2.energy.input.fromElectricityGrid = inputData[iExp].energy.electricityGridAmount; // kWh input from .csv
+        calculatorCO2.energy.input.fromElectricityOwnHydropower = inputData[iExp].energy.electricityHydro; // kWh input from .csv
+        calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = inputData[iExp].energy.electricitySolar; // kWh input from .csv
+        calculatorCO2.energy.input.fromElectricityOwnWind = inputData[iExp].energy.electricityEolic; // kWh input from .csv
+        calculatorCO2.energy.input.fromFuelBiodiesel = inputData[iExp].energy.biodiesel; // l input from .csv
+        calculatorCO2.energy.input.fromFuelBioethanol = inputData[iExp].energy.bioethanol; // l input from .csv
+        calculatorCO2.energy.input.fromFuelCoal = inputData[iExp].energy.coal; // kg input from .csv
+        calculatorCO2.energy.input.fromFuelDiesel = inputData[iExp].energy.diesel; // l input from .csv
+        calculatorCO2.energy.input.fromFuelHighDensityBiomass = inputData[iExp].energy.highEnergyDensityBiomass; // kg input from .csv
+        calculatorCO2.energy.input.fromFuelLPG = inputData[iExp].energy.highEnergyDensityBiomass; // l input from .csv
+        calculatorCO2.energy.input.fromFuelOil = inputData[iExp].energy.oil; // l input from .csv
+        calculatorCO2.energy.input.fromFuelPetrol = inputData[iExp].energy.petrol; // l input from .csv
+        calculatorCO2.energy.input.fromFuelWood = inputData[iExp].energy.wood; // kg input from .csv
+
+        // **********************************************************************
+        calculatorCO2.pesticide.weightOfActivePrinciple = inputData[iExp].agronomicInput.pesticideWeight; // input from .csv kg active principle
+        // **********************************************************************
+
+        calculatorCO2.soilManage.percentage.noTillage = inputData[iExp].cropFieldManagement.noTillage; // input from .csv
+        calculatorCO2.soilManage.percentage.minimumTillage = inputData[iExp].cropFieldManagement.minTillage; // input from .csv
+        calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
+
+        calculatorCO2.soilManage.percentage.coverCropping = inputData[iExp].cropFieldManagement.coverCrop; // input from .csv
+
+        calculatorCO2.soilManage.percentage.forest = inputData[iExp].cropFieldManagement.forest ; // input from .csv
+        calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
+        calculatorCO2.soilManage.percentage.permanentGrass = inputData[iExp].cropFieldManagement.permanentGrass; // input from .csv
+        calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
+
+        calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
+
+
+        // *********************************************************************
+        // erosion
+        calculatorCO2.averageTemperature = avgTemperature;
+        calculatorCO2.annualRainfall = avgRainfall;
+        calculatorCO2.erosion.erosionFactor.rainfall = calculatorCO2.annualRainfall;
+        if (idSoilTexture == "Medium")
+            calculatorCO2.erosion.erosionFactor.texture = 0.3;
+        else if (idSoilTexture == "Fine")
+            calculatorCO2.erosion.erosionFactor.texture = 0.2;
+        else
+            calculatorCO2.erosion.erosionFactor.texture = 0.05;
+
+
+        calculatorCO2.erosion.erosionFactor.slope = inputData[iExp].general.fieldSlope;
+        // cover factor
+        calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);
+
+        calculatorCO2.erosion.erosionFactor.soilManagement = 0.01*calculatorCO2.soilManage.percentage.coverCropping*0.26;
+        calculatorCO2.erosion.erosionFactor.soilManagement += (100. - calculatorCO2.soilManage.percentage.coverCropping)*0.01 *(0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
+
+        // **********************************************************************
+
+
+        calculatorCO2.computeBalance();
+        std::cout << "values are in kgCO2Eq " << std::endl;
+        std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
+        std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
+        std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
+        std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
+        std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions() << std::endl;
+        std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
+        std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
+        std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
+        std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
+        std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
+        std::cout << "sequestration due to carbon of roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
+        std::cout << "___________________________________________________________________________" << std::endl;
+        std::cout << "carbon budget: " <<calculatorCO2.carbonBudget << "  "<<std::endl;
+        std::cout << "___________________________________________________________________________" << std::endl;
+
+        // ***************************************************************************************
+        printf("\n\n");
     }
-    bool isOrganic = true; // input from .csv
-    calculatorCO2.soilManage.isOrganic = isOrganic;
-    double cropYield = 5 ; // t/ha input from .csv
-    double fieldExtension = 1; // ha input from .csv
-    double surfaceSparseTreesSchrubsHedgeFallow = 3.456; // m2 of sparse vegetation input from csv
-    double ratioFallowExtension;
-    ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (fieldExtension * 10000);
-
-    // read soil drainage
-    QString idDrainage = "POOR"; // input from .csv
-    // read pH
-    double pHSoil = 7.9; // input from .csv
-    //double CEC = 15; // to be computed somehow from .csv data
-    QString idSoilTexture = "MEDIUM"; // input from .csv
-    QString idSoilOrganicCarbon = "SOM<=1.72"; // input from .csv
-    QString idClimate;
-    double yearETP = 1000 + 100*(avgTemperature - 13);
-    if (avgTemperature > 20 && avgRainfall > yearETP)
-        idClimate = "TROPICAL_MOIST";
-    else if (avgTemperature > 20 && avgRainfall <= yearETP)
-        idClimate = "TROPICAL_DRY";
-    else if (avgTemperature <= 20 && avgRainfall > yearETP)
-        idClimate = "TEMPERATE_MOIST";
-    else
-        idClimate  = "TEMPERATE_DRY";
-
-    int nrFertilizers = 8;
-    QString idFertiliser[8];
-    idFertiliser[0] = "Urea_46_4N"; // input from .csv
-    idFertiliser[1] = "Compost_fully_aerated_production_1N"; // input from .csv
-    idFertiliser[2] = "Biochar"; // input from .csv
-    idFertiliser[3] = "Digestate_6percent_drymatter"; // input from .csv
-    idFertiliser[4] = "Straw"; // input from .csv
-    idFertiliser[5] = "Wood_chips"; // input from .csv
-    idFertiliser[6] = "Volcanic_rock_dust"; // input from .csv
-    idFertiliser[7] = "NONE"; // input from .csv
-
-    //idFertiliser[4] = "NONE"; // input from .csv
-    //idFertiliser[5] = "NONE"; // input from .csv
-    //idFertiliser[6] = "NONE"; // input from .csv
-
-    QString inhibitor[8];
-    inhibitor[0] = "nitrification_inhibitor"; // input from .csv
-    inhibitor[1] = "nitrification_inhibitor";
-    inhibitor[2] = "none";
-    inhibitor[3] = "none";
-    inhibitor[4] = "none";
-    inhibitor[5] = "none";
-    inhibitor[6] = "none";
-    inhibitor[7] = "none";
-
-    QString idFeature[8];
-    for (int i=0;i<nrFertilizers;i++)
-        idFeature[i] = "field2"; // initialization - default value
-
-    idFeature[0] = "field2"; //input from .csv
-    idFeature[1] = "field2"; //input from .csv
-    idFeature[2] = "field2"; //input from .csv
-    idFeature[3] = "field2"; //input from .csv
-    idFeature[4] = "field2"; //input from .csv
-    idFeature[5] = "field2"; //input from .csv
-    idFeature[6] = "field2"; //input from .csv
-    idFeature[7] = "field2"; //input from .csv
-
-
-
-    QString idCrop = "APPLE_TREE"; //input from .csv
-    calculatorCO2.soilDepth = 28; // [cm] input from .csv
-    calculatorCO2.skeleton = 3; // [%] input from .csv
-
-    calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
-
-
-    // read climate
-
-    if (! readClimate(idClimate, db, calculatorCO2, error))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
-
-
-    // read fertilizer
-    for (int i=0; i<nrFertilizers;i++)
-        calculatorCO2.fertiliser.amountFertiliser[i] = 0; // initialization - default value
-
-    calculatorCO2.fertiliser.amountFertiliser[0] = 200; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[1] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[2] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[3] = 1; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[4] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[5] = 5; // kg/ha input from .csv
-    calculatorCO2.fertiliser.amountFertiliser[6] = 1; // kg/ha input from .csv
-
-
-
-    if (! readFertilizer(idFertiliser, db, calculatorCO2, error,nrFertilizers))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
-
-    // read bouwmanNH4 table
-
-
-    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error,nrFertilizers))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
-
-    //read residue_treatment table
-    QString idResidue[2]; //input from .csv
-    idResidue[0] = "left_on_field_incorporated_or_mulch"; //input from .csv
-    idResidue[1] = "left_on_field_incorporated_or_mulch"; //input from .csv
-
-    if (idResidue[0] == "left_on_field_incorporated_or_mulch")
-    {
-        calculatorCO2.cropResidue.residueLeftOnField[0] = true;
-    }
-    else
-    {
-        calculatorCO2.cropResidue.residueLeftOnField[0] = false;
-    }
-    if (idResidue[1] == "left_on_field_incorporated_or_mulch")
-    {
-        calculatorCO2.cropResidue.residueLeftOnField[1] = true;
-    }
-    else
-    {
-        calculatorCO2.cropResidue.residueLeftOnField[1] = false;
-    }
-
-    if (! readResidue(idResidue, db, calculatorCO2, error))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
-
-    // read crop_parameters table
-    if (! readCropParameters(idCrop, db, calculatorCO2, error))
-    {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
-        return -1;
-    }
-
-
-
-
-    // *********************************************************************
-    calculatorCO2.cropResidue.residueWeight[0] = 10; //(t/ha) dry weight of woody residue input from .csv
-    calculatorCO2.cropResidue.residueWeight[1] = 2; //(t/ha) dry weight of green residue input from .csv
-    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
-    if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
-
-    // **********************************************************************
-    double idPercentageEnergyInGrid = 38.4;  // % input from .csv
-    if (idPercentageEnergyInGrid != NODATA)
-    {
-        calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid;
-    }
-    calculatorCO2.energy.input.fromElectricityGrid = 3; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnHydropower = 5; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnPhotovoltaic = 5; // kWh input from .csv
-    calculatorCO2.energy.input.fromElectricityOwnWind = 5; // kWh input from .csv
-    calculatorCO2.energy.input.fromFuelBiodiesel = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelBioethanol = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelCoal = 1; // kg input from .csv
-    calculatorCO2.energy.input.fromFuelDiesel = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelHighDensityBiomass = 1; // kg input from .csv
-    calculatorCO2.energy.input.fromFuelLPG = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelOil = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelPetrol = 1; // l input from .csv
-    calculatorCO2.energy.input.fromFuelWood = 1; // kg input from .csv
-
-    // **********************************************************************
-    calculatorCO2.pesticide.weightOfActivePrinciple = 15.4; // input from .csv kg active principle
-    // **********************************************************************
-
-    calculatorCO2.soilManage.percentage.noTillage = 100; // input from .csv
-    calculatorCO2.soilManage.percentage.minimumTillage = 0; // input from .csv
-    calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
-
-    calculatorCO2.soilManage.percentage.coverCropping = 1; // input from .csv
-
-    calculatorCO2.soilManage.percentage.forest = 0 ; // input from .csv
-    calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
-    calculatorCO2.soilManage.percentage.permanentGrass = 0; // input from .csv
-    calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
-
-    calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
-
-
-    // *********************************************************************
-    // erosion
-    calculatorCO2.averageTemperature = avgTemperature;
-    calculatorCO2.annualRainfall = avgRainfall; // input from .csv
-    calculatorCO2.erosion.erosionFactor.rainfall = calculatorCO2.annualRainfall;
-    if (idSoilTexture == "MEDIUM")
-        calculatorCO2.erosion.erosionFactor.texture = 0.3;
-    else if (idSoilTexture == "FINE")
-        calculatorCO2.erosion.erosionFactor.texture = 0.2;
-    else
-        calculatorCO2.erosion.erosionFactor.texture = 0.05;
-
-    double slope = 0.3; // input from .csv
-    calculatorCO2.erosion.erosionFactor.slope = slope;
-    // cover factor
-    calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);
-
-    calculatorCO2.erosion.erosionFactor.soilManagement = 0.01*calculatorCO2.soilManage.percentage.coverCropping*0.26;
-    calculatorCO2.erosion.erosionFactor.soilManagement += (100. - calculatorCO2.soilManage.percentage.coverCropping)*0.01 *(0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
-
-    // **********************************************************************
-
-
-    calculatorCO2.computeBalance();
-    std::cout << "values are in kgCO2Eq " << std::endl;
-    std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
-    std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
-    std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
-    std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
-    std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions() << std::endl;
-    std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
-    std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
-    std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
-    std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
-    std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
-    std::cout << "sequestration due to carbon of roots: " <<-calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
-
-    // ***************************************************************************************
-    // print results
-
 
 
     return 0;

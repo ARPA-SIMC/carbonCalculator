@@ -217,6 +217,10 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions();
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField );
+    carbonBudget = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
+            + soilManage.computeEmissions() + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
+            + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication
+            + soilManage.computeSequestrationRootBiomass() ;
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
@@ -228,7 +232,7 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
     fertiliser.bouwmanParameterNH4.modelParameter = bouwmanTableNH4.elementParameter;
     // ***********************************************************************
     // drainage
-    if (idDrainage == "POOR")
+    if (idDrainage == "Poor")
     {
         fertiliser.bouwmanParameterN2O.drainage = bouwmanTableN2O.drainage[0];
         fertiliser.bouwmanParameterNO.drainage = bouwmanTableNO.drainage[0];
@@ -275,12 +279,7 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
     }
 
     //**************************************************************************
-    // pH
-    //double referencepH;
-    //5
-    //6.4
-    //7.9
-    //9
+
 
     if (pH < 0 ) return false;
     if (pH > 14) return false;
@@ -315,19 +314,19 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
     int index;
     double textureParameterForCec;
     double bulkDensity;
-    if (idSoilTexture == "FINE")
+    if (idSoilTexture == "Fine")
     {
         index = 0;
         textureParameterForCec = 0.6;
         bulkDensity = 1.5;
     }
-    else if (idSoilTexture == "MEDIUM")
+    else if (idSoilTexture == "Medium")
     {
         index = 1;
         textureParameterForCec = 0.3;
         bulkDensity = 1.3;
     }
-    else if (idSoilTexture == "COARSE")
+    else if (idSoilTexture == "Coarse")
     {
         index = 2;
         textureParameterForCec = 0.15;
@@ -384,12 +383,12 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
 
         for (int i=0;i<4;i++)
         {
-            if (idInhibitor[i] == "polymer_coated")
+            if (idInhibitor[i] == "Polymer_coated")
             {
                 fertiliser.inhibitorN2O[i] = fertiliser.nitrogenInhibitorN2O.polymerCoated[fertiliser.inhibitorClass];
                 fertiliser.inhibitorNO[i] = fertiliser.nitrogenInhibitorNO.polymerCoated[fertiliser.inhibitorClass];
             }
-            else if (idInhibitor[i] == "nitrification_inhibitor")
+            else if (idInhibitor[i] == "Nitrification_inhibitor")
             {
                 fertiliser.inhibitorN2O[i] = fertiliser.nitrogenInhibitorN2O.nitrificationInhibitor[fertiliser.inhibitorClass];
                 fertiliser.inhibitorNO[i] = fertiliser.nitrogenInhibitorNO.nitrificationInhibitor[fertiliser.inhibitorClass];
