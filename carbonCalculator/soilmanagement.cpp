@@ -4,18 +4,23 @@
 #include "basicStructures.h"
 
 
-double SoilManagement::computeEmissions()
+double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
 {
     double emissions;
-    emissions = FROM_C_TO_CO2 * 460 * percentage.arable * 0.01; // from Haddaway et al. 2017
+    double matrixElement;
+    setMatrix();
+    matrixElement = soilTillage[myIdClimate].matrix[0][2];
+    emissions = FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.conventionalTillage*0.01;
+    matrixElement = soilTillage[myIdClimate].matrix[0][1];
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.minimumTillage*0.01;
+    emissions *= percentage.arable*0.01;
     return emissions;
 }
 
 double SoilManagement::computeSequestrationRootBiomass()
 {
-
-    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter);
-    else return -FROM_C_TO_CO2*695*exp(-rootDecayParameter);
+    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
+    else return -FROM_C_TO_CO2*695*exp(-rootDecayParameter)*percentage.arable*0.01;
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
@@ -34,7 +39,7 @@ void SoilManagement::setMatrix()
             }
         }
     }
-
+    // 0 forest 1 grass 2 arable
     soilLandUse[0].matrix[0][1]=	0.82;
     soilLandUse[0].matrix[0][2]=	0.71;
     soilLandUse[0].matrix[1][0]=	1.219512195;
@@ -62,7 +67,7 @@ void SoilManagement::setMatrix()
     soilLandUse[3].matrix[1][2]=    0.873715015;
     soilLandUse[3].matrix[2][0]=	1.449275362;
     soilLandUse[3].matrix[2][1]=    1.144537959;
-
+    // 0 notill 1 minimumTillage 2 conventionalTillage
     soilTillage[0].matrix[0][1]=	0.939655172;
     soilTillage[0].matrix[0][2]=	0.862068966;
     soilTillage[0].matrix[1][0]=	1.064220183;
@@ -144,21 +149,19 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     double incrementOrganicAmendment=1;
     double incrementCoverCrop=1;
     double incrementLandUse = 1;
-    double incrementTotal;
+    double incrementTotal=1;
 
     setMatrix();
-    incrementTillage = computeSequestrationTillage(myIdClimate);
-    incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
-    incrementLandUse = computeSequestrationLandUse(myIdClimate);
+    incrementTotal *= incrementTillage = computeSequestrationTillage(myIdClimate);
+    incrementTotal *= incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
+    incrementTotal *= incrementLandUse = computeSequestrationLandUse(myIdClimate);
     for (int i=0; i<8; i++)
     {
-        incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
+        incrementTotal *= incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
     }
     incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
-    incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
+    incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
 
-    incrementTotal = incrementTillage*incrementCoverCrop
-            *incrementOrganicAmendment*incrementResidue*incrementLandUse;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
 }

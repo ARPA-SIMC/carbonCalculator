@@ -215,10 +215,10 @@ void CarbonCalculator::computeBalance()
     cropResidue.computeEmissions();
     fertiliser.computeEmissions();
     erosion.computeCarbonLoss();
-    soilManage.computeEmissions();
+    soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField );
     carbonBudget = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
-            + soilManage.computeEmissions() + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
+            + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication
             + soilManage.computeSequestrationRootBiomass() ;
 }

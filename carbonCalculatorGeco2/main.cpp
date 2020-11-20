@@ -477,7 +477,6 @@ int main(int argc, char *argv[])
         QString idResidue[2]; //input from .csv
         idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment;
         idResidue[1] = inputData[iExp].cropFieldManagement.greenResidueTreatment;
-        idResidue[1] = idResidue[0] = "Left_on_field_incorporated_or_mulch";
         if (idResidue[0] == "Left_on_field_incorporated_or_mulch")
         {
             calculatorCO2.cropResidue.residueLeftOnField[0] = true;
@@ -573,8 +572,10 @@ int main(int argc, char *argv[])
         calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);
 
         calculatorCO2.erosion.erosionFactor.soilManagement = 0.01*calculatorCO2.soilManage.percentage.coverCropping*0.26;
-        calculatorCO2.erosion.erosionFactor.soilManagement += (100. - calculatorCO2.soilManage.percentage.coverCropping)*0.01 *(0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
+        calculatorCO2.erosion.erosionFactor.soilManagement += (100. - calculatorCO2.soilManage.percentage.coverCropping)*0.01*(0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
 
+
+        calculatorCO2.erosion.erosionFactor.soilManagement *= 0.01 * calculatorCO2.soilManage.percentage.arable;
         // **********************************************************************
 
 
@@ -584,14 +585,14 @@ int main(int argc, char *argv[])
         std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
         std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
         std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
-        std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions() << std::endl;
+        std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate) << std::endl;
         std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
         std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
         std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
         std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
         std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
         std::cout << "sequestration due to carbon of roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
-        std::cout << "___________________________________________________________________________" << std::endl;
+        std::cout << "___________________________________________________________________________\n" << std::endl;
         std::cout << "carbon budget: " <<calculatorCO2.carbonBudget << "  "<<std::endl;
         std::cout << "___________________________________________________________________________" << std::endl;
 

@@ -38,7 +38,7 @@ public:
     double rootDecayParameter;
 
     void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
-    double computeEmissions();
+    double computeEmissions(double carbonInSoil, int myIdClimate);
     double computeSequestrationRootBiomass();
     double computeSequestrationTillage(int myIdClimate);
     double computeSequestrationLandUse(int myIdClimate);
