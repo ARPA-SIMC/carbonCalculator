@@ -75,6 +75,7 @@ struct Tenergy{
     float oil;
     float petrol;
     float LPG;
+    float methane;
     float coal;
     float highEnergyDensityBiomass;
     float wood;
@@ -264,6 +265,7 @@ int main(int argc, char *argv[])
         inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.methane = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
@@ -535,7 +537,7 @@ int main(int argc, char *argv[])
         calculatorCO2.energy.input.fromFuelOil = inputData[iExp].energy.oil; // l input from .csv
         calculatorCO2.energy.input.fromFuelPetrol = inputData[iExp].energy.petrol; // l input from .csv
         calculatorCO2.energy.input.fromFuelWood = inputData[iExp].energy.wood; // kg input from .csv
-
+        calculatorCO2.energy.input.fromFuelMethane = inputData[iExp].energy.methane; // kg input from .csv
         // **********************************************************************
         calculatorCO2.pesticide.weightOfActivePrinciple = inputData[iExp].agronomicInput.pesticideWeight; // input from .csv kg active principle
         // **********************************************************************
@@ -589,9 +591,18 @@ int main(int argc, char *argv[])
         std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
         std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
         std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
-        std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
-        std::cout << "sequestration due to carbon incorporation: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
-        std::cout << "sequestration due to carbon of roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
+        //std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
+        std::cout << "sequestration due to conservative tillage"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqTillage << std::endl;
+        std::cout << "sequestration due to cover crop use"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqCropCover << std::endl;
+        std::cout << "sequestration due to conservative Land use"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqLandUse << std::endl;
+        for (int i=0; i<8; i++)
+        {
+            std::cout << "sequestration due to amendment"<<calculatorCO2.soilManage.sequestrationCarbonCO2EqFertilizerAmendment[i] << std::endl;;
+        }
+        std::cout << "sequestration due to woody residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[0] << std::endl;
+        std::cout << "sequestration due to green residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[1] << std::endl;
+        std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
+        std::cout << "sequestration due to organic system: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
         std::cout << "___________________________________________________________________________\n" << std::endl;
         std::cout << "carbon budget: " <<calculatorCO2.carbonBudget << "  "<<std::endl;
         std::cout << "___________________________________________________________________________" << std::endl;

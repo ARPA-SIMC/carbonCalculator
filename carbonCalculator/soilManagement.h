@@ -34,6 +34,11 @@ public:
 
     Tpercentage percentage;
     double sequestrationCarbonCO2Eq;
+    double sequestrationCarbonCO2EqResidue[2];
+    double sequestrationCarbonCO2EqTillage;
+    double sequestrationCarbonCO2EqCropCover;
+    double sequestrationCarbonCO2EqLandUse;
+    double sequestrationCarbonCO2EqFertilizerAmendment[8];
     bool isOrganic;
     double rootDecayParameter;
 

@@ -37,19 +37,16 @@ void EnergyManagement::computeEmissions()
     emissions.fromFuelWood = input.fromFuelWood*parameterFuel.woodEmissionPerEnergyUnit*parameterFuel.woodHeatPower; // ??????????????????????
     emissions.fromFuelCoal = input.fromFuelCoal*parameterFuel.coalEmissionPerEnergyUnit*parameterFuel.coalHeatPower;
     emissions.fromFuelOil = input.fromFuelOil * 0.8* parameterFuel.oilPerEnergyUnit*parameterFuel.heavyOilHeatPower;
-    emissions.fromFuelLPG = input.fromFuelLPG * 0.582 *parameterFuel.lpgPerEnergyUnit * parameterFuel.propaneHeatPower;
-
+    emissions.fromFuelLPG = input.fromFuelLPG * 0.582 *parameterFuel.lpgPerEnergyUnit * parameterFuel.LPGHeatPower;
+    emissions.fromFuelMethane = input.fromFuelMethane * parameterFuel.methanePerEnergyUnit * parameterFuel.methaneHeatPower;
     emissions.total = emissions.fromElectricityGrid + emissions.fromElectricityOwnPhotovoltaic
             + emissions.fromElectricityOwnWind + emissions.fromElectricityOwnHydropower
             + emissions.fromFuelBiodiesel + emissions.fromFuelBioethanol
             + emissions.fromFuelPetrol + emissions.fromFuelDiesel
             + emissions.fromFuelHighDensityBiomass + emissions.fromFuelWood
-            + emissions.fromFuelCoal + emissions.fromFuelOil + emissions.fromFuelLPG;
+            + emissions.fromFuelCoal + emissions.fromFuelOil
+            + emissions.fromFuelLPG + emissions.fromFuelMethane;
 
 }
 
 
-/*void EnergyManagement::getEmissions()
-{
-
-}*/

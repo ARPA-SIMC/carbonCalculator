@@ -51,12 +51,15 @@
         double woodEmissionPerEnergyUnit = 0.109; // kgCO2Eq/MJ from https://www.volker-quaschning.de/datserv/CO2-spez/index_e.php
         double lpgPerEnergyUnit = 0.0628; // kgCO2Eq/MJ
         double oilPerEnergyUnit = 0.0773; // kgCO2Eq/MJ
+        double methanePerEnergyUnit =0.063; // kgCO2Eq/MJ
 
         double coalHeatPower = 31.50; // MJ/kg
-        double propaneHeatPower = 47.50; // MJ/kg
+        double LPGHeatPower = 49.50; // MJ/kg
         double heavyOilHeatPower = 40.33; // MJ/kg
         double highDensityBiomassHeatPower = 20.08;  // MJ/kg
         double woodHeatPower = 12.99;  // MJ/kg
+        double methaneHeatPower = 55.6; // MJ/kg
+
 
         double dieselEmissionPerLitre = 2.68 ; // kgCO2/litre
         double ethanolEmissionPerLitre = 2.32; // kgCO2/litre
@@ -80,6 +83,7 @@
         double fromFuelCoal = 0;
         double fromFuelOil = 0;
         double fromFuelLPG = 0;
+        double fromFuelMethane = 0;
 
         double total = 0;
     };

@@ -19,8 +19,8 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
 
 double SoilManagement::computeSequestrationRootBiomass()
 {
-    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
-    else return -FROM_C_TO_CO2*695*exp(-rootDecayParameter)*percentage.arable*0.01;
+    if (!isOrganic) return -FROM_C_TO_CO2*10*exp(-rootDecayParameter)*percentage.arable*0.01;
+    else return -FROM_C_TO_CO2*(695-370)*exp(-rootDecayParameter)*percentage.arable*0.01;
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
@@ -153,24 +153,35 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
 
     setMatrix();
     incrementTotal *= incrementTillage = computeSequestrationTillage(myIdClimate);
+    sequestrationOfCarbon = -1*carbonInSoil*(incrementTillage-1);
+    sequestrationCarbonCO2EqTillage = sequestrationOfCarbon * FROM_C_TO_CO2;
     incrementTotal *= incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
+    sequestrationOfCarbon = -1*carbonInSoil*(incrementCoverCrop-1);
+    sequestrationCarbonCO2EqCropCover = sequestrationOfCarbon * FROM_C_TO_CO2;
     incrementTotal *= incrementLandUse = computeSequestrationLandUse(myIdClimate);
+    sequestrationOfCarbon = -1*carbonInSoil*(incrementLandUse-1);
+    sequestrationCarbonCO2EqLandUse = sequestrationOfCarbon * FROM_C_TO_CO2;
     for (int i=0; i<8; i++)
     {
         incrementTotal *= incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
+        sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i])-1);
+        sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
     }
     incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
+    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0])-1);
+    sequestrationCarbonCO2EqResidue[0] = sequestrationOfCarbon * FROM_C_TO_CO2;
     incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
-
+    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1])-1);
+    sequestrationCarbonCO2EqResidue[1] = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass();
 }
 
 double SoilManagement::computeSequestrationTillage(int myIdClimate)
 {
     double matrixElement;
     double incrementNoTillage;
-    //double incrementNoTillagePercentage;
     double incrementMinimumTillage;
     double incrementTillage;
     // no Tillage
