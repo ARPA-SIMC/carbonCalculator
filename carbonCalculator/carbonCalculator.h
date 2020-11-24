@@ -37,7 +37,7 @@
         double emissionCH4inCH4Units;
         double emissionN2OinN2OUnits;
         double residueWeight[2];
-        bool residueLeftOnField[2] = {false,false};
+        bool residueLeftOnField[2];
 
     public:
         // functions

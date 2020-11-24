@@ -489,11 +489,11 @@ int main(int argc, char *argv[])
         }
         if (idResidue[1] == "Left_on_field_incorporated_or_mulch")
         {
-            calculatorCO2.cropResidue.residueLeftOnField[1] = true;
+            calculatorCO2.cropResidue.residueLeftOnField[1] = 1;
         }
         else
         {
-            calculatorCO2.cropResidue.residueLeftOnField[1] = false;
+            calculatorCO2.cropResidue.residueLeftOnField[1] = 0;
         }
 
         if (! readResidue(idResidue, db, calculatorCO2, error))
@@ -580,7 +580,6 @@ int main(int argc, char *argv[])
         calculatorCO2.erosion.erosionFactor.soilManagement *= 0.01 * calculatorCO2.soilManage.percentage.arable;
         // **********************************************************************
 
-
         calculatorCO2.computeBalance();
         std::cout << "values are in kgCO2Eq " << std::endl;
         std::cout << "emissions due to energy: " << calculatorCO2.energy.emissions.total << std::endl;
@@ -594,7 +593,7 @@ int main(int argc, char *argv[])
         //std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
         std::cout << "sequestration due to conservative tillage"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqTillage << std::endl;
         std::cout << "sequestration due to cover crop use"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqCropCover << std::endl;
-        std::cout << "sequestration due to conservative Land use"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqLandUse << std::endl;
+        std::cout << "sequestration due to conservative Land use (forest + permanent grass + sparse vegetation)"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqLandUse << std::endl;
         for (int i=0; i<8; i++)
         {
             std::cout << "sequestration due to amendment"<<calculatorCO2.soilManage.sequestrationCarbonCO2EqFertilizerAmendment[i] << std::endl;;
