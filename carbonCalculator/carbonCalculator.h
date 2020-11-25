@@ -96,7 +96,9 @@
             int idClimate;
             double averageTemperature;
             double annualRainfall;
-            double carbonBudget;
+            double carbonBudgetPerHectare;
+            double carbonBudgetWholeField;
+            double carbonFootprintPerKgOfProduce;
     };
 
 #endif // CARBONCALCULATOR_H

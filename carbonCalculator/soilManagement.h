@@ -41,7 +41,8 @@ public:
     double sequestrationCarbonCO2EqFertilizerAmendment[8];
     bool isOrganic;
     double rootDecayParameter;
-
+    double yield;
+    double fieldSize;
     void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
     double computeEmissions(double carbonInSoil, int myIdClimate);
     double computeSequestrationRootBiomass();

@@ -311,12 +311,12 @@ int main(int argc, char *argv[])
             isOrganic = true; // input from .csv
         }
         calculatorCO2.soilManage.isOrganic = isOrganic;
-        double cropYield = inputData[iExp].cropFieldManagement.yield ; // t/ha input from .csv
-        double fieldExtension = inputData[iExp].general.fieldSize; // ha input from .csv
+        calculatorCO2.soilManage.yield = inputData[iExp].cropFieldManagement.yield ; // t/ha input from .csv
+        calculatorCO2.soilManage.fieldSize = inputData[iExp].general.fieldSize; // ha input from .csv
         double surfaceSparseTreesSchrubsHedgeFallow = inputData[iExp].cropFieldManagement.sparseVegetation; // m2 of sparse vegetation input from csv
         double ratioFallowExtension;
-        ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (fieldExtension * 10000);
-
+        //ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (calculatorCO2.soilManage.fieldSize * 10000);
+        ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / 100.;
         // read soil drainage
         QString idDrainage = inputData[iExp].soil.drainage; // input from .csv
         // read pH
@@ -586,7 +586,7 @@ int main(int argc, char *argv[])
         std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
         std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
         std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
-        std::cout << "emissions due to type of soil due to Carbon Oxydation: " << calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate) << std::endl;
+        std::cout << "emissions due to type of soil due to Carbon Oxidation: " << calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate) << std::endl;
         std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
         std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
         std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
@@ -603,8 +603,12 @@ int main(int argc, char *argv[])
         std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
         std::cout << "sequestration due to organic system: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
         std::cout << "___________________________________________________________________________\n" << std::endl;
-        std::cout << "carbon budget: " <<calculatorCO2.carbonBudget << "  "<<std::endl;
-        std::cout << "___________________________________________________________________________" << std::endl;
+        std::cout << "carbon budget per hectare: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
+        std::cout << "___________________________________________________________________________\n" << std::endl;
+        std::cout << "carbon budget whole field: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
+        std::cout << "___________________________________________________________________________\n" << std::endl;
+        std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
+        std::cout << "___________________________________________________________________________\n" << std::endl;
 
         // ***************************************************************************************
         printf("\n\n");

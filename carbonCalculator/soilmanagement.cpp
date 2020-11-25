@@ -152,7 +152,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     double incrementTotal=1;
 
     setMatrix();
-    incrementTotal *= incrementTillage = computeSequestrationTillage(myIdClimate);
+    incrementTotal *= incrementTillage = (percentage.arable * computeSequestrationTillage(myIdClimate) + 1*(100 - percentage.arable))/100.;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTillage-1);
     sequestrationCarbonCO2EqTillage = sequestrationOfCarbon * FROM_C_TO_CO2;
     incrementTotal *= incrementCoverCrop = computeSequestrationCoverCropping(myIdClimate);
