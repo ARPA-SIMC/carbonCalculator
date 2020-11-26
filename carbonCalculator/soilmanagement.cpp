@@ -9,18 +9,24 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     double emissions;
     double matrixElement;
     setMatrix();
-    matrixElement = soilTillage[myIdClimate].matrix[0][2];
+    /*
+    matrixElement = soilTillage[myIdClimate].matrix[2][0];
     emissions = FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.conventionalTillage*0.01;
-    matrixElement = soilTillage[myIdClimate].matrix[0][1];
+    matrixElement = soilTillage[myIdClimate].matrix[2][1];
     emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.minimumTillage*0.01;
+    matrixElement = 1;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.noTillage*0.01;
     emissions *= percentage.arable*0.01;
+    */
+    matrixElement = soilTillage[myIdClimate].matrix[0][2];
+    emissions = FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.arable*0.01;
     return emissions;
 }
 
 double SoilManagement::computeSequestrationRootBiomass()
 {
-    if (!isOrganic) return -FROM_C_TO_CO2*10*exp(-rootDecayParameter)*percentage.arable*0.01;
-    else return -FROM_C_TO_CO2*(695-370)*exp(-rootDecayParameter)*percentage.arable*0.01;
+    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
+    else return -FROM_C_TO_CO2*(695)*exp(-rootDecayParameter)*percentage.arable*0.01;
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
