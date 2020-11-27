@@ -514,7 +514,7 @@ int main(int argc, char *argv[])
 
         // *********************************************************************
         calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of woody residue input from .csv
-        calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of green residue input from .csv
+        calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.greenResidueWeight; //(t/ha) dry weight of green residue input from .csv
         if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
         if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
@@ -601,7 +601,7 @@ int main(int argc, char *argv[])
         std::cout << "sequestration due to woody residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[0] << std::endl;
         std::cout << "sequestration due to green residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[1] << std::endl;
         std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
-        std::cout << "sequestration due to organic system: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
+        std::cout << "sequestration due to organic system: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
         std::cout << "___________________________________________________________________________\n" << std::endl;
         std::cout << "carbon budget per hectare: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
         std::cout << "___________________________________________________________________________\n" << std::endl;

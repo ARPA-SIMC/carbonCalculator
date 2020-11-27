@@ -45,13 +45,13 @@ public:
     double fieldSize;
     void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
     double computeEmissions(double carbonInSoil, int myIdClimate);
-    double computeSequestrationRootBiomass();
+    double computeSequestrationRootBiomass(int myIdClimate);
     double computeSequestrationTillage(int myIdClimate);
     double computeSequestrationLandUse(int myIdClimate);
     double computeSequestrationCoverCropping(int myIdClimate);
     double computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment);
-    double computeSequestrationResidueIncorporation(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue);
-
+    double computeSequestrationResidueIncorporation(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue,int indexRecalitrant);
+    double computeSequestrationResidueIncorporation2(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue,int indexRecalitrant);
 };
 
 #endif // SOILMANAGEMENT_H

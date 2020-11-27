@@ -23,10 +23,23 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     return emissions;
 }
 
-double SoilManagement::computeSequestrationRootBiomass()
+double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
 {
-    if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
-    else return -FROM_C_TO_CO2*(695)*exp(-rootDecayParameter)*percentage.arable*0.01;
+
+    double biomassRootPerHectare;
+    double biomassRootCrop;
+    double biomassRootCoverCrop;
+    double biomassRootPermanentGrass;
+    double biomassRootForest;
+    if (!isOrganic) biomassRootPerHectare = 370;
+    else biomassRootPerHectare = 695; // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
+    biomassRootCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-rootDecayParameter)*percentage.arable*0.01*0.01*(percentage.conventionalTillage + percentage.noTillage * ((soilTillage[myIdClimate].matrix[2][0]-1)/20 + 1) + percentage.minimumTillage * ((soilTillage[myIdClimate].matrix[1][0]-1)/20 +1));
+    biomassRootCoverCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.arable*0.01*0.01*percentage.coverCropping*((soilCoverCropping[myIdClimate].matrix[0][1]-1)/20 + 1);
+    biomassRootPermanentGrass = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.permanentGrass*0.01 *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
+    biomassRootForest = - 695 * FROM_C_TO_CO2*exp(-0.71)*percentage.forest*0.01*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1);;
+    return biomassRootCrop + biomassRootCoverCrop + biomassRootCoverCrop + biomassRootForest;
+    //if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
+    //else return -FROM_C_TO_CO2*(695)*exp(-rootDecayParameter)*percentage.arable*0.01;
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
@@ -173,15 +186,18 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i])-1);
         sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
     }
-    incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0]);
-    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0])-1);
+    incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0);
+    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)-1);
     sequestrationCarbonCO2EqResidue[0] = sequestrationOfCarbon * FROM_C_TO_CO2;
-    incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1]);
-    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1])-1);
+    //incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1);
+    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)-1);
     sequestrationCarbonCO2EqResidue[1] = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
+    //printf("valori residui legno %f verde %f \n", residues[0],residues[1]);
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass();
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass(myIdClimate);
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
 }
 
 double SoilManagement::computeSequestrationTillage(int myIdClimate)
@@ -241,13 +257,25 @@ double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmen
 
 }
 
-double SoilManagement::computeSequestrationResidueIncorporation(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue)
+double SoilManagement::computeSequestrationResidueIncorporation(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int indexRecalcitrant)
 {
     if (!isIncorporatedResidue) return 1;
     double increment;
     double slopeFreshWeight;
-    slopeFreshWeight = 0.00002 * percentageDryMatter + 0.0015;
+    if (indexRecalcitrant == 0)
+    slopeFreshWeight = 0.00001 *(1 + 57.7/14.7) * percentageDryMatter + 0.0015; // an average with 32.6% decay with 25% lignin and 75% cellulose
+    else slopeFreshWeight = 0.00002 * percentageDryMatter + 0.0015;
     increment =1 + slopeFreshWeight*residueIncorporated;
     return increment;
 }
 
+double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int indexRecalcitrant)
+{
+    if (!isIncorporatedResidue) return 1;
+    double increment;
+    double slopeFreshWeight;
+    if (indexRecalcitrant == 0)
+    return -0.5 * residueIncorporated *1000 * (0.577+0.147)*0.5;
+    else
+    return -0.45 * residueIncorporated * 1000* 0.147;
+}
