@@ -61,7 +61,9 @@
         double lostCO2;
     };
 
+    class CropBiomass{
 
+    };
 
     class CarbonCalculator{
     private:
@@ -80,6 +82,7 @@
             FertiliserApplication fertiliser;
             SoilManagement soilManage;
             SoilErosion erosion;
+            CropBiomass biomassTimber;
         // functions
             void computeBalance();
             void initializeBouwmanTables();
