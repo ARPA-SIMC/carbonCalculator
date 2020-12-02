@@ -18,8 +18,16 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.noTillage*0.01;
     emissions *= percentage.arable*0.01;
     */
-    matrixElement = soilTillage[myIdClimate].matrix[0][2];
-    emissions = FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.arable*0.01;
+    matrixElement = soilTillage[myIdClimate].matrix[2][0]*soilLandUse[myIdClimate].matrix[2][0];
+    emissions = FROM_C_TO_CO2 * carbonInSoil * 0.006*( 1 + 1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.conventionalTillage*0.01;
+    matrixElement = soilTillage[myIdClimate].matrix[1][0]*soilLandUse[myIdClimate].matrix[2][0];
+    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 +  1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.minimumTillage*0.01;
+    matrixElement = soilLandUse[myIdClimate].matrix[2][0];
+    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 +  1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.noTillage*0.01;
+    matrixElement = soilLandUse[myIdClimate].matrix[1][0];
+    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 + 1./20.*(matrixElement-1))*percentage.permanentGrass*0.01;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
+
     return emissions;
 }
 
@@ -160,7 +168,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* recalcitrantIndex, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -182,8 +190,8 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationCarbonCO2EqLandUse = sequestrationOfCarbon * FROM_C_TO_CO2;
     for (int i=0; i<8; i++)
     {
-        incrementTotal *= incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i]);
-        sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i])-1);
+        incrementTotal *= incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i]);
+        sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
         sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
     }
     incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0);
@@ -249,10 +257,10 @@ double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
     return incrementCoverCropping = increment*percentage.coverCropping /100. + (100 - percentage.coverCropping)/100.;
 }
 
-double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment)
+double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment,double recalcitrantIndex)
 {
     double increment;
-    increment = 1 + incrementalParameterAmendment* amountOfAmendments/1000;
+    increment = 1 + incrementalParameterAmendment* amountOfAmendments*(1-recalcitrantIndex)/1000;
     return increment;
 
 }
