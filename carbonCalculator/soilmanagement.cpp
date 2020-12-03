@@ -17,7 +17,7 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     matrixElement = 1;
     emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.noTillage*0.01;
     emissions *= percentage.arable*0.01;
-    */
+
     matrixElement = soilTillage[myIdClimate].matrix[2][0]*soilLandUse[myIdClimate].matrix[2][0];
     emissions = FROM_C_TO_CO2 * carbonInSoil * 0.006*( 1 + 1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.conventionalTillage*0.01;
     matrixElement = soilTillage[myIdClimate].matrix[1][0]*soilLandUse[myIdClimate].matrix[2][0];
@@ -27,7 +27,11 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     matrixElement = soilLandUse[myIdClimate].matrix[1][0];
     emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 + 1./20.*(matrixElement-1))*percentage.permanentGrass*0.01;
     emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
-
+    */
+    emissions = FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.permanentGrass*0.01;
+    double weightArable = 0.01*(percentage.conventionalTillage*soilTillage[myIdClimate].matrix[2][0] + percentage.minimumTillage*soilTillage[myIdClimate].matrix[1][0]+percentage.noTillage);
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./24.*percentage.arable*0.01*weightArable;
     return emissions;
 }
 
@@ -194,16 +198,18 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
         sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
     }
-    incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0);
-    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)-1);
-    sequestrationCarbonCO2EqResidue[0] = sequestrationOfCarbon * FROM_C_TO_CO2;
+    //incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0);
+    //sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)-1);
+    //sequestrationCarbonCO2EqResidue[0] = sequestrationOfCarbon * FROM_C_TO_CO2;
     //incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1);
-    sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)-1);
-    sequestrationCarbonCO2EqResidue[1] = sequestrationOfCarbon * FROM_C_TO_CO2;
+    //sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)-1);
+    //sequestrationCarbonCO2EqResidue[1] = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
     //printf("valori residui legno %f verde %f \n", residues[0],residues[1]);
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass(myIdClimate);
+    sequestrationCarbonCO2EqResidue[0] = SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
 }
@@ -277,13 +283,19 @@ double SoilManagement::computeSequestrationResidueIncorporation(double residueIn
     return increment;
 }
 
-double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int indexRecalcitrant)
+double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int isHerbaceous)
 {
-    if (!isIncorporatedResidue) return 1;
-    double increment;
-    double slopeFreshWeight;
-    if (indexRecalcitrant == 0)
-    return -0.5 * residueIncorporated *1000 * (0.577+0.147)*0.5;
+    if (!isIncorporatedResidue) return 0;
+    //double increment;
+    //double slopeFreshWeight;
+    if (isHerbaceous == 0)
+    {
+        residueIncorporated += 1*0.01*percentage.forest;
+        return -0.5 * residueIncorporated *1000 * (0.577+0.147)*0.5;
+    }
     else
-    return -0.45 * residueIncorporated * 1000* 0.147;
+    {
+        residueIncorporated += 0.01*(0.2*percentage.forest + 0.5*percentage.permanentGrass + 0.5*percentage.arable*0.01*percentage.coverCropping);
+        return -0.45 * residueIncorporated * 1000* 0.147;
+    }
 }

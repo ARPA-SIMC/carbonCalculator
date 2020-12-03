@@ -591,7 +591,7 @@ int main(int argc, char *argv[])
         std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
         std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
         //std::cout << "sequestration due to minimum tillage and crop covering and land use: " << calculatorCO2.soilManage.sequestrationCarbonCO2Eq << std::endl;
-        /*std::cout << "sequestration due to conservative tillage"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqTillage << std::endl;
+        std::cout << "sequestration due to conservative tillage"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqTillage << std::endl;
         std::cout << "sequestration due to cover crop use"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqCropCover << std::endl;
         std::cout << "sequestration due to conservative Land use (forest + permanent grass + sparse vegetation)"<< calculatorCO2.soilManage.sequestrationCarbonCO2EqLandUse << std::endl;
         for (int i=0; i<8; i++)
@@ -609,7 +609,6 @@ int main(int argc, char *argv[])
         std::cout << "___________________________________________________________________________\n" << std::endl;
         std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
         std::cout << "___________________________________________________________________________\n" << std::endl;
-*/
         // ***************************************************************************************
         printf("\n\n");
     }

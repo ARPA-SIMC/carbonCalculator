@@ -31,7 +31,8 @@ SOURCES += \
     dbUtilities.cpp \
     energyManagement.cpp \
     fertilisationAndSoil.cpp \
-    soilmanagement.cpp
+    soilmanagement.cpp \
+    biomasstrees.cpp
 
 HEADERS += \
     basicStructures.h \
@@ -41,4 +42,5 @@ HEADERS += \
     dbUtilities.h \
     energyManagement.h \
     fertilisationAndSoil.h \
-    soilManagement.h
+    soilManagement.h \
+    biomasstrees.h
