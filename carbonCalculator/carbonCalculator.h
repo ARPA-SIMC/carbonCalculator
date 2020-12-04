@@ -5,6 +5,7 @@
     #include "energyManagement.h"
     #include "fertilisationandsoil.h"
     #include "soilmanagement.h"
+    #include "biomasstrees.h"
     #include <QString>
 
 
@@ -61,9 +62,7 @@
         double lostCO2;
     };
 
-    class CropBiomass{
 
-    };
 
     class CarbonCalculator{
     private:
@@ -82,7 +81,8 @@
             FertiliserApplication fertiliser;
             SoilManagement soilManage;
             SoilErosion erosion;
-            CropBiomass biomassTimber;
+            //CropBiomass biomassTimber;
+            BiomassTree biomassInTree;
         // functions
             void computeBalance();
             void initializeBouwmanTables();

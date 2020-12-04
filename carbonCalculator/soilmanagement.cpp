@@ -55,6 +55,18 @@ double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
+double SoilManagement::computeSequestrationDueToOrganicMamagement()
+{
+   if (!isOrganic)
+   {
+       return -270*FROM_C_TO_CO2*(percentage.forest+percentage.permanentGrass)*0.01;
+   }
+   else
+   {
+       return -270*FROM_C_TO_CO2; // from Gattinger et al. 2012
+   }
+}
+
 void SoilManagement::setMatrix()
 {
 
@@ -212,6 +224,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
 }
 
 double SoilManagement::computeSequestrationTillage(int myIdClimate)

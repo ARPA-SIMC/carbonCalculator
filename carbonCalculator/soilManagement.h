@@ -52,6 +52,7 @@ public:
     double computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment, double recalcitrantIndex);
     double computeSequestrationResidueIncorporation(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue,int indexRecalitrant);
     double computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue, int isHerbaceous);
+    double computeSequestrationDueToOrganicMamagement();
 };
 
 #endif // SOILMANAGEMENT_H

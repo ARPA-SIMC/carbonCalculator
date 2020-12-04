@@ -12,7 +12,7 @@
 
     //; // cm questo va reso variabile
     double turnellParameter = 0.5248; // -
-    double timberDensity;
+    double timberDensity = 0.6;
     double treeDensity;
     double deadTreeDensity;
     double orchardAge;
@@ -31,6 +31,7 @@
     double getBiomass(double height,double diameter);
     double getBiomassOrchard(double height,double diameter);
     double getBiomassOrchardLastYear(double height,double diameter);
+    double annualCarbonGain(double height, double diameter, int isOrchard, int nrPlants);
     };
 
 
