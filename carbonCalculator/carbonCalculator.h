@@ -102,6 +102,9 @@
             double carbonBudgetPerHectare;
             double carbonBudgetWholeField;
             double carbonFootprintPerKgOfProduce;
+            double carbonBudgetPerHectareSoil;
+            double carbonBudgetWholeFieldSoil;
+            double carbonFootprintPerKgOfProduceSoil;
     };
 
 #endif // CARBONCALCULATOR_H

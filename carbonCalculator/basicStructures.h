@@ -41,7 +41,7 @@
         double fossil = 0.15; //kg CO2/MJ supposed to be produced mostly from gas
         double wind = 0.003333333; //kg CO2/MJ
         double photovoltaic = 0.019722222; //kg CO2/MJ
-        double hydropower = 0.001666667; //kg CO2/MJ
+        double hydropower = 0.001666667; //kg CO2/MJ !! da controllare
     };
 
     struct TparameterFuel{

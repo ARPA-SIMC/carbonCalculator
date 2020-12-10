@@ -45,10 +45,10 @@ double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
     double biomassRootForest;
     if (!isOrganic) biomassRootPerHectare = 370;
     else biomassRootPerHectare = 695; // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
-    biomassRootCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-rootDecayParameter)*percentage.arable*0.01*0.01*(percentage.conventionalTillage + percentage.noTillage * ((soilTillage[myIdClimate].matrix[2][0]-1)/20 + 1) + percentage.minimumTillage * ((soilTillage[myIdClimate].matrix[1][0]-1)/20 +1));
-    biomassRootCoverCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.arable*0.01*0.01*percentage.coverCropping*((soilCoverCropping[myIdClimate].matrix[0][1]-1)/20 + 1);
-    biomassRootPermanentGrass = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.permanentGrass*0.01 *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
-    biomassRootForest = - 695 * FROM_C_TO_CO2*exp(-0.71)*percentage.forest*0.01*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1);;
+    biomassRootCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-rootDecayParameter)*percentage.arable*0.01;//*0.01*(percentage.conventionalTillage + percentage.noTillage * ((soilTillage[myIdClimate].matrix[2][0]-1)/20 + 1) + percentage.minimumTillage * ((soilTillage[myIdClimate].matrix[1][0]-1)/20 +1));
+    biomassRootCoverCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.coverCropping*0.01*0.5;//*0.01*percentage.coverCropping*((soilCoverCropping[myIdClimate].matrix[0][1]-1)/20 + 1);
+    biomassRootPermanentGrass = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.permanentGrass*0.01;// *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
+    biomassRootForest = - 695 * FROM_C_TO_CO2*exp(-0.71)*percentage.forest*0.01;//*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1); // we supposed forest is organic by default
     return biomassRootCrop + biomassRootCoverCrop + biomassRootCoverCrop + biomassRootForest;
     //if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
     //else return -FROM_C_TO_CO2*(695)*exp(-rootDecayParameter)*percentage.arable*0.01;
@@ -59,7 +59,7 @@ double SoilManagement::computeSequestrationDueToOrganicMamagement()
 {
    if (!isOrganic)
    {
-       return -270*FROM_C_TO_CO2*(percentage.forest+percentage.permanentGrass)*0.01;
+       return -270*FROM_C_TO_CO2*(percentage.forest)*0.01;
    }
    else
    {
@@ -188,7 +188,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
-    double incrementResidue=1;
+    //double incrementResidue=1;
     double incrementOrganicAmendment=1;
     double incrementCoverCrop=1;
     double incrementLandUse = 1;
@@ -303,12 +303,13 @@ double SoilManagement::computeSequestrationResidueIncorporation2(double residueI
     //double slopeFreshWeight;
     if (isHerbaceous == 0)
     {
-        residueIncorporated += 1*0.01*percentage.forest;
-        return -0.5 * residueIncorporated *1000 * (0.577+0.147)*0.5;
+        residueIncorporated += 1*0.01*percentage.forest;//1 t/ha of wood incorporated
+        return -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)
     }
     else
     {
-        residueIncorporated += 0.01*(0.2*percentage.forest + 0.5*percentage.permanentGrass + 0.5*percentage.arable*0.01*percentage.coverCropping);
-        return -0.45 * residueIncorporated * 1000* 0.147;
+        // 0.2 t/ha of forest leaves, 0.5 t/ha of permanent grass, 0.5 t/ha of cover cropping
+        residueIncorporated += 0.01*(0.2*percentage.forest+0.5*percentage.permanentGrass + 0.5*percentage.arable*0.01*percentage.coverCropping);
+        return -0.45*residueIncorporated*1000*0.147;
     }
 }
