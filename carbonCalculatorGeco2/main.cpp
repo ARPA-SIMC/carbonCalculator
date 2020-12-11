@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QString error;
 
-    bool isOldCsv = false;
+    bool isOldCsv = true;
     if (isOldCsv)
     {
         // search data path
@@ -614,6 +614,14 @@ int main(int argc, char *argv[])
             std::cout << "___________________________________________________________________________\n" << std::endl;
             std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduceSoil << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon budget per hectare with tree biomass: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon budget whole field with tree biomass: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon footprint gCO2Eq per kg of produce with tree biomass: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+
             // ***************************************************************************************
             printf("\n\n");
         }
