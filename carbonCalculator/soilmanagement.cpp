@@ -221,9 +221,15 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass(myIdClimate);
     sequestrationCarbonCO2EqResidue[0] = SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[2] = SoilManagement::computeSequestrationResidueIncorporation2(residues[2],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[3] = SoilManagement::computeSequestrationResidueIncorporation2(residues[3],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
+
+
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
 }
 

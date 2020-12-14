@@ -50,7 +50,7 @@ double BiomassTree::annualCarbonGain(double height, double diameter, int isOrcha
     {
         carbon = 0.5 * 85 * timberDensity * treeDensity;  // from Nader et al. 2019
     }
-    //carbon *= 1.5; //  [g] adding woody roots;
+
     carbon -= 1000*woodyResidues*0.5;
     carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
     return -carbonCO2Eq;

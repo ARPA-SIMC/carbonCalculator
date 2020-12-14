@@ -20,9 +20,9 @@
         double belowGroundContentN = 0.019; //default parameter
         int isTreeCrop = 1; //default parameter
 
-        double emissionCH4[2] = {0.065333333,0.065333333}; //default parameter
-        double emissionN2O[2] = {0.00050675,0.00050675}; //default parameter
-        double residueReconvertedToCO2[2] = {10,10}; //default parameter
+        double emissionCH4[4] = {0.065333333,0.065333333,0.065333333,0.065333333}; //default parameter
+        double emissionN2O[4] = {0.00050675,0.00050675,0.00050675,0.00050675}; //default parameter
+        double residueReconvertedToCO2[4] = {10,10,10,10}; //default parameter
     };
 
     struct TresidueType{

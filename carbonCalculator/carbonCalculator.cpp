@@ -10,21 +10,31 @@ void CropResidueManagement::computeEmissions()
 {
     double woodParameterReduction =  0.1;
     aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  * residueWeight[0];
+    aboveGroundNitrogen += cropResidueParameter.aboveGroundContentN  * residueWeight[1];
     belowGroundResidue = cropResidueParameter.belowAboveRatio*residueWeight[0];
+    belowGroundResidue += cropResidueParameter.belowAboveRatio*residueWeight[1];
     emissionCH4inCH4Units = cropResidueParameter.emissionCH4[0]*residueWeight[0]*1000*woodParameterReduction;
+    emissionCH4inCH4Units += cropResidueParameter.emissionCH4[1]*residueWeight[1]*1000*woodParameterReduction;
     emissionN2OinN2OUnits = cropResidueParameter.emissionN2O[0]*residueWeight[0]*1000*woodParameterReduction;
+    emissionN2OinN2OUnits += cropResidueParameter.emissionN2O[1]*residueWeight[1]*1000*woodParameterReduction;
     kgCO2Equivalent.fromCH4 = emissionCH4inCH4Units * EQUIVALENTCH4TOCO2;
     kgCO2Equivalent.fromN2O = emissionN2OinN2OUnits * EQUIVALENTN2OTOCO2;
     kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[0]*residueWeight[0]*cropResidueParameter.residueReconvertedToCO2[0]/100.);
+    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[1]*residueWeight[1]*cropResidueParameter.residueReconvertedToCO2[1]/100.);
     kgCO2Equivalent.total = kgCO2Equivalent.fromCH4 + kgCO2Equivalent.fromN2O + kgCO2Equivalent.fromCO2;
 
-    aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  * residueWeight[1];
-    belowGroundResidue = cropResidueParameter.belowAboveRatio*residueWeight[1];
-    emissionCH4inCH4Units = cropResidueParameter.emissionCH4[1]*residueWeight[1]*1000;
-    emissionN2OinN2OUnits = cropResidueParameter.emissionN2O[1]*residueWeight[1]*1000;
+    aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  * residueWeight[2];
+    aboveGroundNitrogen += cropResidueParameter.aboveGroundContentN  * residueWeight[3];
+    belowGroundResidue = cropResidueParameter.belowAboveRatio*residueWeight[2];
+    belowGroundResidue += cropResidueParameter.belowAboveRatio*residueWeight[3];
+    emissionCH4inCH4Units = cropResidueParameter.emissionCH4[2]*residueWeight[2]*1000;
+    emissionCH4inCH4Units += cropResidueParameter.emissionCH4[3]*residueWeight[3]*1000;
+    emissionN2OinN2OUnits = cropResidueParameter.emissionN2O[2]*residueWeight[2]*1000;
+    emissionN2OinN2OUnits += cropResidueParameter.emissionN2O[3]*residueWeight[3]*1000;
     kgCO2Equivalent.fromCH4 = emissionCH4inCH4Units * EQUIVALENTCH4TOCO2;
     kgCO2Equivalent.fromN2O = emissionN2OinN2OUnits * EQUIVALENTN2OTOCO2;
-    kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[1]*residueWeight[1]*cropResidueParameter.residueReconvertedToCO2[1]/100.);
+    kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[2]*residueWeight[2]*cropResidueParameter.residueReconvertedToCO2[2]/100.);
+    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[3]*residueWeight[3]*cropResidueParameter.residueReconvertedToCO2[3]/100.);
     kgCO2Equivalent.total += kgCO2Equivalent.fromCH4 + kgCO2Equivalent.fromN2O + kgCO2Equivalent.fromCO2;
 }
 
@@ -217,7 +227,7 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField);
-    biomassInTree.annualCarbonGain(300,15,1,2000,cropResidue.residueWeight[0]);
+    biomassInTree.annualCarbonGain(300,15,1,2000,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;

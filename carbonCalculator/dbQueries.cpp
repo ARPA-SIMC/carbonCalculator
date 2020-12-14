@@ -165,9 +165,9 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
 
 bool readResidue(QString* idResidue, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
 {
-    for (int i=0;i<2;i++)
+    for (int i=0;i<4;i++)
     {
-        QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue[0] + "'";
+        QString queryString = "SELECT * FROM residue_treatment WHERE id_treatment_residue='" + idResidue[i] + "'";
         QSqlQuery query = db.exec(queryString);
         query.last();
         if (! query.isValid())

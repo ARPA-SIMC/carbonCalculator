@@ -41,6 +41,9 @@ struct Tsoil{
     QString texture;
     float organicMatter;
     float skeleton;
+    float availableWaterCapacity;
+    float totalNitrogen;
+    float carbonNitrogenRatio;
 };
 struct TcropFieldManagement{
     QString cropName;
@@ -52,10 +55,16 @@ struct TcropFieldManagement{
     float permanentGrass;
     float forest;
     float sparseVegetation;
-    QString woodyResidueTreatment;
-    float woodyResidueWeight;
-    QString greenResidueTreatment;
-    float greenResidueWeight;
+    QString woodyResidueTreatment[2];
+    float woodyResidueWeight[2];
+    QString greenResidueTreatment[2];
+    float greenResidueWeight[2];
+    float treeDensity;
+    float deadTreeDensity;
+    float orchardAge;
+    float treeDBH;
+    float treeHeight;
+
 };
 
 struct TagronomicInput{
@@ -108,7 +117,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QString error;
 
-    bool isOldCsv = true;
+    bool isOldCsv = false;
     if (isOldCsv)
     {
         // search data path
@@ -221,10 +230,10 @@ int main(int argc, char *argv[])
             inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
-            inputData[iExp].cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
+            //inputData[iExp].cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+            //inputData[iExp].cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
+            //inputData[iExp].cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
+            //inputData[iExp].cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
 
             inputData[iExp].agronomicInput.pesticideWeight = data[iExp].value(label++).remove("\"").toFloat();
             for (int i=0;i<4;i++)
@@ -482,8 +491,8 @@ int main(int argc, char *argv[])
 
             //read residue_treatment table
             QString idResidue[2]; //input from .csv
-            idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment;
-            idResidue[1] = inputData[iExp].cropFieldManagement.greenResidueTreatment;
+            //idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment;
+            //idResidue[1] = inputData[iExp].cropFieldManagement.greenResidueTreatment;
             if (idResidue[0] == "Left_on_field_incorporated_or_mulch")
             {
                 calculatorCO2.cropResidue.residueLeftOnField[0] = true;
@@ -518,8 +527,8 @@ int main(int argc, char *argv[])
 
 
             // *********************************************************************
-            calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of woody residue input from .csv
-            calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.greenResidueWeight; //(t/ha) dry weight of green residue input from .csv
+            //calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of woody residue input from .csv
+            //calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.greenResidueWeight; //(t/ha) dry weight of green residue input from .csv
             if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
             if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
 
@@ -731,8 +740,17 @@ int main(int argc, char *argv[])
             inputData[iExp].soil.texture = data[iExp].value(label++).remove("\"");
             inputData[iExp].soil.organicMatter = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].soil.skeleton = data[iExp].value(label++).remove("\"").toFloat();
-            /*
+            inputData[iExp].soil.availableWaterCapacity = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].soil.totalNitrogen = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].soil.carbonNitrogenRatio = data[iExp].value(label++).remove("\"").toFloat();
+
+
             inputData[iExp].cropFieldManagement.cropName = data[iExp].value(label++).remove("\"");
+            inputData[iExp].cropFieldManagement.treeDensity = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.deadTreeDensity = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.orchardAge = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.treeDBH = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.treeHeight = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.isOrganic = data[iExp].value(label++).remove("\"");
             inputData[iExp].cropFieldManagement.yield = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.noTillage = data[iExp].value(label++).remove("\"").toFloat();
@@ -741,10 +759,14 @@ int main(int argc, char *argv[])
             inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).remove("\"").toFloat();
             inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.woodyResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.woodyResidueTreatment = data[iExp].value(label++).remove("\"");
-            inputData[iExp].cropFieldManagement.greenResidueWeight = data[iExp].value(label++).remove("\"").toFloat();
-            inputData[iExp].cropFieldManagement.greenResidueTreatment = data[iExp].value(label++).remove("\"");
+            inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.woodyResidueWeight[1] = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.woodyResidueTreatment[0] = data[iExp].value(label++).remove("\"");
+            inputData[iExp].cropFieldManagement.woodyResidueTreatment[1] = data[iExp].value(label++).remove("\"");
+            inputData[iExp].cropFieldManagement.greenResidueWeight[0] = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.greenResidueWeight[1] = data[iExp].value(label++).remove("\"").toFloat();
+            inputData[iExp].cropFieldManagement.greenResidueTreatment[0] = data[iExp].value(label++).remove("\"");
+            inputData[iExp].cropFieldManagement.greenResidueTreatment[1] = data[iExp].value(label++).remove("\"");
 
             inputData[iExp].agronomicInput.pesticideWeight = data[iExp].value(label++).remove("\"").toFloat();
             for (int i=0;i<4;i++)
@@ -1001,31 +1023,38 @@ int main(int argc, char *argv[])
             }
 
             //read residue_treatment table
-            QString idResidue[2]; //input from .csv
-            idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment;
-            idResidue[1] = inputData[iExp].cropFieldManagement.greenResidueTreatment;
-            if (idResidue[0] == "Left_on_field_incorporated_or_mulch")
+            QString idResidue[4]; //input from .csv
+            idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment[0];
+            idResidue[2] = inputData[iExp].cropFieldManagement.greenResidueTreatment[0];
+            idResidue[1] = inputData[iExp].cropFieldManagement.woodyResidueTreatment[1];
+            idResidue[3] = inputData[iExp].cropFieldManagement.greenResidueTreatment[1];
+            for (int i=0;i<4;i++)
             {
-                calculatorCO2.cropResidue.residueLeftOnField[0] = true;
+                if (idResidue[i] == "Left_on_field_incorporated_or_mulch")
+                {
+                    calculatorCO2.cropResidue.residueLeftOnField[i] = true;
+                }
+                else
+                {
+                    calculatorCO2.cropResidue.residueLeftOnField[i] = false;
+                }
             }
-            else
-            {
-                calculatorCO2.cropResidue.residueLeftOnField[0] = false;
-            }
+            /*
             if (idResidue[1] == "Left_on_field_incorporated_or_mulch")
             {
-                calculatorCO2.cropResidue.residueLeftOnField[1] = 1;
+                calculatorCO2.cropResidue.residueLeftOnField[1] = true;
             }
             else
             {
-                calculatorCO2.cropResidue.residueLeftOnField[1] = 0;
+                calculatorCO2.cropResidue.residueLeftOnField[1] = false;
             }
-
+            */
             if (! readResidue(idResidue, db, calculatorCO2, error))
             {
                 std::cout << "ERROR: " + error.toStdString() << std::endl;
                 return -1;
             }
+
 
             // read crop_parameters table
             if (! readCropParameters(idCrop, db, calculatorCO2, error))
@@ -1038,10 +1067,15 @@ int main(int argc, char *argv[])
 
 
             // *********************************************************************
-            calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight; //(t/ha) dry weight of woody residue input from .csv
-            calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.greenResidueWeight; //(t/ha) dry weight of green residue input from .csv
-            if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 3; // t/ha
-            if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 3; // t/ha
+            calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight[0]; //(t/ha) dry weight of woody residue input from .csv
+            calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
+            calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[2]; //(t/ha) dry weight of green residue input from .csv
+            calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[3]; //(t/ha) dry weight of woody residue input from .csv
+
+            if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 0.5; // t/ha
+            if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 0.5; // t/ha
+            if (calculatorCO2.cropResidue.residueWeight[2] == NODATA) calculatorCO2.cropResidue.residueWeight[2] = 0.1; // t/ha
+            if (calculatorCO2.cropResidue.residueWeight[3] == NODATA) calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
 
             // **********************************************************************
             double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
@@ -1067,18 +1101,19 @@ int main(int argc, char *argv[])
             calculatorCO2.pesticide.weightOfActivePrinciple = inputData[iExp].agronomicInput.pesticideWeight; // input from .csv kg active principle
             // **********************************************************************
 
-            calculatorCO2.soilManage.percentage.noTillage = inputData[iExp].cropFieldManagement.noTillage; // input from .csv
-            calculatorCO2.soilManage.percentage.minimumTillage = inputData[iExp].cropFieldManagement.minTillage; // input from .csv
-            calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
+            calculatorCO2.soilManage.percentage.coverCropping = 100.*inputData[iExp].cropFieldManagement.coverCrop/(calculatorCO2.soilManage.fieldSize*10000); // input from .csv
 
-            calculatorCO2.soilManage.percentage.coverCropping = inputData[iExp].cropFieldManagement.coverCrop; // input from .csv
-
-            calculatorCO2.soilManage.percentage.forest = inputData[iExp].cropFieldManagement.forest ; // input from .csv
+            calculatorCO2.soilManage.percentage.forest = 100. * inputData[iExp].cropFieldManagement.forest/(calculatorCO2.soilManage.fieldSize*10000) ; // input from .csv
             calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
-            calculatorCO2.soilManage.percentage.permanentGrass = inputData[iExp].cropFieldManagement.permanentGrass; // input from .csv
+            calculatorCO2.soilManage.percentage.permanentGrass = 100. * inputData[iExp].cropFieldManagement.permanentGrass/(calculatorCO2.soilManage.fieldSize*10000); // input from .csv
             calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
 
             calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
+
+
+            calculatorCO2.soilManage.percentage.noTillage = 100. * inputData[iExp].cropFieldManagement.noTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
+            calculatorCO2.soilManage.percentage.minimumTillage = 100. * inputData[iExp].cropFieldManagement.minTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
+            calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
 
 
             // *********************************************************************
@@ -1136,7 +1171,7 @@ int main(int argc, char *argv[])
             std::cout << "___________________________________________________________________________\n" << std::endl;
             // ***************************************************************************************
             printf("\n\n");
-            */
+
         }
         return 0;
     }

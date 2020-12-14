@@ -37,8 +37,8 @@
         double belowGroundResidue;
         double emissionCH4inCH4Units;
         double emissionN2OinN2OUnits;
-        double residueWeight[2];
-        bool residueLeftOnField[2];
+        double residueWeight[4];
+        bool residueLeftOnField[4];
 
     public:
         // functions
