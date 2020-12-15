@@ -1022,6 +1022,13 @@ int main(int argc, char *argv[])
                 return -1;
             }
 
+            // biomass data
+
+            calculatorCO2.biomassInTree.maxHeight = inputData[iExp].cropFieldManagement.treeHeight;
+            calculatorCO2.biomassInTree.treeDensity = inputData[iExp].cropFieldManagement.treeDensity;
+            calculatorCO2.biomassInTree.deadTreeDensity = inputData[iExp].cropFieldManagement.deadTreeDensity;
+            calculatorCO2.biomassInTree.currentDiameter = inputData[iExp].cropFieldManagement.treeDBH;
+
             //read residue_treatment table
             QString idResidue[4]; //input from .csv
             idResidue[0] = inputData[iExp].cropFieldManagement.woodyResidueTreatment[0];
@@ -1069,8 +1076,8 @@ int main(int argc, char *argv[])
             // *********************************************************************
             calculatorCO2.cropResidue.residueWeight[0] = inputData[iExp].cropFieldManagement.woodyResidueWeight[0]; //(t/ha) dry weight of woody residue input from .csv
             calculatorCO2.cropResidue.residueWeight[1] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
-            calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[2]; //(t/ha) dry weight of green residue input from .csv
-            calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[3]; //(t/ha) dry weight of woody residue input from .csv
+            calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[0]; //(t/ha) dry weight of green residue input from .csv
+            calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
 
             if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 0.5; // t/ha
             if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 0.5; // t/ha
@@ -1159,7 +1166,10 @@ int main(int argc, char *argv[])
                 std::cout << "sequestration due to amendment"<<calculatorCO2.soilManage.sequestrationCarbonCO2EqFertilizerAmendment[i] << std::endl;;
             }
             std::cout << "sequestration due to woody residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[0] << std::endl;
-            std::cout << "sequestration due to green residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[1] << std::endl;
+            std::cout << "sequestration due to woody residues2" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[1] << std::endl;
+            std::cout << "sequestration due to green residues" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[2] << std::endl;
+            std::cout << "sequestration due to green residues2" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[3] << std::endl;
+
             std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
             std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;

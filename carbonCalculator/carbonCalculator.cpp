@@ -20,7 +20,7 @@ void CropResidueManagement::computeEmissions()
     kgCO2Equivalent.fromCH4 = emissionCH4inCH4Units * EQUIVALENTCH4TOCO2;
     kgCO2Equivalent.fromN2O = emissionN2OinN2OUnits * EQUIVALENTN2OTOCO2;
     kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[0]*residueWeight[0]*cropResidueParameter.residueReconvertedToCO2[0]/100.);
-    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[1]*residueWeight[1]*cropResidueParameter.residueReconvertedToCO2[1]/100.);
+    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[0]*residueWeight[1]*cropResidueParameter.residueReconvertedToCO2[1]/100.);
     kgCO2Equivalent.total = kgCO2Equivalent.fromCH4 + kgCO2Equivalent.fromN2O + kgCO2Equivalent.fromCO2;
 
     aboveGroundNitrogen = cropResidueParameter.aboveGroundContentN  * residueWeight[2];
@@ -33,8 +33,8 @@ void CropResidueManagement::computeEmissions()
     emissionN2OinN2OUnits += cropResidueParameter.emissionN2O[3]*residueWeight[3]*1000;
     kgCO2Equivalent.fromCH4 = emissionCH4inCH4Units * EQUIVALENTCH4TOCO2;
     kgCO2Equivalent.fromN2O = emissionN2OinN2OUnits * EQUIVALENTN2OTOCO2;
-    kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[2]*residueWeight[2]*cropResidueParameter.residueReconvertedToCO2[2]/100.);
-    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[3]*residueWeight[3]*cropResidueParameter.residueReconvertedToCO2[3]/100.);
+    kgCO2Equivalent.fromCO2 = 1000*(cropResidueParameter.dryMatterFraction[1]*residueWeight[2]*cropResidueParameter.residueReconvertedToCO2[2]/100.);
+    kgCO2Equivalent.fromCO2 += 1000*(cropResidueParameter.dryMatterFraction[1]*residueWeight[3]*cropResidueParameter.residueReconvertedToCO2[3]/100.);
     kgCO2Equivalent.total += kgCO2Equivalent.fromCH4 + kgCO2Equivalent.fromN2O + kgCO2Equivalent.fromCO2;
 }
 
@@ -227,13 +227,13 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField);
-    biomassInTree.annualCarbonGain(300,15,1,2000,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
+    biomassInTree.annualCarbonGain(300,15,2000,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
     carbonBudgetWholeFieldSoil = carbonBudgetPerHectareSoil*soilManage.fieldSize;
     carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
-    carbonBudgetPerHectare = carbonBudgetPerHectareSoil + biomassInTree.annualCarbonGain(200,15,1,3000,cropResidue.residueWeight[0]);
+    carbonBudgetPerHectare = carbonBudgetPerHectareSoil + biomassInTree.annualCarbonGain(200,15,3000,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBudgetWholeField = carbonBudgetPerHectare*soilManage.fieldSize;
     carbonFootprintPerKgOfProduce = carbonBudgetPerHectare/soilManage.yield;
 

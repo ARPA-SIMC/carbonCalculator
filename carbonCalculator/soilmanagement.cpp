@@ -228,8 +228,8 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
 
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[2],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[3],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
 }
 
@@ -304,18 +304,23 @@ double SoilManagement::computeSequestrationResidueIncorporation(double residueIn
 
 double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int isHerbaceous)
 {
+    double sequestration = 0 ;
     if (!isIncorporatedResidue) return 0;
     //double increment;
     //double slopeFreshWeight;
     if (isHerbaceous == 0)
     {
         residueIncorporated += 1*0.01*percentage.forest;//1 t/ha of wood incorporated
-        return -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)
+        sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)
+        if (sequestration < 0) return sequestration;
+        else return 0;
     }
     else
     {
         // 0.2 t/ha of forest leaves, 0.5 t/ha of permanent grass, 0.5 t/ha of cover cropping
         residueIncorporated += 0.01*(0.2*percentage.forest+0.5*percentage.permanentGrass + 0.5*percentage.arable*0.01*percentage.coverCropping);
-        return -0.45*residueIncorporated*1000*0.147;
+        sequestration = -0.45*residueIncorporated*1000*0.147;
+        if (sequestration < 0) return sequestration;
+        else return 0;
     }
 }

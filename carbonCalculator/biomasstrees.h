@@ -21,6 +21,8 @@
     double maxHeight;
     double agePerMaxHeight;
     double agePerMaxDiameter;
+    double currentDiameter;
+    int isOrchard;
 
       //io farei 15 anni 21 cm 5 metri in 5 anni per citrus
       //sentirei vincenzo per gli altri alberi e per la vite
@@ -31,7 +33,7 @@
     double getBiomass(double height,double diameter);
     double getBiomassOrchard(double height,double diameter);
     double getBiomassOrchardLastYear(double height,double diameter);
-    double annualCarbonGain(double height, double diameter, int isOrchard, int nrPlants, double woodyResidues);
+    double annualCarbonGain(double height, double diameter, int nrPlants, double woodyResidues);
     };
 
 

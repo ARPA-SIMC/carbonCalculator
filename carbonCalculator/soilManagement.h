@@ -34,7 +34,7 @@ public:
 
     Tpercentage percentage;
     double sequestrationCarbonCO2Eq;
-    double sequestrationCarbonCO2EqResidue[2];
+    double sequestrationCarbonCO2EqResidue[4];
     double sequestrationCarbonCO2EqTillage;
     double sequestrationCarbonCO2EqCropCover;
     double sequestrationCarbonCO2EqLandUse;

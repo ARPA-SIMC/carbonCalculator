@@ -221,16 +221,28 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
         error =  "missing emission of dry matter fraction data";
         return false;
     }
+    calculator.biomassInTree.isOrchard = 1;
     if (valueString == "grass")
+    {
         calculator.soilManage.rootDecayParameter  = 1.27; // The decomposition of fine and coarse roots: their global patterns and controlling factors Xinyue Zhang & Wei Wang NATURE Scientific Reports volume 5, Article number: 9940 (2015)
+        calculator.biomassInTree.isOrchard = 0;
+    }
     else if (valueString == "shrub")
+    {
         calculator.soilManage.rootDecayParameter  = 1.02;
+    }
     else if (valueString == "tree_broadleaf")
+    {
         calculator.soilManage.rootDecayParameter  = 0.71;
+    }
     else if (valueString == "tree_conifer")
+    {
         calculator.soilManage.rootDecayParameter  = 0.41;
+    }
     else
+    {
         calculator.soilManage.rootDecayParameter  = 1.02;
+    }
 
 
     if (! getValue(query.value("nitrogen_content_aboveground"), &value))

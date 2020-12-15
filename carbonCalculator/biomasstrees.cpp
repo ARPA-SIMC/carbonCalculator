@@ -36,7 +36,7 @@ double BiomassTree::annualGrowthHeight()
     return 0;
 }
 
-double BiomassTree::annualCarbonGain(double height, double diameter, int isOrchard, int nrPlants,double woodyResidues)
+double BiomassTree::annualCarbonGain(double height, double diameter, int nrPlants,double woodyResidues)
 {
     double carbon;
     double carbonCO2Eq=0;
