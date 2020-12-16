@@ -230,6 +230,7 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
     else if (valueString == "shrub")
     {
         calculator.soilManage.rootDecayParameter  = 1.02;
+        calculator.biomassInTree.isOrchard = 0;
     }
     else if (valueString == "tree_broadleaf")
     {
@@ -259,6 +260,37 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
     }
     calculator.cropResidue.cropResidueParameter.belowAboveRatio = value;
 
+
+    if (! getValue(query.value("growth_diameter"), &value))
+    {
+        error = "Error: missing diameter growth data";
+        return false;
+    }
+    calculator.biomassInTree.incrementDiameter = value;
+
+    if (! getValue(query.value("growth_height"), &value))
+    {
+        error = "Error: missing height growth data";
+        return false;
+    }
+    calculator.biomassInTree.incrementHeight = value;
+
+    if (! getValue(query.value("wood_density"), &value))
+    {
+        error = "Error: missing wood density data";
+        return false;
+    }
+    calculator.biomassInTree.timberDensity = value;
+
+    if (! getValue(query.value("woody_crop"), &value))
+    {
+        error = "Error: missing woody crop data";
+        return false;
+    }
+    if (value > 0.001)
+        calculator.woodyCrop = true;
+    else
+        calculator.woodyCrop = false;
 
     QString stringValue;
     if (! getValue(query.value("bouwman_equivalent"), &stringValue))

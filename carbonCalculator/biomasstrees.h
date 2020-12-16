@@ -6,19 +6,23 @@
 
     class BiomassTree{
 
-
+    // refererences for allometric data:
+    // Nader et al. 2019 (grapevine)
+    // Quinones Oliver & Font 2013 (citrus tree)
+    // https://homeguides.sfgate.com/size-apple-tree-rate-growth-57015.html (apple tree)
 
     public:
 
     //; // cm questo va reso variabile
-    double turnellParameter = 0.5248; // -
+    double turrellParameter = 0.5248; // -
     double timberDensity = 0.6;
     double treeDensity;
     double deadTreeDensity;
     double orchardAge;
     double incrementHeight;
+    double incrementDiameter;
     double maxDiameter;
-    double maxHeight;
+    double currentHeight;
     double agePerMaxHeight;
     double agePerMaxDiameter;
     double currentDiameter;

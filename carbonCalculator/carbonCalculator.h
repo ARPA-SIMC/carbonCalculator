@@ -39,6 +39,7 @@
         double emissionN2OinN2OUnits;
         double residueWeight[4];
         bool residueLeftOnField[4];
+        double totalWoodyResidue;
 
     public:
         // functions
@@ -105,6 +106,8 @@
             double carbonBudgetPerHectareSoil;
             double carbonBudgetWholeFieldSoil;
             double carbonFootprintPerKgOfProduceSoil;
+            double percentageTreeBiomassToAccountFor;
+            bool woodyCrop;
     };
 
 #endif // CARBONCALCULATOR_H

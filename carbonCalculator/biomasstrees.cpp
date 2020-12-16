@@ -5,12 +5,12 @@
 
 double BiomassTree::getVolume(double height,double diameter)
 {
-    return turnellParameter*height*diameter*diameter;
+    return turrellParameter*height*diameter*diameter;
 }
 
 double BiomassTree::getBiomass(double height,double diameter)
 {
-    timberDensity = 0.6; //kg/m3
+    //timberDensity = 0.6; //kg/m3
     return timberDensity*getVolume(height,diameter)/1000;
 }
 
@@ -28,12 +28,12 @@ double BiomassTree::getBiomassOrchardLastYear(double height,double diameter)
 
 double BiomassTree::annualGrowthDiameter()
 {
-    return 1.5;
+    return incrementDiameter;
 }
 
 double BiomassTree::annualGrowthHeight()
 {
-    return 0;
+    return incrementHeight;
 }
 
 double BiomassTree::annualCarbonGain(double height, double diameter, int nrPlants,double woodyResidues)
@@ -45,13 +45,16 @@ double BiomassTree::annualCarbonGain(double height, double diameter, int nrPlant
     {
         carbon = 0.5 * BiomassTree::getBiomassOrchard(height,diameter); // [g]
         carbon -= 0.5* BiomassTree::getBiomassOrchardLastYear(height,diameter); //[g]
+        carbon -= 1000*woodyResidues*0.5;
     }
     else
     {
-        carbon = 0.5 * 85 * timberDensity * treeDensity;  // from Nader et al. 2019
+        carbon = 0.5 * BiomassTree::getBiomassOrchard(height,diameter); // [g]
+        carbon -= 0.5* BiomassTree::getBiomassOrchardLastYear(height,diameter); //[g]
+        carbon /= turrellParameter; // from Nader et al. 2019
     }
 
-    carbon -= 1000*woodyResidues*0.5;
+
     carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
     return -carbonCO2Eq;
 }

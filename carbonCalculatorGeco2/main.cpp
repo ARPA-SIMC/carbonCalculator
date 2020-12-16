@@ -862,8 +862,8 @@ int main(int argc, char *argv[])
             calculatorCO2.soilManage.fieldSize = inputData[iExp].general.fieldSize; // ha input from .csv
             double surfaceSparseTreesSchrubsHedgeFallow = inputData[iExp].cropFieldManagement.sparseVegetation; // m2 of sparse vegetation input from csv
             double ratioFallowExtension;
-            //ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (calculatorCO2.soilManage.fieldSize * 10000);
-            ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / 100.;
+            ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / (calculatorCO2.soilManage.fieldSize * 10000);
+            //ratioFallowExtension = surfaceSparseTreesSchrubsHedgeFallow / 100.;
             // read soil drainage
             QString idDrainage = inputData[iExp].soil.drainage; // input from .csv
             // read pH
@@ -1024,7 +1024,7 @@ int main(int argc, char *argv[])
 
             // biomass data
 
-            calculatorCO2.biomassInTree.maxHeight = inputData[iExp].cropFieldManagement.treeHeight;
+            calculatorCO2.biomassInTree.currentHeight = inputData[iExp].cropFieldManagement.treeHeight;
             calculatorCO2.biomassInTree.treeDensity = inputData[iExp].cropFieldManagement.treeDensity;
             calculatorCO2.biomassInTree.deadTreeDensity = inputData[iExp].cropFieldManagement.deadTreeDensity;
             calculatorCO2.biomassInTree.currentDiameter = inputData[iExp].cropFieldManagement.treeDBH;
@@ -1046,16 +1046,7 @@ int main(int argc, char *argv[])
                     calculatorCO2.cropResidue.residueLeftOnField[i] = false;
                 }
             }
-            /*
-            if (idResidue[1] == "Left_on_field_incorporated_or_mulch")
-            {
-                calculatorCO2.cropResidue.residueLeftOnField[1] = true;
-            }
-            else
-            {
-                calculatorCO2.cropResidue.residueLeftOnField[1] = false;
-            }
-            */
+
             if (! readResidue(idResidue, db, calculatorCO2, error))
             {
                 std::cout << "ERROR: " + error.toStdString() << std::endl;
@@ -1084,6 +1075,18 @@ int main(int argc, char *argv[])
             if (calculatorCO2.cropResidue.residueWeight[2] == NODATA) calculatorCO2.cropResidue.residueWeight[2] = 0.1; // t/ha
             if (calculatorCO2.cropResidue.residueWeight[3] == NODATA) calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
 
+            calculatorCO2.cropResidue.totalWoodyResidue = calculatorCO2.cropResidue.residueWeight[0];
+            calculatorCO2.cropResidue.totalWoodyResidue += calculatorCO2.cropResidue.residueWeight[1];
+            calculatorCO2.percentageTreeBiomassToAccountFor = 20 * 0.36; // supposing 20% is the wheight of the belowground biomass
+            for (int i=0;i<2;i++)
+            {
+                if (idResidue[i] == "Left_on_field_incorporated_or_mulch")
+                    calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.36)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
+                else if (idResidue[i] == "Biochar")
+                    calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.5)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
+                else if (idResidue[i] == "Burned")
+                    calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.05)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
+            }
             // **********************************************************************
             double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
             if (idPercentageEnergyInGrid != NODATA)
@@ -1111,13 +1114,11 @@ int main(int argc, char *argv[])
             calculatorCO2.soilManage.percentage.coverCropping = 100.*inputData[iExp].cropFieldManagement.coverCrop/(calculatorCO2.soilManage.fieldSize*10000); // input from .csv
 
             calculatorCO2.soilManage.percentage.forest = 100. * inputData[iExp].cropFieldManagement.forest/(calculatorCO2.soilManage.fieldSize*10000) ; // input from .csv
-            calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
+            calculatorCO2.soilManage.percentage.forest += (ratioFallowExtension*100/2.) ;
             calculatorCO2.soilManage.percentage.permanentGrass = 100. * inputData[iExp].cropFieldManagement.permanentGrass/(calculatorCO2.soilManage.fieldSize*10000); // input from .csv
-            calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
+            calculatorCO2.soilManage.percentage.permanentGrass += (ratioFallowExtension*100/2.); //assuming that sparse vegetation is intermediate between forest and permanetn grass
 
             calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
-
-
             calculatorCO2.soilManage.percentage.noTillage = 100. * inputData[iExp].cropFieldManagement.noTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
             calculatorCO2.soilManage.percentage.minimumTillage = 100. * inputData[iExp].cropFieldManagement.minTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
             calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
@@ -1173,11 +1174,11 @@ int main(int argc, char *argv[])
             std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
             std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget per hectare: " <<calculatorCO2.carbonBudgetPerHectareSoil << "  "<<std::endl;
+            std::cout << "carbon budget per hectare: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget whole field: " <<calculatorCO2.carbonBudgetWholeFieldSoil << "  "<<std::endl;
+            std::cout << "carbon budget whole field: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduceSoil << "  "<<std::endl;
+            std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
             // ***************************************************************************************
             printf("\n\n");
