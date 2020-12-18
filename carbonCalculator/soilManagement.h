@@ -33,6 +33,7 @@ private:
 public:
 
     Tpercentage percentage;
+    double emissionsConventionalManagement;
     double sequestrationCarbonCO2Eq;
     double sequestrationCarbonCO2EqResidue[4];
     double sequestrationCarbonCO2EqTillage;

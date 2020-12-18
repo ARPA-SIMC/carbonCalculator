@@ -36,6 +36,25 @@ double BiomassTree::annualGrowthHeight()
     return incrementHeight;
 }
 
+double BiomassTree::woodyCarbonInCO2Eq(double height, double diameter, int nrPlants,double woodyResidues)
+{
+    double carbon;
+    double carbonCO2Eq=0;
+    treeDensity = nrPlants;
+    if (isOrchard == 1)
+    {
+        carbon = 0.5 * BiomassTree::getBiomassOrchard(height,diameter); // [g]
+        carbon -= 1000*woodyResidues*0.5;
+    }
+    else
+    {
+        carbon = 0.5 * BiomassTree::getBiomassOrchard(height,diameter); // [g]
+        carbon /= turrellParameter; // from Nader et al. 2019
+    }
+    carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
+    return -carbonCO2Eq;
+}
+
 double BiomassTree::annualCarbonGain(double height, double diameter, int nrPlants,double woodyResidues)
 {
     double carbon;

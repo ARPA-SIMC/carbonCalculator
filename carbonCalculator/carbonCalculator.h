@@ -100,13 +100,15 @@
             int idClimate;
             double averageTemperature;
             double annualRainfall;
-            double carbonBudgetPerHectare;
-            double carbonBudgetWholeField;
-            double carbonFootprintPerKgOfProduce;
+            double carbonBiomass;
+            double carbonBudgetPerHectareBiomass;
+            double carbonBudgetWholeFieldBiomass;
+            double carbonFootprintPerKgOfProduceBiomass;
             double carbonBudgetPerHectareSoil;
             double carbonBudgetWholeFieldSoil;
             double carbonFootprintPerKgOfProduceSoil;
             double percentageTreeBiomassToAccountFor;
+            double carbonSavedBySustainablePractices;
             bool woodyCrop;
     };
 

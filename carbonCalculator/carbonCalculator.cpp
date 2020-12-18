@@ -228,17 +228,24 @@ void CarbonCalculator::computeBalance()
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField);
     biomassInTree.annualCarbonGain(biomassInTree.currentHeight,biomassInTree.currentDiameter,biomassInTree.treeDensity,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
-    carbonBudgetPerHectare = carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
+    carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
-    carbonBudgetWholeField = carbonBudgetWholeFieldSoil = carbonBudgetPerHectareSoil*soilManage.fieldSize;
-    carbonFootprintPerKgOfProduce = carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
+    carbonBudgetWholeFieldSoil = carbonBudgetPerHectareSoil*soilManage.fieldSize;
+    carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
     if (woodyCrop)
     {
-        carbonBudgetPerHectare = carbonBudgetPerHectareSoil + biomassInTree.annualCarbonGain(biomassInTree.currentHeight,biomassInTree.currentDiameter,biomassInTree.treeDensity,cropResidue.totalWoodyResidue)*percentageTreeBiomassToAccountFor*0.01;
-        carbonBudgetWholeField = carbonBudgetPerHectare*soilManage.fieldSize;
-        carbonFootprintPerKgOfProduce = carbonBudgetPerHectare/soilManage.yield;
+        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain(biomassInTree.currentHeight,biomassInTree.currentDiameter,biomassInTree.treeDensity,cropResidue.totalWoodyResidue);
+        carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
+        carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     }
+    carbonSavedBySustainablePractices = 0;
+    carbonSavedBySustainablePractices = soilManage.emissionsConventionalManagement - soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
+    carbonSavedBySustainablePractices -= soilManage.sequestrationCarbonCO2Eq;
+    carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
+    soilManage.isOrganic = false;
+    carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
+    carbonBiomass = biomassInTree.woodyCarbonInCO2Eq(biomassInTree.currentHeight,biomassInTree.currentDiameter,biomassInTree.treeDensity,cropResidue.totalWoodyResidue);
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)

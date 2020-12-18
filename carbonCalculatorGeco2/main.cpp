@@ -624,11 +624,11 @@ int main(int argc, char *argv[])
             std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduceSoil << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget per hectare with tree biomass: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
+            //std::cout << "carbon budget per hectare with tree biomass: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget whole field with tree biomass: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
+            //std::cout << "carbon budget whole field with tree biomass: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon footprint gCO2Eq per kg of produce with tree biomass: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
+            //std::cout << "carbon footprint gCO2Eq per kg of produce with tree biomass: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
 
             // ***************************************************************************************
@@ -857,6 +857,7 @@ int main(int argc, char *argv[])
             {
                 isOrganic = true; // input from .csv
             }
+
             calculatorCO2.soilManage.isOrganic = isOrganic;
             calculatorCO2.soilManage.yield = inputData[iExp].cropFieldManagement.yield ; // t/ha input from .csv
             calculatorCO2.soilManage.fieldSize = inputData[iExp].general.fieldSize; // ha input from .csv
@@ -1023,7 +1024,7 @@ int main(int argc, char *argv[])
             }
 
             // biomass data
-
+            calculatorCO2.biomassInTree.orchardAge = inputData[iExp].cropFieldManagement.orchardAge ;
             calculatorCO2.biomassInTree.currentHeight = inputData[iExp].cropFieldManagement.treeHeight;
             calculatorCO2.biomassInTree.treeDensity = inputData[iExp].cropFieldManagement.treeDensity;
             calculatorCO2.biomassInTree.deadTreeDensity = inputData[iExp].cropFieldManagement.deadTreeDensity;
@@ -1173,12 +1174,27 @@ int main(int argc, char *argv[])
 
             std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
             std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
+
+            printf("\n\n\n\n\n\n\n\n");
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget per hectare: " <<calculatorCO2.carbonBudgetPerHectare << "  "<<std::endl;
+            std::cout << "carbon budget per hectare (soil): " <<calculatorCO2.carbonBudgetPerHectareSoil << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon budget whole field: " <<calculatorCO2.carbonBudgetWholeField << "  "<<std::endl;
+            std::cout << "carbon budget whole field (soil): " <<calculatorCO2.carbonBudgetWholeFieldSoil << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
-            std::cout << "carbon footprint gCO2Eq per kg of produce: " <<calculatorCO2.carbonFootprintPerKgOfProduce << "  "<<std::endl;
+            std::cout << "carbon footprint gCO2Eq per kg of produce (soil): " <<calculatorCO2.carbonFootprintPerKgOfProduceSoil << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+
+            printf("\n\n");
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon budget per hectare soil : " <<calculatorCO2.carbonBudgetPerHectareSoil << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon budget per Hectare biomass: " <<calculatorCO2.carbonBudgetPerHectareBiomass << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "total Biomass : " <<calculatorCO2.carbonBiomass << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "orchard age : " <<calculatorCO2.biomassInTree.orchardAge << "  "<<std::endl;
+            std::cout << "___________________________________________________________________________\n" << std::endl;
+            std::cout << "carbon saved due to sustainable practices: " <<calculatorCO2.carbonSavedBySustainablePractices << "  "<<std::endl;
             std::cout << "___________________________________________________________________________\n" << std::endl;
             // ***************************************************************************************
             printf("\n\n");
