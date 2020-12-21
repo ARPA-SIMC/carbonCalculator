@@ -58,6 +58,23 @@ double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
     // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
+double SoilManagement::computeSequestrationUnstableCarbonDueToRoots(int myIdClimate)
+{
+    double biomassRootPerHectare;
+    double biomassRootCrop;
+    double biomassRootCoverCrop;
+    double biomassRootPermanentGrass;
+    double biomassRootForest;
+    if (!isOrganic) biomassRootPerHectare = 370;
+    else biomassRootPerHectare = 695; // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
+    biomassRootCrop = biomassRootPerHectare*percentage.arable*0.01*(1 - exp(-rootDecayParameter));//*0.01*(percentage.conventionalTillage + percentage.noTillage * ((soilTillage[myIdClimate].matrix[2][0]-1)/20 + 1) + percentage.minimumTillage * ((soilTillage[myIdClimate].matrix[1][0]-1)/20 +1));
+    biomassRootCoverCrop = biomassRootPerHectare*(1 - exp(-1.27))*percentage.coverCropping*0.01*0.5;//*0.01*percentage.coverCropping*((soilCoverCropping[myIdClimate].matrix[0][1]-1)/20 + 1);
+    biomassRootPermanentGrass = biomassRootPerHectare*(1 - exp(-1.27))*percentage.permanentGrass*0.01;// *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
+    biomassRootForest = 695*(1 - exp(-0.71))*percentage.forest*0.01;//*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1); // we supposed forest is organic by default
+    return biomassRootCrop + biomassRootCoverCrop + biomassRootCoverCrop + biomassRootForest;
+
+}
+
 double SoilManagement::computeSequestrationDueToOrganicMamagement()
 {
    if (!isOrganic)
@@ -213,12 +230,14 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
         sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
     }
-    //incrementResidue = computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0);
-    //sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)-1);
-    //sequestrationCarbonCO2EqResidue[0] = sequestrationOfCarbon * FROM_C_TO_CO2;
-    //incrementTotal *= incrementResidue = incrementResidue * computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1);
-    //sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationResidueIncorporation(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],1)-1);
-    //sequestrationCarbonCO2EqResidue[1] = sequestrationOfCarbon * FROM_C_TO_CO2;
+    incrementTotal *= computeSequestrationOrganicAmendments(2*computeSequestrationUnstableCarbonDueToRoots(myIdClimate),0.000835,0);
+    double percentageUnstable[4] = {1-0.36,1-0.36,1-0.14,1-0.14};
+    for (int i=0;i<4;i++)
+    {
+        if (isIncorporatedResidue[i])
+            incrementTotal *= computeSequestrationOrganicAmendments(2*residues[i]*percentageUnstable[i]*1000,0.000835,0);
+    }
+
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
     //printf("valori residui legno %f verde %f \n", residues[0],residues[1]);
     sequestrationCarbonCO2Eq = sequestrationOfCarbon * FROM_C_TO_CO2;
@@ -233,7 +252,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[2],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[3],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
+    //sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
 }
 
 double SoilManagement::computeSequestrationTillage(int myIdClimate)

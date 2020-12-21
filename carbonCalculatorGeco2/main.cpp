@@ -556,19 +556,18 @@ int main(int argc, char *argv[])
             calculatorCO2.pesticide.weightOfActivePrinciple = inputData[iExp].agronomicInput.pesticideWeight; // input from .csv kg active principle
             // **********************************************************************
 
-            calculatorCO2.soilManage.percentage.noTillage = inputData[iExp].cropFieldManagement.noTillage; // input from .csv
-            calculatorCO2.soilManage.percentage.minimumTillage = inputData[iExp].cropFieldManagement.minTillage; // input from .csv
+            calculatorCO2.soilManage.percentage.noTillage = inputData[iExp].cropFieldManagement.noTillage / (calculatorCO2.soilManage.fieldSize*10000); // input from .csv
+            calculatorCO2.soilManage.percentage.minimumTillage = inputData[iExp].cropFieldManagement.minTillage / (calculatorCO2.soilManage.fieldSize*10000); // input from .csv
             calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
 
-            calculatorCO2.soilManage.percentage.coverCropping = inputData[iExp].cropFieldManagement.coverCrop; // input from .csv
+            calculatorCO2.soilManage.percentage.coverCropping = inputData[iExp].cropFieldManagement.coverCrop/ (calculatorCO2.soilManage.fieldSize*10000); // input from .csv
 
-            calculatorCO2.soilManage.percentage.forest = inputData[iExp].cropFieldManagement.forest ; // input from .csv
+            calculatorCO2.soilManage.percentage.forest = inputData[iExp].cropFieldManagement.forest / (calculatorCO2.soilManage.fieldSize*10000); // input from .csv
             calculatorCO2.soilManage.percentage.forest += ratioFallowExtension*100/2. ;
-            calculatorCO2.soilManage.percentage.permanentGrass = inputData[iExp].cropFieldManagement.permanentGrass; // input from .csv
+            calculatorCO2.soilManage.percentage.permanentGrass = inputData[iExp].cropFieldManagement.permanentGrass/ (calculatorCO2.soilManage.fieldSize*10000); // input from .csv
             calculatorCO2.soilManage.percentage.permanentGrass += ratioFallowExtension*100/2.; //assuming that sparse vegetation is intermediate between forest and permanetn grass
 
             calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
-
 
             // *********************************************************************
             // erosion
@@ -1120,10 +1119,14 @@ int main(int argc, char *argv[])
             calculatorCO2.soilManage.percentage.permanentGrass += (ratioFallowExtension*100/2.); //assuming that sparse vegetation is intermediate between forest and permanetn grass
 
             calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
-            calculatorCO2.soilManage.percentage.noTillage = 100. * inputData[iExp].cropFieldManagement.noTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
-            calculatorCO2.soilManage.percentage.minimumTillage = 100. * inputData[iExp].cropFieldManagement.minTillage/calculatorCO2.soilManage.percentage.arable; // input from .csv
-            calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
-
+            calculatorCO2.soilManage.percentage.noTillage =100 * inputData[iExp].cropFieldManagement.noTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
+            calculatorCO2.soilManage.percentage.minimumTillage =100 * inputData[iExp].cropFieldManagement.minTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
+            calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage - calculatorCO2.soilManage.percentage.noTillage;
+            //printf("arable %f permanent %f\n",calculatorCO2.soilManage.percentage.arable,calculatorCO2.soilManage.percentage.permanentGrass);
+            //printf("minimum %f noTillage %f\n",calculatorCO2.soilManage.percentage.minimumTillage ,calculatorCO2.soilManage.percentage.noTillage);
+            //printf("covercrop %f\n",calculatorCO2.soilManage.percentage.coverCropping);
+            //printf("%f %f %f %f \n",calculatorCO2.soilManage.percentage.noTillage,calculatorCO2.soilManage.percentage.forest,calculatorCO2.soilManage.percentage.minimumTillage,calculatorCO2.soilManage.percentage.noTillage );
+            //getchar();
 
             // *********************************************************************
             // erosion

@@ -47,6 +47,7 @@ public:
     void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double *recalcitrantIndex, double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue);
     double computeEmissions(double carbonInSoil, int myIdClimate);
     double computeSequestrationRootBiomass(int myIdClimate);
+    double computeSequestrationUnstableCarbonDueToRoots(int myIdClimate);
     double computeSequestrationTillage(int myIdClimate);
     double computeSequestrationLandUse(int myIdClimate);
     double computeSequestrationCoverCropping(int myIdClimate);

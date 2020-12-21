@@ -10,7 +10,6 @@ double BiomassTree::getVolume(double height,double diameter)
 
 double BiomassTree::getBiomass(double height,double diameter)
 {
-    //timberDensity = 0.6; //kg/m3
     return timberDensity*getVolume(height,diameter)/1000;
 }
 
