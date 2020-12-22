@@ -282,6 +282,13 @@ bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calc
     }
     calculator.biomassInTree.timberDensity = value;
 
+    if (! getValue(query.value("annual_biomass_increment"), &value))
+    {
+        error = "Error: missing annual biomass increment data";
+        return false;
+    }
+    calculator.biomassInTree.annualCarbonWoodyDryMatter = value/FROM_C_TO_CO2*2;
+
     if (! getValue(query.value("woody_crop"), &value))
     {
         error = "Error: missing woody crop data";
