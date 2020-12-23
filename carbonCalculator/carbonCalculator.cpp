@@ -227,7 +227,7 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField);
-    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
+    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
@@ -235,7 +235,7 @@ void CarbonCalculator::computeBalance()
     carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
     if (woodyCrop)
     {
-        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
+        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
         carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
         carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     }
@@ -245,7 +245,7 @@ void CarbonCalculator::computeBalance()
     carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
     soilManage.isOrganic = false;
     carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
-    carbonBiomass = biomassInTree.woodyCarbonInCO2Eq(biomassInTree.currentHeight,biomassInTree.currentDiameter,biomassInTree.treeDensity,cropResidue.totalWoodyResidue);
+    carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0);
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)

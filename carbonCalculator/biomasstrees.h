@@ -39,8 +39,9 @@
     double getBiomassOrchard(double height,double diameter);
     double getBiomassOrchardLastYear(double height,double diameter);
     double annualCarbonGain(double height, double diameter, int nrPlants, double woodyResidues);
-    double annualCarbonGain2(double woodyBiomass, double woodyResidues);
+    double annualCarbonGain2(double woodyBiomass, double percentageAccounted);
     double woodyCarbonInCO2Eq(double height, double diameter, int nrPlants, double woodyResidues);
+    double woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted);
     };
 
 
