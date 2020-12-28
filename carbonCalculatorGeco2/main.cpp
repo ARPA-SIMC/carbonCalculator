@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
         if (argc < 2)
         {
             #ifdef TEST
-                csvFileName = dataPath + "prova2.csv";
+                csvFileName = dataPath + "inputFile.csv";
             #else
                 usage();
                 return 1;
