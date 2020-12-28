@@ -233,12 +233,19 @@ void CarbonCalculator::computeBalance()
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
     carbonBudgetWholeFieldSoil = carbonBudgetPerHectareSoil*soilManage.fieldSize;
     carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
+    carbonBudgetPerHectareBiomass = 0;
+    carbonBudgetWholeFieldBiomass = 0;
+    carbonFootprintPerKgOfProduceBiomass = 0;
+    carbonBiomass = 0;
     if (woodyCrop)
     {
         carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
-        carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
-        carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
+        //carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
+        //carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     }
+    carbonBudgetPerHectareBiomass += biomassInTree.annualFromForestCarbonGain2(2500,(soilManage.percentage.forest/100.));
+    carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
+    carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     carbonSavedBySustainablePractices = 0;
     carbonSavedBySustainablePractices = soilManage.emissionsConventionalManagement - soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     carbonSavedBySustainablePractices -= soilManage.sequestrationCarbonCO2Eq;
@@ -246,6 +253,7 @@ void CarbonCalculator::computeBalance()
     soilManage.isOrganic = false;
     carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
     carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0);
+    carbonBiomass += biomassInTree.woodyCarbonFromForestInCO2Eq2(biomassInTree.orchardAge,2500,(soilManage.percentage.forest/100.));
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)

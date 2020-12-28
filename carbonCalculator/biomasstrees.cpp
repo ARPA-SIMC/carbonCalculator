@@ -91,3 +91,14 @@ double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction
 {
     return age*annualCarbonGain2(annualWoodyProduction,percentageAccounted);
 }
+
+double BiomassTree::woodyCarbonFromForestInCO2Eq2(double age, double annualCO2Credits, double percentage)
+{
+    return -age*annualCO2Credits*percentage;
+}
+
+double BiomassTree::annualFromForestCarbonGain2(double annualCO2Credits, double percentage)
+{
+    return -annualCO2Credits*percentage;
+}
+
