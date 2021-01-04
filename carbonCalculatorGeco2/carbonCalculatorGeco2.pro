@@ -18,7 +18,7 @@ CONFIG(release, debug|release) {
 
 
 SOURCES += main.cpp \
-    inputOutput_.cpp
+    inputOutput.cpp
 
 HEADERS += \
-    inputOutput_.h
+    inputOutput.h
