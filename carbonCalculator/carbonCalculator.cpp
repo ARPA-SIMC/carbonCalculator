@@ -240,6 +240,7 @@ void CarbonCalculator::computeBalance()
     if (woodyCrop)
     {
         carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
+        // inserire un if se le potature sono maggiori della metà della biomassa oppure no
         //carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
         //carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     }
