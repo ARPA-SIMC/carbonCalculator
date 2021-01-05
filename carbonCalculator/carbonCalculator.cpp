@@ -227,7 +227,7 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField);
-    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
+    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
@@ -239,10 +239,7 @@ void CarbonCalculator::computeBalance()
     carbonBiomass = 0;
     if (woodyCrop)
     {
-        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0);
-        // inserire un if se le potature sono maggiori della metà della biomassa oppure no
-        //carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
-        //carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
+        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     }
     carbonBudgetPerHectareBiomass += biomassInTree.annualFromForestCarbonGain2(2500,(soilManage.percentage.forest/100.));
     carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
@@ -253,7 +250,7 @@ void CarbonCalculator::computeBalance()
     carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
     soilManage.isOrganic = false;
     carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
-    carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0);
+    carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBiomass += biomassInTree.woodyCarbonFromForestInCO2Eq2(biomassInTree.orchardAge,2500,(soilManage.percentage.forest/100.));
 }
 

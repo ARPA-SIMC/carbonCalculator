@@ -77,19 +77,25 @@ double BiomassTree::annualCarbonGain(double height, double diameter, int nrPlant
     return -carbonCO2Eq;
 }
 
-double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double percentageAccounted)
+double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double percentageAccounted,double pruningWeight)
 {
     double carbon;
     double carbonCO2Eq=0;
-    carbon = (annualWoodyProduction * 0.5)* percentageAccounted * 0.01;
+    double woodWeight;
+    if ((0.5 *annualWoodyProduction) > pruningWeight)
+        woodWeight = annualWoodyProduction;
+    else
+        woodWeight = pruningWeight;
+
+    carbon = (woodWeight * 0.5)* percentageAccounted * 0.01;
     carbon *= 1000;
     carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
     return -carbonCO2Eq;
 }
 
-double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted)
+double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted, double pruningWeight)
 {
-    return age*annualCarbonGain2(annualWoodyProduction,percentageAccounted);
+    return age*annualCarbonGain2(annualWoodyProduction,percentageAccounted,pruningWeight);
 }
 
 double BiomassTree::woodyCarbonFromForestInCO2Eq2(double age, double annualCO2Credits, double percentage)
