@@ -154,8 +154,6 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
-
-        std::cout << inputData[iExp].general.idCountry.toStdString() << std::endl;
     }
     return true;
 }
@@ -520,7 +518,7 @@ void printOutput(CarbonCalculator &calculatorCO2)
     std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
     std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
 
-    printf("\n\n\n\n\n\n\n\n");
+    printf("\n\n");
     std::cout << "___________________________________________________________________________\n" << std::endl;
     std::cout << "carbon budget per hectare (soil): " <<calculatorCO2.carbonBudgetPerHectareSoil << "  "<<std::endl;
     std::cout << "___________________________________________________________________________\n" << std::endl;
@@ -541,6 +539,5 @@ void printOutput(CarbonCalculator &calculatorCO2)
     std::cout << "___________________________________________________________________________\n" << std::endl;
     std::cout << "carbon saved due to sustainable practices: " <<calculatorCO2.carbonSavedBySustainablePractices << "  "<<std::endl;
     std::cout << "___________________________________________________________________________\n" << std::endl;
-    // ***************************************************************************************
-
+    printf("\n\n");
 }
