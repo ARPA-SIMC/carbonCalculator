@@ -20,9 +20,6 @@
 
 
 
-
-
-
 struct Tgeneral{
     QString enterpriseName;
     QString idCountry;

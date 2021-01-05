@@ -1,4 +1,4 @@
-#include "inputoutput.h"
+#include "inputOutput.h"
 
 void usage()
 {
