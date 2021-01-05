@@ -47,6 +47,8 @@ int main(int argc, char *argv[])
     if (! openDataBase(db,dataPath))
         return -1;
 
+    // TODO create output db
+
     // compute balance
     for (int iExp=0; iExp<numberOfExperiments; iExp++)
     {
@@ -55,9 +57,13 @@ int main(int argc, char *argv[])
         if (!isSetVarOk) return -1;
         calculatorCO2.computeBalance();
 
-        std::cout << "CASE: " << inputData[iExp].general.enterpriseName.toStdString() << " - " << inputData[iExp].general.year << std::endl;
+        QString key = QString::number(inputData[iExp].general.year) +
+                "_" + inputData[iExp].general.enterpriseName
+                + "_Field" + QString::number(inputData[iExp].general.nrField);
+        std::cout << "KEY: " << key.toStdString() << std::endl;
         printOutput(calculatorCO2);
-        // TODO save db output
+
+        // TODO save output to db
     }
 
     return 0;
