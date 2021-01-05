@@ -57,6 +57,7 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
     {
         int label=1;
         inputData[iExp].general.enterpriseName = data[iExp].value(label++).remove("\"");
+        inputData[iExp].general.nrField = (int) data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
         inputData[iExp].general.latitude = data[iExp].value(label++).remove("\"").toFloat();

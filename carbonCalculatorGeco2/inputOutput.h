@@ -23,6 +23,7 @@
 struct Tgeneral{
     QString enterpriseName;
     QString idCountry;
+    int nrField;
     int year;
     float latitude;
     float longitude;
