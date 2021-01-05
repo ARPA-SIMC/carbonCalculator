@@ -82,7 +82,7 @@ double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double perce
     double carbon;
     double carbonCO2Eq=0;
     double woodWeight;
-    if ((0.5 *annualWoodyProduction) > pruningWeight)
+    if (annualWoodyProduction < pruningWeight)
         woodWeight = annualWoodyProduction;
     else
         woodWeight = pruningWeight;

@@ -267,10 +267,7 @@ double SoilManagement::computeSequestrationTillage(int myIdClimate)
     // minimum Tillage
     matrixElement = soilTillage[myIdClimate].matrix[2][1];
     incrementMinimumTillage =  1 + 1./20.*(matrixElement - 1);
-
     return incrementTillage = incrementNoTillage*percentage.noTillage/100. + incrementMinimumTillage*percentage.minimumTillage/100. + (100 - percentage.noTillage - percentage.minimumTillage)/100.;
-
-
 }
 
 double SoilManagement::computeSequestrationLandUse(int myIdClimate)
@@ -328,8 +325,6 @@ double SoilManagement::computeSequestrationResidueIncorporation2(double residueI
 {
     double sequestration = 0 ;
     if (!isIncorporatedResidue) return 0;
-    //double increment;
-    //double slopeFreshWeight;
     if (isHerbaceous == 0)
     {
         residueIncorporated += 1*0.01*percentage.forest;//1 t/ha of wood incorporated
