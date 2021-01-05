@@ -54,10 +54,11 @@ int main(int argc, char *argv[])
         isSetVarOk = setCarbonCalculatorVariables(db,calculatorCO2,inputData,iExp);
         if (!isSetVarOk) return -1;
         calculatorCO2.computeBalance();
-        printOutput(calculatorCO2);
-    }
 
-    // TODO save db output
+        std::cout << "CASE: " << inputData[iExp].general.enterpriseName.toStdString() << " - " << inputData[iExp].general.year << std::endl;
+        printOutput(calculatorCO2);
+        // TODO save db output
+    }
 
     return 0;
 }
