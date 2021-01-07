@@ -87,7 +87,7 @@ double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double perce
     else
         woodWeight = pruningWeight;
 
-    if (woodWeight < 0.5) woodWeight = 0.5; // added following Marotta suggestion
+    if (woodWeight < 0.5) woodWeight = 0.5; // added to avoid 0
 
     carbon = (woodWeight * 0.5)* percentageAccounted * 0.01;
     carbon *= 1000;
