@@ -18,7 +18,9 @@ CONFIG(release, debug|release) {
 
 
 SOURCES += main.cpp \
+    dbOutput.cpp \
     inputOutput.cpp
 
 HEADERS += \
+    dbOutput.h \
     inputOutput.h

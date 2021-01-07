@@ -1,4 +1,5 @@
 #include "inputOutput.h"
+#include "dbOutput.h"
 
 // uncomment to compute test
 #define TEST
@@ -42,28 +43,34 @@ int main(int argc, char *argv[])
     std::vector<TinputData> inputData;
     readCsvFile(csvFileName,inputData,numberOfExperiments);
 
-    // open DB
-    QSqlDatabase db;
-    if (! openDataBase(db,dataPath))
+    // open parameters DB
+    QSqlDatabase dbParameters;
+    if (! openDataBase(dbParameters, dataPath))
         return -1;
 
-    // TODO create output db
+    // create output DB
+    QSqlDatabase dbOutput;
+    QString dbName = dataPath + "output.db";
+    if (! createOutputDB(dbOutput, dbName))
+        return -1;
 
     // compute balance
     for (int iExp=0; iExp<numberOfExperiments; iExp++)
     {
         bool isSetVarOk = false;
-        isSetVarOk = setCarbonCalculatorVariables(db,calculatorCO2,inputData,iExp);
+        isSetVarOk = setCarbonCalculatorVariables(dbParameters,calculatorCO2,inputData,iExp);
         if (!isSetVarOk) return -1;
         calculatorCO2.computeBalance();
 
-        QString key = QString::number(inputData[iExp].general.year) +
+        QString id = QString::number(inputData[iExp].general.year) +
                 "_" + inputData[iExp].general.enterpriseName
                 + "_Field" + QString::number(inputData[iExp].general.nrField);
-        std::cout << "KEY: " << key.toStdString() << std::endl;
+        std::cout << "ID: " << id.toStdString() << std::endl;
         printOutput(calculatorCO2);
 
-        // TODO save output to db
+        // save db output
+        if (! saveOutput(id, dbOutput, inputData[iExp]))
+            return -1;
     }
 
     return 0;
