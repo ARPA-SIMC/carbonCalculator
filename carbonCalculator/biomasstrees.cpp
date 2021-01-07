@@ -87,6 +87,8 @@ double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double perce
     else
         woodWeight = pruningWeight;
 
+    if (woodWeight < 0.5) woodWeight = 0.5;
+
     carbon = (woodWeight * 0.5)* percentageAccounted * 0.01;
     carbon *= 1000;
     carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
