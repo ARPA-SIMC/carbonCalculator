@@ -51,10 +51,10 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
 }
 
 
-bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
+bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
 {
-    QString queryOutput = "INSERT INTO general "
-                       " (id, enterprise_name, nr_field, year, country, latitude, longitude, field_size, field_slope) "
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id, enterprise_name, nr_field, year, country, latitude, longitude, field_size, field_slope) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
@@ -71,7 +71,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
     if (myQuery.lastError().isValid())
     {
-        std::cout << "Error in saving table 'general': " << myQuery.lastError().text().toStdString();
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
         return false;
     }
 
@@ -81,7 +81,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
 
 bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
 {
-    if (! saveTableGeneral(id, dbOutput, inputData))
+    if (! saveTableGeneral(id, dbOutput, inputData, "general"))
         return false;
 
     // TODO save other tables

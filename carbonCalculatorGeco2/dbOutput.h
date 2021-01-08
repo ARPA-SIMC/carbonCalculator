@@ -7,7 +7,7 @@
 
     bool createOutputDB(QSqlDatabase &dbOutput, QString dbName);
     bool createTableGeneral(QSqlDatabase &dbOutput);
-    bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData);
+    bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
     bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData);
 
 
