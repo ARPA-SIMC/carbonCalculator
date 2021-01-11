@@ -31,7 +31,7 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
     emissions = FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
     emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.permanentGrass*0.01;
     double weightArable = 0.01*(percentage.conventionalTillage*soilTillage[myIdClimate].matrix[2][0] + percentage.minimumTillage*soilTillage[myIdClimate].matrix[1][0]+percentage.noTillage);
-    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./24.*percentage.arable*0.01*weightArable;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.arable*0.01*weightArable;
     weightArable = soilTillage[myIdClimate].matrix[2][0];
     emissionsConventionalManagement = FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./24.*weightArable;
 

@@ -413,14 +413,28 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[0]; //(t/ha) dry weight of green residue input from .csv
     calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
 
-    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA) calculatorCO2.cropResidue.residueWeight[0] = 0.5; // t/ha
-    if (calculatorCO2.cropResidue.residueWeight[1] == NODATA) calculatorCO2.cropResidue.residueWeight[1] = 0.5; // t/ha
-    if (calculatorCO2.cropResidue.residueWeight[2] == NODATA) calculatorCO2.cropResidue.residueWeight[2] = 0.1; // t/ha
-    if (calculatorCO2.cropResidue.residueWeight[3] == NODATA) calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
+    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+    {
+        calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.5; // t/ha
+        calculatorCO2.cropResidue.residueWeight[1] = 0;
+    }
+    else if (calculatorCO2.cropResidue.residueWeight[0] != NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+    {
+        calculatorCO2.cropResidue.residueWeight[1] = 0; // t/ha
+    }
+    if (calculatorCO2.cropResidue.residueWeight[2] == NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+    {
+        calculatorCO2.cropResidue.residueWeight[2] = 0.5; // t/ha
+        calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
+    }
+    else if (calculatorCO2.cropResidue.residueWeight[2] != NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+    {
+        calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
+    }
 
     calculatorCO2.cropResidue.totalWoodyResidue = calculatorCO2.cropResidue.residueWeight[0];
     calculatorCO2.cropResidue.totalWoodyResidue += calculatorCO2.cropResidue.residueWeight[1];
-    calculatorCO2.percentageTreeBiomassToAccountFor = 20 * 0.36; // supposing 20% is the wheight of the belowground biomass
+    /*calculatorCO2.percentageTreeBiomassToAccountFor = 20 * 0.36; // supposing 20% is the wheight of the belowground biomass
     for (int i=0;i<2;i++)
     {
         if (idResidue[i] == "Left_on_field_incorporated_or_mulch")
@@ -429,7 +443,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
             calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.5)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
         else if (idResidue[i] == "Burned")
             calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.05)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
-    }
+    }*/
     // **********************************************************************
     double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
     if (idPercentageEnergyInGrid != NODATA)
