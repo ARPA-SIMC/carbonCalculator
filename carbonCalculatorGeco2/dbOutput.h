@@ -12,13 +12,13 @@
     bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData);
 
     bool createTableClimate(QSqlDatabase &dbOutput);
-    bool saveTableClimate(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
+    bool saveTableClimate(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
     bool createTableSoil(QSqlDatabase &dbOutput);
-    bool saveTableSoil(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
+    bool saveTableSoil(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
     bool createTableCropField(QSqlDatabase &dbOutput);
-    bool saveTableCropField(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
+    bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
 
 #endif // DBOUTPUT_H
