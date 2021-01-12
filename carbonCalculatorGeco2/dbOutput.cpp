@@ -26,7 +26,8 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
         return false;
     if (! createTableSoil(dbOutput))
         return false;
-
+    if (! createTableCropField(dbOutput))
+        return false;
     // TODO other tables
 
     return true;
@@ -36,11 +37,12 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
 {
     if (! saveTableGeneral(id, dbOutput, inputData, "general"))
         return false;
-    if (! saveTableClimate( dbOutput, inputData, "climate"))
+    if (! saveTableClimate(dbOutput, inputData, "climate"))
         return false;
-    if (! saveTableSoil( dbOutput, inputData, "soil"))
+    if (! saveTableSoil(dbOutput, inputData, "soil"))
         return false;
-
+    //if (! saveTableCropField(dbOutput, inputData, "crop_field"))
+        return false;
 
 
     // TODO save other tables
@@ -194,4 +196,77 @@ bool saveTableSoil(QSqlDatabase &dbOutput, TinputData &inputData, QString tableN
     return true;
 }
 
+bool createTableCropField(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE crop_field";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
 
+    queryString = "CREATE TABLE crop_field "
+                  " (crop_type TEXT, density INTEGER, delta_trees INTEGER,"
+                  "orchard_age INTEGER, DBH REAL, "
+                  " tree_height REAL, organic_management TEXT, yield REAL, "
+                  " no_tillage_area REAL, minimum_tillage_area REAL,"
+                  "cover_crop_area REAL, forestry_area REAL, sparse_vegetation_area REAL,"
+                  "woody_residue_weight_1 REAL,woody_residue_weight_2 REAL,"
+                  "woody_residue_treatment_1 TEXT,woody_residue_treatment_2 TEXT,"
+                  "green_residue_weight_1 REAL,green_residue_weight_2 REAL,"
+                  "green_residue_treatment_1 TEXT,green_residue_treatment_2 TEXT"
+                  ")";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'soil': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableCropField(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
+{
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (crop_type, density,delta_trees, orchard_age, DBH, "
+                         " tree_height, organic_management, yield, "
+                         " no_tillage_area, minimum_tillage_area"
+                         "cover_crop_area, forestry_area, sparse_vegetation_area"
+                         "woody_residue_weight_1,woody_residue_weight_2"
+                         "woody_residue_treatment_1,woody_residue_treatment_2"
+                         "green_residue_weight_1,green_residue_weight_2"
+                         "green_residue_treatment_1,green_residue_treatment_2) "
+                       " VALUES ";
+
+    queryOutput += "('" + inputData.cropFieldManagement.cropName + "'"
+                + QString::number(inputData.cropFieldManagement.treeDensity)
+                + QString::number(inputData.cropFieldManagement.deadTreeDensity)
+                + QString::number(inputData.cropFieldManagement.orchardAge)
+                + QString::number(inputData.cropFieldManagement.treeDBH)
+                + QString::number(inputData.cropFieldManagement.treeHeight)
+                + ",'" + inputData.cropFieldManagement.isOrganic + "'"
+                + "," + QString::number(inputData.cropFieldManagement.yield, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.noTillage, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.minTillage, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.coverCrop, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.forest, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.sparseVegetation, 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.woodyResidueWeight[0], 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.woodyResidueWeight[1], 'g', 1)
+                + ",'" + inputData.cropFieldManagement.woodyResidueTreatment[0] + "'"
+                + ",'" + inputData.cropFieldManagement.woodyResidueTreatment[1] + "'"
+                + "," + QString::number(inputData.cropFieldManagement.greenResidueWeight[0], 'g', 1)
+                + "," + QString::number(inputData.cropFieldManagement.greenResidueWeight[1], 'g', 1)
+                + ",'" + inputData.cropFieldManagement.greenResidueTreatment[0] + "'"
+                + ",'" + inputData.cropFieldManagement.greenResidueTreatment[1]
+                + "')";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}

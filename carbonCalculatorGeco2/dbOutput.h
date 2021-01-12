@@ -17,6 +17,8 @@
     bool createTableSoil(QSqlDatabase &dbOutput);
     bool saveTableSoil(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
+    bool createTableCropField(QSqlDatabase &dbOutput);
+    bool saveTableCropField(QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
 
 #endif // DBOUTPUT_H
