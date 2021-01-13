@@ -23,5 +23,7 @@
     bool createTableAgronomicInputs(QSqlDatabase &dbOutput);
     bool saveTableAgronomicInputs(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
+    bool createTableEnergy(QSqlDatabase &dbOutput);
+    bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
 #endif // DBOUTPUT_H

@@ -30,6 +30,9 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
         return false;
     if (! createTableAgronomicInputs(dbOutput))
         return false;
+    if (! createTableEnergy(dbOutput))
+        return false;
+
     // TODO other tables
 
     return true;
@@ -47,7 +50,8 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
         return false;
     if (! saveTableAgronomicInputs(id, dbOutput, inputData, "agronomic_inputs"))
         return false;
-
+    if (! saveTableEnergy(id, dbOutput, inputData, "energy"))
+        return false;
     // TODO save other tables
 
     return true;
@@ -316,25 +320,6 @@ bool createTableAgronomicInputs(QSqlDatabase &dbOutput)
 
 bool saveTableAgronomicInputs(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
 {
-    //+ " (id,pesticide_weight,"
-      //"fertilizer_name_1,fertilizer_name_2,"
-      //"fertilizer_name_3,fertilizer_name_4, "
-      //"fertilizer_rate_1,fertilizer_rate_2,"
-      //"fertilizer_rate_3,fertilizer_rate_4, "
-      //"fertilizer_application_method_1,fertilizer_application_method_2,"
-      //"fertilizer_application_method_3,fertilizer_application_method_4, "
-      //"fertilizer_inhibitor_1,fertilizer_inhibitor_2,"
-      //"fertilizer_inhibitor_3,fertilizer_inhibitor_4,"
-      //"amendment_name_1,amendment_name_2,"
-      //"amendment_name_3,amendment_name_4, "
-      //"amendment_rate_1,amendment_rate_2,"
-      //"amendment_rate_3,amendment_rate_4, "
-      //"amendment_application_method_1,amendment_application_method_2,"
-      //"amendment_application_method_3,amendment_application_method_4,"
-      //"amendment_inhibitor_1,amendment_inhibitor_2,"
-      //"amendment_inhibitor_3,amendment_inhibitor_4) "
-    //" VALUES ";
-
 
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id,pesticide_weight,"
@@ -390,6 +375,76 @@ bool saveTableAgronomicInputs(QString id, QSqlDatabase &dbOutput, TinputData &in
                 + ",'" + inputData.agronomicInput.amendmentInhibitor[1] + "'"
                 + ",'" + inputData.agronomicInput.amendmentInhibitor[2] + "'"
                 + ",'" + inputData.agronomicInput.amendmentInhibitor[3] + "'"
+                + ")";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool createTableEnergy(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE energy";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
+
+    queryString = "CREATE TABLE energy"
+                  " (id TEXT,biodiesel REAL,"
+                  "bioethanol REAL,diesel REAL,"
+                  "oil REAL,petrol REAL, "
+                  "LPG REAL,coal REAL,"
+                  "high_density_biomass REAL,wood REAL, "
+                  "methane REAL,electricity_grid REAL,"
+                  "percentage_renewables_provider REAL,hydropower_electricity REAL, "
+                  "photovoltaic_electricity REAL,eolic_electricity REAL"
+                  ")";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'energy': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
+{
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id,biodiesel,"
+                         "bioethanol,diesel,"
+                         "oil,petrol, "
+                         "LPG,coal,"
+                         "high_density_biomass,wood, "
+                         "methane,electricity_grid,"
+                         "percentage_renewables_provider,hydropower_electricity, "
+                         "photovoltaic_electricity,eolic_electricity) "
+                       " VALUES ";
+
+    queryOutput += "('" + id + "'"
+                + "," + QString::number(inputData.energy.biodiesel)
+                + "," + QString::number(inputData.energy.bioethanol)
+                + "," + QString::number(inputData.energy.diesel)
+                + "," + QString::number(inputData.energy.oil)
+                + "," + QString::number(inputData.energy.petrol)
+                + "," + QString::number(inputData.energy.LPG)
+                + "," + QString::number(inputData.energy.coal)
+                + "," + QString::number(inputData.energy.highEnergyDensityBiomass)
+                + "," + QString::number(inputData.energy.wood)
+                + "," + QString::number(inputData.energy.methane)
+                + "," + QString::number(inputData.energy.electricityGridAmount)
+                + "," + QString::number(inputData.energy.electricityGridPercentageRenewables)
+                + "," + QString::number(inputData.energy.electricityHydro)
+                + "," + QString::number(inputData.energy.electricitySolar)
+                + "," + QString::number(inputData.energy.electricityEolic)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
