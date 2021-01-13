@@ -101,6 +101,7 @@
             double averageTemperature;
             double annualRainfall;
             double carbonBiomass;
+            double carbonBiomassWholeField;
             double carbonBudgetPerHectareBiomass;
             double carbonBudgetWholeFieldBiomass;
             double carbonFootprintPerKgOfProduceBiomass;
@@ -109,6 +110,7 @@
             double carbonFootprintPerKgOfProduceSoil;
             double percentageTreeBiomassToAccountFor;
             double carbonSavedBySustainablePractices;
+            double carbonSavedBySustainablePracticesWholeField;
             bool woodyCrop;
     };
 

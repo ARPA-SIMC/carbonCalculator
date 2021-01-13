@@ -1,6 +1,8 @@
 #ifndef DBOUTPUT_H
 #define DBOUTPUT_H
 
+#include "carbonCalculator.h"
+
     class QSqlDatabase;
     class QString;
     struct TinputData;
@@ -9,7 +11,7 @@
     bool createTableGeneral(QSqlDatabase &dbOutput);
 
     bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
-    bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData);
+    bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2);
 
     bool createTableClimate(QSqlDatabase &dbOutput);
     bool saveTableClimate(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
@@ -25,5 +27,12 @@
 
     bool createTableEnergy(QSqlDatabase &dbOutput);
     bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
+
+    bool createTableCarbonBudget(QSqlDatabase &dbOutput);
+    bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName);
+
+    bool createTableCarbonDynamics(QSqlDatabase &dbOutput);
+    bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName);
+
 
 #endif // DBOUTPUT_H

@@ -32,13 +32,16 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
         return false;
     if (! createTableEnergy(dbOutput))
         return false;
-
+    if (! createTableCarbonBudget(dbOutput))
+        return false;
+    if (! createTableCarbonDynamics(dbOutput))
+        return false;
     // TODO other tables
 
     return true;
 }
 
-bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
+bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2)
 {
     if (! saveTableGeneral(id, dbOutput, inputData, "general"))
         return false;
@@ -52,6 +55,9 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
         return false;
     if (! saveTableEnergy(id, dbOutput, inputData, "energy"))
         return false;
+    if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget"))
+        return false;
+
     // TODO save other tables
 
     return true;
@@ -445,6 +451,132 @@ bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, 
                 + "," + QString::number(inputData.energy.electricityHydro)
                 + "," + QString::number(inputData.energy.electricitySolar)
                 + "," + QString::number(inputData.energy.electricityEolic)
+                + ")";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+bool createTableCarbonBudget(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE carbon_budget";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
+
+    queryString = "CREATE TABLE carbon_budget"
+                  " (id TEXT,soil_carbon_budget_hectare REAL,"
+                  "soil_carbon_budget_field REAL,"
+                  "soil_carbon_saved_due_to_sustainable_practices_hectare REAL,soil_carbon_saved_due_to_sustainable_practices_field REAL,"
+                  "soil_carbon_footprint REAL,"
+                  "biomass_carbon_budget_hectare REAL,biomass_carbon_budget_field REAL, "
+                  "biomass_carbon_hectare REAL,biomass_carbon_field REAL,"
+                  "biomass_carbon_footprint REAL"
+                  ")";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'carbon_budget': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName)
+{
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id,soil_carbon_budget_hectare,"
+                         "soil_carbon_budget_field,"
+                         "soil_carbon_saved_due_to_sustainable_practices_hectare,soil_carbon_saved_due_to_sustainable_practices_field,"
+                         "soil_carbon_footprint,"
+                         "biomass_carbon_budget_hectare,biomass_carbon_budget_field, "
+                         "biomass_carbon_hectare,biomass_carbon_field,"
+                         "biomass_carbon_footprint) "
+                       " VALUES ";
+
+    queryOutput += "('" + id + "'"
+                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareSoil)
+                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldSoil)
+                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePractices)
+                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePracticesWholeField)
+                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceSoil)
+                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareBiomass)
+                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldBiomass)
+                + "," + QString::number(calculatorCO2.carbonBiomass)
+                + "," + QString::number(calculatorCO2.carbonBiomassWholeField)
+                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceBiomass)
+                + ")";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+bool createTableCarbonDynamics(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE carbon_dynamics";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
+
+    queryString = "CREATE TABLE carbon_dynamics"
+                  " (id TEXT,energy_emission REAL,"
+                  "pesticide_production_emission REAL,"
+                  "residue_management_emission REAL,nitrogen_compounds_emission REAL,"
+                  "carbon_oxydation_emission REAL,"
+                  "fertilizer_production_emission REAL,fertilizer_apllication_emission REAL, "
+                  "carbon_lost_erosion REAL,conservative_tillage_sequestration REAL,"
+                  "crop_cover_sequestration REAL, conservative_landuse_sequestration REAL,"
+                  "amendment_application_sequestration REAL,woody_residue_sequestration REAL,"
+                  "green_residue_sequestration REAL, fine_root_sequestration REAL"
+                  ")";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'carbon_dynamics': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName)
+{
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id,soil_carbon_budget_hectare,"
+                         "soil_carbon_budget_field,"
+                         "soil_carbon_saved_due_to_sustainable_practices_hectare,soil_carbon_saved_due_to_sustainable_practices_field,"
+                         "soil_carbon_footprint,"
+                         "biomass_carbon_budget_hectare,biomass_carbon_budget_field, "
+                         "biomass_carbon_hectare,biomass_carbon_field,"
+                         "biomass_carbon_footprint) "
+                       " VALUES ";
+
+    queryOutput += "('" + id + "'"
+                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareSoil)
+                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldSoil)
+                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePractices)
+                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePracticesWholeField)
+                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceSoil)
+                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareBiomass)
+                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldBiomass)
+                + "," + QString::number(calculatorCO2.carbonBiomass)
+                + "," + QString::number(calculatorCO2.carbonBiomassWholeField)
+                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceBiomass)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);

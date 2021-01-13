@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
         printOutput(calculatorCO2);
 
         // save db output
-        if (! saveOutput(id, dbOutput, inputData[iExp]))
+        if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2))
             return -1;
     }
 

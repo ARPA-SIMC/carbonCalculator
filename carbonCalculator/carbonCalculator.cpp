@@ -248,10 +248,12 @@ void CarbonCalculator::computeBalance()
     carbonSavedBySustainablePractices = soilManage.emissionsConventionalManagement - soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     carbonSavedBySustainablePractices -= soilManage.sequestrationCarbonCO2Eq;
     carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
+    carbonSavedBySustainablePracticesWholeField = carbonSavedBySustainablePractices*soilManage.fieldSize;
     soilManage.isOrganic = false;
     carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
     carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBiomass += biomassInTree.woodyCarbonFromForestInCO2Eq2(biomassInTree.orchardAge,2500,(soilManage.percentage.forest/100.));
+    carbonBiomassWholeField = carbonBiomass*soilManage.fieldSize;
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)
