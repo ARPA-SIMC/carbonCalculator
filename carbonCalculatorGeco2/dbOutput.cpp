@@ -28,6 +28,8 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
         return false;
     if (! createTableCropField(dbOutput))
         return false;
+    if (! createTableAgronomicInputs(dbOutput))
+        return false;
     // TODO other tables
 
     return true;
@@ -43,7 +45,8 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData)
         return false;
     if (! saveTableCropField(id, dbOutput, inputData, "crop_field"))
         return false;
-
+    if (! saveTableAgronomicInputs(id, dbOutput, inputData, "agronomic_inputs"))
+        return false;
 
     // TODO save other tables
 
@@ -219,7 +222,7 @@ bool createTableCropField(QSqlDatabase &dbOutput)
 
     if (myQuery.lastError().isValid())
     {
-        std::cout << "Error in creating table 'soil': " << myQuery.lastError().text().toStdString();
+        std::cout << "Error in creating table 'crop_field': " << myQuery.lastError().text().toStdString();
         return false;
     }
 
@@ -262,6 +265,131 @@ bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputDat
                 + "," + QString::number(inputData.cropFieldManagement.greenResidueWeight[1])
                 + ",'" + inputData.cropFieldManagement.greenResidueTreatment[0] + "'"
                 + ",'" + inputData.cropFieldManagement.greenResidueTreatment[1] + "'"
+                + ")";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+bool createTableAgronomicInputs(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE agronomic_inputs";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
+
+    queryString = "CREATE TABLE agronomic_inputs"
+                  " (id TEXT,pesticide_weight REAL,"
+                  "fertilizer_name_1 TEXT,fertilizer_name_2 TEXT,"
+                  "fertilizer_name_3 TEXT,fertilizer_name_4 TEXT, "
+                  "fertilizer_rate_1 REAL,fertilizer_rate_2 REAL,"
+                  "fertilizer_rate_3 REAL,fertilizer_rate_4 REAL, "
+                  "fertilizer_application_method_1 TEXT,fertilizer_application_method_2 TEXT,"
+                  "fertilizer_application_method_3 TEXT,fertilizer_application_method_4 TEXT, "
+                  "fertilizer_inhibitor_1 TEXT,fertilizer_inhibitor_2 TEXT,"
+                  "fertilizer_inhibitor_3 TEXT,fertilizer_inhibitor_4 TEXT,"
+                  "amendment_name_1 TEXT,amendment_name_2 TEXT,"
+                  "amendment_name_3 TEXT,amendment_name_4 TEXT, "
+                  "amendment_rate_1 REAL,amendment_rate_2 REAL,"
+                  "amendment_rate_3 REAL,amendment_rate_4 REAL, "
+                  "amendment_application_method_1 TEXT,amendment_application_method_2 TEXT,"
+                  "amendment_application_method_3 TEXT,amendment_application_method_4 TEXT, "
+                  "amendment_inhibitor_1 TEXT,amendment_inhibitor_2 TEXT,"
+                  "amendment_inhibitor_3 TEXT,amendment_inhibitor_4 TEXT"
+                  ")";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'agronomic_inputs': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableAgronomicInputs(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
+{
+    //+ " (id,pesticide_weight,"
+      //"fertilizer_name_1,fertilizer_name_2,"
+      //"fertilizer_name_3,fertilizer_name_4, "
+      //"fertilizer_rate_1,fertilizer_rate_2,"
+      //"fertilizer_rate_3,fertilizer_rate_4, "
+      //"fertilizer_application_method_1,fertilizer_application_method_2,"
+      //"fertilizer_application_method_3,fertilizer_application_method_4, "
+      //"fertilizer_inhibitor_1,fertilizer_inhibitor_2,"
+      //"fertilizer_inhibitor_3,fertilizer_inhibitor_4,"
+      //"amendment_name_1,amendment_name_2,"
+      //"amendment_name_3,amendment_name_4, "
+      //"amendment_rate_1,amendment_rate_2,"
+      //"amendment_rate_3,amendment_rate_4, "
+      //"amendment_application_method_1,amendment_application_method_2,"
+      //"amendment_application_method_3,amendment_application_method_4,"
+      //"amendment_inhibitor_1,amendment_inhibitor_2,"
+      //"amendment_inhibitor_3,amendment_inhibitor_4) "
+    //" VALUES ";
+
+
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id,pesticide_weight,"
+                         "fertilizer_name_1,fertilizer_name_2,"
+                         "fertilizer_name_3,fertilizer_name_4, "
+                         "fertilizer_rate_1,fertilizer_rate_2,"
+                         "fertilizer_rate_3,fertilizer_rate_4, "
+                         "fertilizer_application_method_1,fertilizer_application_method_2,"
+                         "fertilizer_application_method_3,fertilizer_application_method_4, "
+                         "fertilizer_inhibitor_1,fertilizer_inhibitor_2,"
+                         "fertilizer_inhibitor_3,fertilizer_inhibitor_4,"
+                         "amendment_name_1,amendment_name_2,"
+                         "amendment_name_3,amendment_name_4, "
+                         "amendment_rate_1,amendment_rate_2,"
+                         "amendment_rate_3,amendment_rate_4, "
+                         "amendment_application_method_1,amendment_application_method_2,"
+                         "amendment_application_method_3,amendment_application_method_4,"
+                         "amendment_inhibitor_1,amendment_inhibitor_2,"
+                         "amendment_inhibitor_3,amendment_inhibitor_4) "
+                       " VALUES ";
+
+    queryOutput += "('" + id + "'"
+                + "," + QString::number(inputData.agronomicInput.pesticideWeight)
+                + ",'" + inputData.agronomicInput.fertilizerName[0] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerName[1] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerName[2] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerName[3] + "'"
+                + "," + QString::number(inputData.agronomicInput.fertilizerAmount[0])
+                + "," + QString::number(inputData.agronomicInput.fertilizerAmount[1])
+                + "," + QString::number(inputData.agronomicInput.fertilizerAmount[2])
+                + "," + QString::number(inputData.agronomicInput.fertilizerAmount[3])
+                + ",'" + inputData.agronomicInput.fertilizerApplicationMethod[0] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerApplicationMethod[1] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerApplicationMethod[2] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerApplicationMethod[3] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerInhibitor[0] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerInhibitor[1] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerInhibitor[2] + "'"
+                + ",'" + inputData.agronomicInput.fertilizerInhibitor[3] + "'"
+                + ",'" + inputData.agronomicInput.amendmentName[0] + "'"
+                + ",'" + inputData.agronomicInput.amendmentName[1] + "'"
+                + ",'" + inputData.agronomicInput.amendmentName[2] + "'"
+                + ",'" + inputData.agronomicInput.amendmentName[3] + "'"
+                + "," + QString::number(inputData.agronomicInput.amendmentAmount[0])
+                + "," + QString::number(inputData.agronomicInput.amendmentAmount[1])
+                + "," + QString::number(inputData.agronomicInput.amendmentAmount[2])
+                + "," + QString::number(inputData.agronomicInput.amendmentAmount[3])
+                + ",'" + inputData.agronomicInput.amendmentApplicationMethod[0] + "'"
+                + ",'" + inputData.agronomicInput.amendmentApplicationMethod[1] + "'"
+                + ",'" + inputData.agronomicInput.amendmentApplicationMethod[2] + "'"
+                + ",'" + inputData.agronomicInput.amendmentApplicationMethod[3] + "'"
+                + ",'" + inputData.agronomicInput.amendmentInhibitor[0] + "'"
+                + ",'" + inputData.agronomicInput.amendmentInhibitor[1] + "'"
+                + ",'" + inputData.agronomicInput.amendmentInhibitor[2] + "'"
+                + ",'" + inputData.agronomicInput.amendmentInhibitor[3] + "'"
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);

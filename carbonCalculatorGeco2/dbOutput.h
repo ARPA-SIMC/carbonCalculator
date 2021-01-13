@@ -20,5 +20,8 @@
     bool createTableCropField(QSqlDatabase &dbOutput);
     bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
+    bool createTableAgronomicInputs(QSqlDatabase &dbOutput);
+    bool saveTableAgronomicInputs(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
+
 
 #endif // DBOUTPUT_H
