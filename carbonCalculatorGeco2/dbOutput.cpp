@@ -57,7 +57,8 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
         return false;
     if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget"))
         return false;
-
+    if (! saveTableCarbonDynamics(id, dbOutput,calculatorCO2 , "carbon_dynamics"))
+        return false;
     // TODO save other tables
 
     return true;
@@ -535,7 +536,7 @@ bool createTableCarbonDynamics(QSqlDatabase &dbOutput)
                   "pesticide_production_emission REAL,"
                   "residue_management_emission REAL,nitrogen_compounds_emission REAL,"
                   "carbon_oxydation_emission REAL,"
-                  "fertilizer_production_emission REAL,fertilizer_apllication_emission REAL, "
+                  "fertilizer_production_emission REAL,fertilizer_application_emission REAL, "
                   "carbon_lost_erosion REAL,conservative_tillage_sequestration REAL,"
                   "crop_cover_sequestration REAL, conservative_landuse_sequestration REAL,"
                   "amendment_application_sequestration REAL,woody_residue_sequestration REAL,"
@@ -557,26 +558,33 @@ bool createTableCarbonDynamics(QSqlDatabase &dbOutput)
 bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id,soil_carbon_budget_hectare,"
-                         "soil_carbon_budget_field,"
-                         "soil_carbon_saved_due_to_sustainable_practices_hectare,soil_carbon_saved_due_to_sustainable_practices_field,"
-                         "soil_carbon_footprint,"
-                         "biomass_carbon_budget_hectare,biomass_carbon_budget_field, "
-                         "biomass_carbon_hectare,biomass_carbon_field,"
-                         "biomass_carbon_footprint) "
+                       + " (id,energy_emission,"
+                         "pesticide_production_emission,"
+                         "residue_management_emission,nitrogen_compounds_emission,"
+                         "carbon_oxydation_emission,"
+                         "fertilizer_production_emission,fertilizer_application_emission, "
+                         "carbon_lost_erosion,conservative_tillage_sequestration,"
+                         "crop_cover_sequestration, conservative_landuse_sequestration,"
+                         "amendment_application_sequestration,woody_residue_sequestration,"
+                         "green_residue_sequestration, fine_root_sequestration) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
-                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareSoil)
-                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldSoil)
-                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePractices)
-                + "," + QString::number(calculatorCO2.carbonSavedBySustainablePracticesWholeField)
-                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceSoil)
-                + "," + QString::number(calculatorCO2.carbonBudgetPerHectareBiomass)
-                + "," + QString::number(calculatorCO2.carbonBudgetWholeFieldBiomass)
-                + "," + QString::number(calculatorCO2.carbonBiomass)
-                + "," + QString::number(calculatorCO2.carbonBiomassWholeField)
-                + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceBiomass)
+                + "," + QString::number(calculatorCO2.energy.emissions.total)
+                + "," + QString::number(calculatorCO2.pesticide.emissionDueToProduction)
+                + "," + QString::number(calculatorCO2.cropResidue.kgCO2Equivalent.total)
+                + "," + QString::number(calculatorCO2.fertiliser.emissionDueToSoil)
+                + "," + QString::number(calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate))
+                + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserProduction)
+                + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserApplication)
+                + "," + QString::number(calculatorCO2.erosion.lostCO2)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqTillage)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqCropCover)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqLandUse)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationAmendment)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqResidueWood)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqResidueGreen)
+                + "," + QString::number(calculatorCO2.soilManage.sequestrationRoot)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
