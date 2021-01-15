@@ -8,6 +8,7 @@ static CarbonCalculator calculatorCO2;
 
 int main(int argc, char *argv[])
 {
+    bool printOutputOnScreen = false;
     QCoreApplication a(argc, argv);
 
     QString dataPath;
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
         return -1;
 
     // compute balance
+    std::cout << "field simulation:" << std::endl ;
     for (int iExp=0; iExp<numberOfExperiments; iExp++)
     {
         bool isSetVarOk = false;
@@ -65,8 +67,8 @@ int main(int argc, char *argv[])
         QString id = QString::number(inputData[iExp].general.year) +
                 "_" + inputData[iExp].general.enterpriseName
                 + "_Field" + QString::number(inputData[iExp].general.nrField);
-        std::cout << "ID: " << id.toStdString() << std::endl;
-        printOutput(calculatorCO2);
+        std::cout << "ID: " << id.toStdString() << "\t" << iExp+1 << " of " << numberOfExperiments << std::endl;
+        if (printOutputOnScreen) printOutput(calculatorCO2);
 
         // save db output
         if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2))
