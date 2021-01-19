@@ -7,27 +7,7 @@
 double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
 {
     double emissions;
-    double matrixElement;
     setMatrix();
-    /*
-    matrixElement = soilTillage[myIdClimate].matrix[2][0];
-    emissions = FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.conventionalTillage*0.01;
-    matrixElement = soilTillage[myIdClimate].matrix[2][1];
-    emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.minimumTillage*0.01;
-    matrixElement = 1;
-    emissions += FROM_C_TO_CO2 * carbonInSoil * (- 1./20.*(matrixElement - 1))*percentage.noTillage*0.01;
-    emissions *= percentage.arable*0.01;
-
-    matrixElement = soilTillage[myIdClimate].matrix[2][0]*soilLandUse[myIdClimate].matrix[2][0];
-    emissions = FROM_C_TO_CO2 * carbonInSoil * 0.006*( 1 + 1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.conventionalTillage*0.01;
-    matrixElement = soilTillage[myIdClimate].matrix[1][0]*soilLandUse[myIdClimate].matrix[2][0];
-    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 +  1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.minimumTillage*0.01;
-    matrixElement = soilLandUse[myIdClimate].matrix[2][0];
-    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 +  1./20.*(matrixElement-1))*percentage.arable*0.01*percentage.noTillage*0.01;
-    matrixElement = soilLandUse[myIdClimate].matrix[1][0];
-    emissions += FROM_C_TO_CO2 * carbonInSoil * 0.006*(1 + 1./20.*(matrixElement-1))*percentage.permanentGrass*0.01;
-    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
-    */
     emissions = FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
     emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.permanentGrass*0.01;
     double weightArable = 0.01*(percentage.conventionalTillage*soilTillage[myIdClimate].matrix[2][0] + percentage.minimumTillage*soilTillage[myIdClimate].matrix[1][0]+percentage.noTillage);
