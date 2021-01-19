@@ -33,9 +33,6 @@ double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
     biomassRootPermanentGrass = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*percentage.permanentGrass*0.01;// *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
     biomassRootForest = - 695 * FROM_C_TO_CO2*exp(-0.71)*percentage.forest*0.01;//*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1); // we supposed forest is organic by default
     return biomassRootCrop + biomassRootCoverCrop + biomassRootCoverCrop + biomassRootForest;
-    //if (!isOrganic) return -FROM_C_TO_CO2*370*exp(-rootDecayParameter)*percentage.arable*0.01;
-    //else return -FROM_C_TO_CO2*(695)*exp(-rootDecayParameter)*percentage.arable*0.01;
-    // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
 }
 
 double SoilManagement::computeSequestrationUnstableCarbonDueToRoots(int myIdClimate)
@@ -312,7 +309,7 @@ double SoilManagement::computeSequestrationResidueIncorporation2(double residueI
     if (isHerbaceous == 0)
     {
         residueIncorporated += 1*0.01*percentage.forest;//1 t/ha of wood incorporated
-        sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)
+        sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)values from Ye et al. 2012
         if (sequestration < 0) return sequestration;
         else return 0;
     }
