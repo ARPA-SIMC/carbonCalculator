@@ -11,7 +11,7 @@
     bool createTableGeneral(QSqlDatabase &dbOutput);
 
     bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
-    bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2);
+    bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2,double credits, int *isAccepted);
 
     bool createTableClimate(QSqlDatabase &dbOutput);
     bool saveTableClimate(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
@@ -29,7 +29,7 @@
     bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName);
 
     bool createTableCarbonBudget(QSqlDatabase &dbOutput);
-    bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName);
+    bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName, double credits, int *isAccepted);
 
     bool createTableCarbonDynamics(QSqlDatabase &dbOutput);
     bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName);

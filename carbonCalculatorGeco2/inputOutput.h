@@ -114,4 +114,10 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 void printOutput(CarbonCalculator &calculatorCO2);
 void usage();
 
+// credits
+
+double computeCredits(CarbonCalculator calculatorCO2, int *isAccepted);
+double computeBufferSoil(int nrPractices);
+double computeBufferBiomass(int nrPractices);
+
 #endif // INPUTOUTPUT_H

@@ -19,7 +19,8 @@ CONFIG(release, debug|release) {
 
 SOURCES += main.cpp \
     dbOutput.cpp \
-    inputOutput.cpp
+    inputOutput.cpp \
+    carbonCredits.cpp
 
 HEADERS += \
     dbOutput.h \

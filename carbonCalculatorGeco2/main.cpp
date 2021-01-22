@@ -63,7 +63,9 @@ int main(int argc, char *argv[])
         isSetVarOk = setCarbonCalculatorVariables(dbParameters,calculatorCO2,inputData,iExp);
         if (!isSetVarOk) return -1;
         calculatorCO2.computeBalance();
-
+        double credits;
+        int isAccepted;
+        credits = computeCredits(calculatorCO2,&isAccepted);
         QString id = QString::number(inputData[iExp].general.year) +
                 "_" + inputData[iExp].general.enterpriseName
                 + "_Field" + QString::number(inputData[iExp].general.nrField);
@@ -71,7 +73,7 @@ int main(int argc, char *argv[])
         if (printOutputOnScreen) printOutput(calculatorCO2);
 
         // save db output
-        if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2))
+        if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2,credits,&isAccepted))
             return -1;
     }
 

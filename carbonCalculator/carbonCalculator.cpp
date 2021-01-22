@@ -250,11 +250,30 @@ void CarbonCalculator::computeBalance()
     carbonSavedBySustainablePractices -= soilManage.sequestrationCarbonCO2Eq;
     carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
     carbonSavedBySustainablePracticesWholeField = carbonSavedBySustainablePractices*soilManage.fieldSize;
+
+    computeConservativePracticesAdopted();
+
     soilManage.isOrganic = false;
     carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
     carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBiomass += biomassInTree.woodyCarbonFromForestInCO2Eq2(biomassInTree.orchardAge,2500,(soilManage.percentage.forest/100.));
     carbonBiomassWholeField = carbonBiomass*soilManage.fieldSize;
+}
+
+void CarbonCalculator::computeConservativePracticesAdopted()
+{
+    nrConservativePracticesAdopted = 0;
+    if (soilManage.isOrganic) nrConservativePracticesAdopted++;
+    if (soilManage.sequestrationCarbonCO2EqTillage < 0) nrConservativePracticesAdopted++;
+    if (soilManage.sequestrationCarbonCO2EqCropCover < 0) nrConservativePracticesAdopted++;
+    if (soilManage.sequestrationCarbonCO2EqLandUse < 0) nrConservativePracticesAdopted++;
+    if ((soilManage.sequestrationCarbonCO2EqResidue[0]+soilManage.sequestrationCarbonCO2EqResidue[1])<0) nrConservativePracticesAdopted++;
+    if ((soilManage.sequestrationCarbonCO2EqResidue[2]+soilManage.sequestrationCarbonCO2EqResidue[3])<0) nrConservativePracticesAdopted++;
+    if (soilManage.sequestrationAmendment < 0) nrConservativePracticesAdopted++;
+    if (fertiliser.emissionDueToFertiliserApplication < 10) nrConservativePracticesAdopted++;
+    if (pesticide.weightOfActivePrinciple < 5) nrConservativePracticesAdopted++;
+    if (cropResidue.kgCO2Equivalent.total < 20) nrConservativePracticesAdopted++;
+    if (biomassInTree.orchardAge >= 20) nrConservativePracticesAdopted++;
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)

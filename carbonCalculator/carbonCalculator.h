@@ -112,6 +112,8 @@
             double carbonSavedBySustainablePractices;
             double carbonSavedBySustainablePracticesWholeField;
             bool woodyCrop;
+            int nrConservativePracticesAdopted;
+            void computeConservativePracticesAdopted();
     };
 
 #endif // CARBONCALCULATOR_H

@@ -41,7 +41,7 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
     return true;
 }
 
-bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2)
+bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, CarbonCalculator calculatorCO2, double credits, int*isAccepted)
 {
     if (! saveTableGeneral(id, dbOutput, inputData, "general"))
         return false;
@@ -55,7 +55,7 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
         return false;
     if (! saveTableEnergy(id, dbOutput, inputData, "energy"))
         return false;
-    if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget"))
+    if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget",credits,isAccepted))
         return false;
     if (! saveTableCarbonDynamics(id, dbOutput,calculatorCO2 , "carbon_dynamics"))
         return false;
@@ -476,7 +476,10 @@ bool createTableCarbonBudget(QSqlDatabase &dbOutput)
                   "soil_carbon_footprint REAL,"
                   "biomass_carbon_budget_hectare REAL,biomass_carbon_budget_field REAL, "
                   "biomass_carbon_hectare REAL,biomass_carbon_field REAL,"
-                  "biomass_carbon_footprint REAL"
+                  "biomass_carbon_footprint REAL,"
+                  "nr_sustainable_practices INTEGER,"
+                  "isAccepted INTEGER,"
+                  "credits REAL"
                   ")";
 
     myQuery = dbOutput.exec(queryString);
@@ -491,7 +494,7 @@ bool createTableCarbonBudget(QSqlDatabase &dbOutput)
 }
 
 
-bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName)
+bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName,double credits, int* isAccepted)
 {
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id,soil_carbon_budget_hectare,"
@@ -500,7 +503,9 @@ bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator 
                          "soil_carbon_footprint,"
                          "biomass_carbon_budget_hectare,biomass_carbon_budget_field, "
                          "biomass_carbon_hectare,biomass_carbon_field,"
-                         "biomass_carbon_footprint) "
+                         "biomass_carbon_footprint,nr_sustainable_practices,"
+                         "isAccepted,"
+                         "credits) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
@@ -514,6 +519,9 @@ bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator 
                 + "," + QString::number(calculatorCO2.carbonBiomass)
                 + "," + QString::number(calculatorCO2.carbonBiomassWholeField)
                 + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceBiomass)
+                + "," + QString::number(calculatorCO2.nrConservativePracticesAdopted)
+                + "," + QString::number(*isAccepted)
+                + "," + QString::number(credits)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
