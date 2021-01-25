@@ -18,7 +18,16 @@
 #include "dbQueries.h"
 #include "csvUtilities.h"
 
-
+struct TgeneralBuyer{
+    QString enterpriseName;
+    QString idCountry;
+    int nrChain;
+    int year;
+    float latitude;
+    float longitude;
+    int isPresentLCA;
+    float valueLCA;
+};
 
 struct Tgeneral{
     QString enterpriseName;
@@ -99,6 +108,12 @@ struct Tenergy{
     float electricityHydro;
 };
 
+struct TinputDataBuyer{
+    TgeneralBuyer generalBuyer;
+    Tenergy energy;
+};
+
+
 struct TinputData{
     Tgeneral general;
     Tclimate climate;
@@ -108,6 +123,18 @@ struct TinputData{
     Tenergy energy;
 };
 
+class BuyerCalculator{
+public:
+    bool setInputBuyer(std::vector<TinputDataBuyer> inputData,int iExp,CarbonCalculator calculatorCO2);
+    double computeDebitsBuyer();
+    int isPresentLCA;
+    double valueLCA;
+    EnergyManagement energy;
+    double emissionEnergy;
+};
+
+
+bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments);
 bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments);
 bool openDataBase(QSqlDatabase &db, QString dataPath);
 bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorCO2,std::vector<TinputData> &inputData,int iExp);

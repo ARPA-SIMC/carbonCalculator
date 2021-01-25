@@ -5,6 +5,7 @@
 #define TEST
 
 static CarbonCalculator calculatorCO2;
+static BuyerCalculator buyerCalculatorCO2;
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +19,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    // read arguments
+    // read arguments carbon calculator
     QString csvFileName;
     if (argc < 2)
     {
@@ -43,6 +44,33 @@ int main(int argc, char *argv[])
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
     readCsvFile(csvFileName,inputData,numberOfExperiments);
+
+
+    // read arguments carbon calculator
+    QString csvFileNameBuyer;
+    if (argc < 2)
+    {
+        #ifdef TEST
+            csvFileNameBuyer = dataPath + "inputFileBuyer.csv";
+        #else
+            usage();
+            return 1;
+        #endif
+    }
+    else
+    {
+        csvFileName = argv[1];
+    }
+
+    // read CSV
+    if (! QFile(csvFileNameBuyer).exists())
+    {
+        std::cout << "Error!\nMissing csv file: " << csvFileNameBuyer.toStdString() << std::endl;
+        return -1;
+    }
+    int numberOfExperimentsBuyer = 0;
+    std::vector<TinputDataBuyer> inputDataBuyer;
+    readCsvFileBuyer(csvFileNameBuyer,inputDataBuyer,numberOfExperimentsBuyer);
 
     // open parameters DB
     QSqlDatabase dbParameters;
@@ -76,6 +104,25 @@ int main(int argc, char *argv[])
         if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2,credits,&isAccepted))
             return -1;
     }
+
+    std::cout << "buyer simulation:" << std::endl ;
+    for (int iExp=0; iExp<numberOfExperimentsBuyer; iExp++)
+    {
+        double debits;
+        bool isSetVarOk = false;
+        isSetVarOk = buyerCalculatorCO2.setInputBuyer(inputDataBuyer,iExp,calculatorCO2);
+        if (!isSetVarOk) return -1;
+        debits = buyerCalculatorCO2.computeDebitsBuyer();
+        QString idBuyer = QString::number(inputDataBuyer[iExp].generalBuyer.year) +
+                "_" + inputDataBuyer[iExp].generalBuyer.enterpriseName
+                + "_Chain" + QString::number(inputDataBuyer[iExp].generalBuyer.nrChain);
+        std::cout << "ID: " << idBuyer.toStdString() << "\t" << iExp+1 << " of " << numberOfExperimentsBuyer << std::endl;
+
+        // save db output
+        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[iExp],buyerCalculatorCO2,debits))
+            return -1;
+    }
+
 
     return 0;
 }

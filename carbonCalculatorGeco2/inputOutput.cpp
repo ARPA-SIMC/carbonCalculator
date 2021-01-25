@@ -5,6 +5,88 @@ void usage()
     std::cout << "USAGE:\ncarbonCalculatorTest <csv data file>\n";
 }
 
+bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments)
+{
+    // check numberOfFields
+    QString error;
+    FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    int numberOfFields = 1;
+    char dummyComma;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyComma = char(getc(fp));
+    } while (dummyComma != '\n' && dummyComma != EOF);
+
+    do
+    {
+        dummyComma = char(getc(fp));
+        if (dummyComma == ',') numberOfFields++;
+    } while (dummyComma != '\n' && dummyComma != EOF);
+    fclose(fp);
+
+    // check numberOfExperiments
+    //FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    numberOfExperiments = 0;
+    char dummyLine;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyLine = char(getc(fp));
+    } while (dummyLine != '\n' && dummyLine != EOF);
+    do
+    {
+        dummyLine = char(getc(fp));
+        if (dummyLine == '\n' || dummyLine == EOF) numberOfExperiments++;
+    } while (dummyLine != EOF);
+    fclose(fp);
+
+    // read data
+    std::vector<QStringList> data;
+    if (! importCsvData(csvFileName, numberOfFields, true, data, error))
+    {
+        std::cout << "Error: " << error.toStdString() << std::endl;
+    }
+
+    inputData.resize(numberOfExperiments);
+
+    // read values (remove quotes)
+    for (int iExp=0; iExp < numberOfExperiments; iExp++)
+    {
+        int label=1;
+        inputData[iExp].generalBuyer.enterpriseName = data[iExp].value(label++).remove("\"");
+        inputData[iExp].generalBuyer.nrChain = (int) data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].generalBuyer.idCountry = data[iExp].value(label++).remove("\"");
+        inputData[iExp].generalBuyer.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
+        inputData[iExp].generalBuyer.latitude = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].generalBuyer.longitude = data[iExp].value(label++).remove("\"").toFloat();
+        if (data[iExp].value(label++).remove("\"") == "yes")
+            inputData[iExp].generalBuyer.isPresentLCA = 1;
+        else
+            inputData[iExp].generalBuyer.isPresentLCA = 0;
+        inputData[iExp].generalBuyer.valueLCA = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.oil = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.methane = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+    }
+    return true;
+}
+
+
 bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& numberOfExperiments)
 {
     // check numberOfFields
@@ -506,6 +588,68 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     return true;
 }
 
+bool  BuyerCalculator::setInputBuyer(std::vector<TinputDataBuyer> inputData, int iExp, CarbonCalculator calculatorCO2)
+{
+    isPresentLCA = inputData[iExp].generalBuyer.isPresentLCA;
+    valueLCA = inputData[iExp].generalBuyer.valueLCA;
+    energy.percentageRenewablesInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;
+    energy.input.fromElectricityGrid = inputData[iExp].energy.electricityGridAmount; // kWh input from .csv
+    energy.input.fromElectricityOwnHydropower = inputData[iExp].energy.electricityHydro; // kWh input from .csv
+    energy.input.fromElectricityOwnPhotovoltaic = inputData[iExp].energy.electricitySolar; // kWh input from .csv
+    energy.input.fromElectricityOwnWind = inputData[iExp].energy.electricityEolic; // kWh input from .csv
+    energy.input.fromFuelBiodiesel = inputData[iExp].energy.biodiesel; // l input from .csv
+    energy.input.fromFuelBioethanol = inputData[iExp].energy.bioethanol; // l input from .csv
+    energy.input.fromFuelCoal = inputData[iExp].energy.coal; // kg input from .csv
+    energy.input.fromFuelDiesel = inputData[iExp].energy.diesel; // l input from .csv
+    energy.input.fromFuelHighDensityBiomass = inputData[iExp].energy.highEnergyDensityBiomass; // kg input from .csv
+    energy.input.fromFuelLPG = inputData[iExp].energy.highEnergyDensityBiomass; // l input from .csv
+    energy.input.fromFuelOil = inputData[iExp].energy.oil; // l input from .csv
+    energy.input.fromFuelPetrol = inputData[iExp].energy.petrol; // l input from .csv
+    energy.input.fromFuelWood = inputData[iExp].energy.wood; // kg input from .csv
+    energy.input.fromFuelMethane = inputData[iExp].energy.methane; // kg input from .csv
+
+    energy.parameterElectricity.fossil = calculatorCO2.energy.parameterElectricity.fossil;
+    energy.parameterElectricity.hydropower = calculatorCO2.energy.parameterElectricity.hydropower;
+    energy.parameterElectricity.photovoltaic = calculatorCO2.energy.parameterElectricity.photovoltaic;
+    energy.parameterElectricity.wind = calculatorCO2.energy.parameterElectricity.wind;
+    energy.parameterFuel.biodieselEmissionPerLitre = calculatorCO2.energy.parameterFuel.biodieselEmissionPerLitre;
+    energy.parameterFuel.coalEmissionPerEnergyUnit = calculatorCO2.energy.parameterFuel.coalEmissionPerEnergyUnit;
+    energy.parameterFuel.coalHeatPower = calculatorCO2.energy.parameterFuel.coalHeatPower;
+    energy.parameterFuel.dieselEmissionPerLitre = calculatorCO2.energy.parameterFuel.dieselEmissionPerLitre;
+    energy.parameterFuel.ethanolEmissionPerLitre = calculatorCO2.energy.parameterFuel.ethanolEmissionPerLitre;
+    energy.parameterFuel.heavyOilHeatPower = calculatorCO2.energy.parameterFuel.heavyOilHeatPower;
+    energy.parameterFuel.highDensityBiomassHeatPower = calculatorCO2.energy.parameterFuel.HighDensityBiomassEmissionPerEnergyUnit;
+    energy.parameterFuel.HighDensityBiomassEmissionPerEnergyUnit = calculatorCO2.energy.parameterFuel.highDensityBiomassHeatPower;
+    energy.parameterFuel.LPGHeatPower = calculatorCO2.energy.parameterFuel.LPGHeatPower;
+    energy.parameterFuel.lpgPerEnergyUnit = calculatorCO2.energy.parameterFuel.lpgPerEnergyUnit;
+    energy.parameterFuel.methaneHeatPower = calculatorCO2.energy.parameterFuel.methaneHeatPower;
+    energy.parameterFuel.methanePerEnergyUnit = calculatorCO2.energy.parameterFuel.methanePerEnergyUnit;
+    energy.parameterFuel.oilPerEnergyUnit = calculatorCO2.energy.parameterFuel.oilPerEnergyUnit;
+    energy.parameterFuel.petrolEmissionPerLitre = calculatorCO2.energy.parameterFuel.petrolEmissionPerLitre;
+    energy.parameterFuel.woodEmissionPerEnergyUnit = calculatorCO2.energy.parameterFuel.woodEmissionPerEnergyUnit;
+    energy.parameterFuel.woodHeatPower = calculatorCO2.energy.parameterFuel.woodHeatPower;
+
+
+    return true;
+}
+
+double BuyerCalculator::computeDebitsBuyer()
+{
+    double debits;
+
+    if (isPresentLCA > 0.1)
+    {
+        energy.emissions.total = NODATA;
+        debits = valueLCA;
+    }
+    else
+    {
+        energy.computeEmissions();
+        debits = energy.emissions.total;
+    }
+    return debits;
+}
+
 void printOutput(CarbonCalculator &calculatorCO2)
 {
     std::cout << "values are in kgCO2Eq " << std::endl;
@@ -556,3 +700,6 @@ void printOutput(CarbonCalculator &calculatorCO2)
     std::cout << "___________________________________________________________________________\n" << std::endl;
     printf("\n\n");
 }
+
+
+

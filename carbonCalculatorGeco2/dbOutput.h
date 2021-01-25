@@ -1,7 +1,8 @@
 #ifndef DBOUTPUT_H
 #define DBOUTPUT_H
 
-#include "carbonCalculator.h"
+//#include "carbonCalculator.h"
+#include "inputOutput.h"
 
     class QSqlDatabase;
     class QString;
@@ -33,6 +34,11 @@
 
     bool createTableCarbonDynamics(QSqlDatabase &dbOutput);
     bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName);
+
+
+    bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debits);
+    bool createTableBuyer(QSqlDatabase &dbOutput);
+    bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName, double debits);
 
 
 #endif // DBOUTPUT_H

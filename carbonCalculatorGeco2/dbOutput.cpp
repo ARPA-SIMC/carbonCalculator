@@ -36,6 +36,9 @@ bool createOutputDB(QSqlDatabase &dbOutput, QString dbName)
         return false;
     if (! createTableCarbonDynamics(dbOutput))
         return false;
+    if (! createTableBuyer(dbOutput))
+        return false;
+
     // TODO other tables
 
     return true;
@@ -64,6 +67,16 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
     return true;
 }
 
+bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debits)
+{
+    if (! saveTableBuyer(id, dbOutput,buyerCalculatorCO2,inputData , "buyer",debits))
+        return false;
+
+    // TODO save other tables
+
+    return true;
+
+}
 
 bool createTableGeneral(QSqlDatabase &dbOutput)
 {
@@ -593,6 +606,98 @@ bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculato
                 + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqResidueWood)
                 + "," + QString::number(calculatorCO2.soilManage.sequestrationCarbonCO2EqResidueGreen)
                 + "," + QString::number(calculatorCO2.soilManage.sequestrationRoot)
+                + ")";
+
+    QSqlQuery myQuery = dbOutput.exec(queryOutput);
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool createTableBuyer(QSqlDatabase &dbOutput)
+{
+    QString queryString = "DROP TABLE buyer";
+    QSqlQuery myQuery = dbOutput.exec(queryString);
+
+    queryString = "CREATE TABLE buyer"
+                  " (id_buyer TEXT, enterprise_name TEXT, nr_productive_chain INTEGER, year INTEGER, "
+                  " country TEXT, latitude REAL, longitude REAL, "
+                  "is_LCA_present INTEGER,life_cycle_assessment REAL,"
+                  "biodiesel REAL,"
+                  "bioethanol REAL,diesel REAL,"
+                  "oil REAL,petrol REAL, "
+                  "LPG REAL,coal REAL,"
+                  "high_density_biomass REAL,wood REAL, "
+                  "methane REAL,electricity_grid REAL,"
+                  "percentage_renewables_provider REAL,hydropower_electricity REAL, "
+                  "photovoltaic_electricity REAL,eolic_electricity REAL,"
+                  "total_energetic_emission REAL, debits REAL)";
+
+    myQuery = dbOutput.exec(queryString);
+
+    if (myQuery.lastError().isValid())
+    {
+        std::cout << "Error in creating table 'buyer': " << myQuery.lastError().text().toStdString();
+        return false;
+    }
+
+    return true;
+}
+
+
+bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debits)
+{
+    QString queryOutput = "INSERT INTO " + tableName
+                       + " (id_buyer, enterprise_name, nr_productive_chain, year, "
+                         " country, latitude, longitude, "
+                         "is_LCA_present,life_cycle_assessment,"
+                         "biodiesel,"
+                         "bioethanol,diesel,"
+                         "oil,petrol, "
+                         "LPG,coal,"
+                         "high_density_biomass,wood, "
+                         "methane,electricity_grid,"
+                         "percentage_renewables_provider,hydropower_electricity,"
+                         "photovoltaic_electricity,eolic_electricity,"
+                         "total_energetic_emission, debits) "
+                       " VALUES ";
+
+    //QString queryOutput = "INSERT INTO " + tableName
+      //                 + " (id_buyer, enterprise_name)" //, nr_productive_chain, year) "
+        //               " VALUES ";
+
+
+    queryOutput += "('" + id_buyer + "'"
+                + "," + "'" + inputData.generalBuyer.enterpriseName + "'"
+                + "," + QString::number(inputData.generalBuyer.nrChain)
+                + "," + QString::number(inputData.generalBuyer.year)
+                + "," + "'" + inputData.generalBuyer.idCountry + "'"
+                + "," + QString::number(inputData.generalBuyer.latitude)
+                + "," + QString::number(inputData.generalBuyer.longitude)
+                + "," + QString::number(inputData.generalBuyer.isPresentLCA)
+                + "," + QString::number(inputData.generalBuyer.valueLCA)
+                + "," + QString::number(inputData.energy.biodiesel)
+                + "," + QString::number(inputData.energy.bioethanol)
+                + "," + QString::number(inputData.energy.diesel)
+                + "," + QString::number(inputData.energy.oil)
+                + "," + QString::number(inputData.energy.petrol)
+                + "," + QString::number(inputData.energy.LPG)
+                + "," + QString::number(inputData.energy.coal)
+                + "," + QString::number(inputData.energy.highEnergyDensityBiomass)
+                + "," + QString::number(inputData.energy.wood)
+                + "," + QString::number(inputData.energy.methane)
+                + "," + QString::number(inputData.energy.electricityGridAmount)
+                + "," + QString::number(inputData.energy.electricityGridPercentageRenewables)
+                + "," + QString::number(inputData.energy.electricityHydro)
+                + "," + QString::number(inputData.energy.electricitySolar)
+                + "," + QString::number(inputData.energy.electricityEolic)
+                + "," + QString::number(buyerCalculatorCO2.energy.emissions.total)
+                + "," + QString::number(debits)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
