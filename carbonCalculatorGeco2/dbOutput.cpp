@@ -85,7 +85,7 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
 
     queryString = "CREATE TABLE general "
                   " (id TEXT, enterprise_name TEXT, nr_field INTEGER, year INTEGER, "
-                  " country TEXT, latitude REAL, longitude REAL, "
+                  " country TEXT, description TEXT, latitude REAL, longitude REAL, "
                   " field_size REAL, field_slope REAL )";
 
     myQuery = dbOutput.exec(queryString);
@@ -103,7 +103,7 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
 bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id, enterprise_name, nr_field, year, country, latitude, longitude, field_size, field_slope) "
+                       + " (id, enterprise_name, nr_field, year, country,description, latitude, longitude, field_size, field_slope) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
@@ -111,6 +111,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData,
                  + "," + QString::number(inputData.general.nrField)
                  + "," + QString::number(inputData.general.year)
                  + ",'" + inputData.general.idCountry + "'"
+                 + ",'" + inputData.general.description + "'"
                  + "," + QString::number(inputData.general.latitude)
                  + "," + QString::number(inputData.general.longitude)
                  + "," + QString::number(inputData.general.fieldSize)
@@ -625,8 +626,8 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE buyer"
-                  " (id_buyer TEXT, enterprise_name TEXT, nr_productive_chain INTEGER, year INTEGER, "
-                  " country TEXT, latitude REAL, longitude REAL, "
+                  " (id_buyer TEXT, enterprise_name TEXT, name_chain_production TEXT,name_of_product TEXT, year INTEGER, "
+                  " country TEXT, description TEXT, latitude REAL, longitude REAL, "
                   "is_LCA_present INTEGER,life_cycle_assessment REAL,"
                   "biodiesel REAL,"
                   "bioethanol REAL,diesel REAL,"
@@ -653,8 +654,8 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
 bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debits)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id_buyer, enterprise_name, nr_productive_chain, year, "
-                         " country, latitude, longitude, "
+                       + " (id_buyer, enterprise_name, name_chain_production,name_of_product, year, "
+                         " country, description, latitude, longitude, "
                          "is_LCA_present,life_cycle_assessment,"
                          "biodiesel,"
                          "bioethanol,diesel,"
@@ -667,16 +668,14 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
                          "total_energetic_emission, debits) "
                        " VALUES ";
 
-    //QString queryOutput = "INSERT INTO " + tableName
-      //                 + " (id_buyer, enterprise_name)" //, nr_productive_chain, year) "
-        //               " VALUES ";
-
 
     queryOutput += "('" + id_buyer + "'"
                 + "," + "'" + inputData.generalBuyer.enterpriseName + "'"
-                + "," + QString::number(inputData.generalBuyer.nrChain)
+                + "," + "'" + inputData.generalBuyer.chainName   + "'"
+                + "," + "'" + inputData.generalBuyer.productName   + "'"
                 + "," + QString::number(inputData.generalBuyer.year)
                 + "," + "'" + inputData.generalBuyer.idCountry + "'"
+                + "," + "'" + inputData.generalBuyer.description   + "'"
                 + "," + QString::number(inputData.generalBuyer.latitude)
                 + "," + QString::number(inputData.generalBuyer.longitude)
                 + "," + QString::number(inputData.generalBuyer.isPresentLCA)

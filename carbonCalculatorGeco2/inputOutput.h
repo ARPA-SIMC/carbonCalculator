@@ -21,7 +21,9 @@
 struct TgeneralBuyer{
     QString enterpriseName;
     QString idCountry;
-    int nrChain;
+    QString chainName;
+    QString productName;
+    QString description;
     int year;
     float latitude;
     float longitude;
@@ -32,6 +34,7 @@ struct TgeneralBuyer{
 struct Tgeneral{
     QString enterpriseName;
     QString idCountry;
+    QString description;
     int nrField;
     int year;
     float latitude;

@@ -115,7 +115,8 @@ int main(int argc, char *argv[])
         debits = buyerCalculatorCO2.computeDebitsBuyer();
         QString idBuyer = QString::number(inputDataBuyer[iExp].generalBuyer.year) +
                 "_" + inputDataBuyer[iExp].generalBuyer.enterpriseName
-                + "_Chain" + QString::number(inputDataBuyer[iExp].generalBuyer.nrChain);
+                + "_" + inputDataBuyer[iExp].generalBuyer.chainName
+                + "_" + inputDataBuyer[iExp].generalBuyer.productName;
         std::cout << "ID: " << idBuyer.toStdString() << "\t" << iExp+1 << " of " << numberOfExperimentsBuyer << std::endl;
 
         // save db output

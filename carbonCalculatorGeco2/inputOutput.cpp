@@ -57,9 +57,11 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     {
         int label=1;
         inputData[iExp].generalBuyer.enterpriseName = data[iExp].value(label++).remove("\"");
-        inputData[iExp].generalBuyer.nrChain = (int) data[iExp].value(label++).remove("\"").toFloat();
+        inputData[iExp].generalBuyer.chainName = data[iExp].value(label++).remove("\"");
+        inputData[iExp].generalBuyer.productName = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.idCountry = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
+        inputData[iExp].generalBuyer.description = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.latitude = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].generalBuyer.longitude = data[iExp].value(label++).remove("\"").toFloat();
         if (data[iExp].value(label++).remove("\"") == "yes")
@@ -142,6 +144,7 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
+        inputData[iExp].general.description = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.latitude = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].general.longitude = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].general.fieldSize = data[iExp].value(label++).remove("\"").toFloat();
