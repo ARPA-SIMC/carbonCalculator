@@ -59,6 +59,7 @@ void AppliedPesticides::setInput(double myWeightOfActivePrinciple,double renewab
 
 void AppliedPesticides::computeEmissions()
 {
+    if (weightOfActivePrinciple < 0 ) weightOfActivePrinciple = 15;
     double nonElectricalEnergyRequired = weightOfActivePrinciple * (energyPerMassOfActivePrinciple - electricalEnergyPerMassOfActivePrinciple); // requirement in MJ
     double electricalEnergyRequired = weightOfActivePrinciple * electricalEnergyPerMassOfActivePrinciple * 0.01 * (100. - renewablesInCountry); // requirement in MJ
     emissionDueToProduction = 0.069 * (nonElectricalEnergyRequired + electricalEnergyRequired); // kgCO2eq
@@ -271,7 +272,7 @@ void CarbonCalculator::computeConservativePracticesAdopted()
     if ((soilManage.sequestrationCarbonCO2EqResidue[2]+soilManage.sequestrationCarbonCO2EqResidue[3])<0) nrConservativePracticesAdopted++;
     if (soilManage.sequestrationAmendment < 0) nrConservativePracticesAdopted++;
     if (fertiliser.emissionDueToFertiliserApplication < 10) nrConservativePracticesAdopted++;
-    if (pesticide.weightOfActivePrinciple < 5) nrConservativePracticesAdopted++;
+    if (pesticide.weightOfActivePrinciple < 3) nrConservativePracticesAdopted++;
     if (cropResidue.kgCO2Equivalent.total < 20) nrConservativePracticesAdopted++;
     if (biomassInTree.orchardAge >= 20) nrConservativePracticesAdopted++;
 }
