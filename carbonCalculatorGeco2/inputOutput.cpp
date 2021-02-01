@@ -56,10 +56,12 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     for (int iExp=0; iExp < numberOfExperiments; iExp++)
     {
         int label=1;
+        inputData[iExp].generalBuyer.compilerName = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.enterpriseName = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.chainName = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.productName = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.idCountry = data[iExp].value(label++).remove("\"");
+        inputData[iExp].generalBuyer.idRegion = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
         inputData[iExp].generalBuyer.description = data[iExp].value(label++).remove("\"");
         inputData[iExp].generalBuyer.latitude = data[iExp].value(label++).remove("\"").toFloat();
@@ -140,9 +142,11 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
     for (int iExp=0; iExp < numberOfExperiments; iExp++)
     {
         int label=1;
+        inputData[iExp].general.compilerName = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.enterpriseName = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++).remove("\"");
+        inputData[iExp].general.idRegion = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.year = (int)(data[iExp].value(label++).remove("\"").toFloat());
         inputData[iExp].general.description = data[iExp].value(label++).remove("\"");
         inputData[iExp].general.latitude = data[iExp].value(label++).remove("\"").toFloat();
@@ -224,22 +228,36 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         {
             inputData[iExp].agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++).remove("\"");
         }
-
-        inputData[iExp].energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.oil = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.methane = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
+        double valueEnergy;
+        valueEnergy = inputData[iExp].energy.biodiesel = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.biodiesel = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.bioethanol = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.bioethanol = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.diesel = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.diesel = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.oil = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.oil = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.petrol = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.petrol = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.LPG = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.LPG = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.coal = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.coal = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.highEnergyDensityBiomass = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.wood = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.wood = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.methane = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.methane = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityGridAmount = valueEnergy = 20.;
         inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
-        inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+        valueEnergy = inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityHydro = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricitySolar = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityEolic = valueEnergy = 20.;
     }
     return true;
 }

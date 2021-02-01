@@ -229,7 +229,7 @@ void CarbonCalculator::computeBalance()
     erosion.computeCarbonLoss();
     soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField,fertiliser.sequestrationDueToFertiliserApplication);
-    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
+    biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,80.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
             + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
@@ -241,7 +241,7 @@ void CarbonCalculator::computeBalance()
     carbonBiomass = 0;
     if (woodyCrop)
     {
-        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,50.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
+        carbonBudgetPerHectareBiomass = biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,80.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     }
     carbonBudgetPerHectareBiomass += biomassInTree.annualFromForestCarbonGain2(2500,(soilManage.percentage.forest/100.));
     carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;

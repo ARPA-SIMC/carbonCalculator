@@ -19,8 +19,10 @@
 #include "csvUtilities.h"
 
 struct TgeneralBuyer{
+    QString compilerName;
     QString enterpriseName;
     QString idCountry;
+    QString idRegion;
     QString chainName;
     QString productName;
     QString description;
@@ -32,8 +34,10 @@ struct TgeneralBuyer{
 };
 
 struct Tgeneral{
+    QString compilerName;
     QString enterpriseName;
     QString idCountry;
+    QString idRegion;
     QString description;
     int nrField;
     int year;
