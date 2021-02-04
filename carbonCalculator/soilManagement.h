@@ -48,7 +48,7 @@ public:
     double rootDecayParameter;
     double yield;
     double fieldSize;
-    void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double *recalcitrantIndex, double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue,double sequestrationFromRecalcitrantAmendment);
+    void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double *recalcitrantIndex, double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double *dryMatter);
     double computeEmissions(double carbonInSoil, int myIdClimate);
     double computeSequestrationRootBiomass(int myIdClimate);
     double computeSequestrationUnstableCarbonDueToRoots(int myIdClimate);

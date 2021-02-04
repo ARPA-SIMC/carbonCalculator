@@ -63,6 +63,14 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
             }
 
             double value;
+
+            if (! getValue(query.value("dry_matter"), &value))
+            {
+                error = "missing dry_matter fraction";
+                return false;
+            }
+            calculator.fertiliser.drymatter[i] = value;
+
             if (! getValue(query.value("bouwman_n2o"), &value))
             {
                 error = "missing emission of Bouwman index for N2O";
@@ -140,6 +148,7 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
                 return false;
             }
             calculator.fertiliser.volatilizationFraction[i] = value;
+
 
 
             query.clear();

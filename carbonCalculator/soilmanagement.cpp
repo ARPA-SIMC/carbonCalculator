@@ -181,7 +181,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* recalcitrantIndex, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* recalcitrantIndex, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double* dryMatter)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -202,20 +202,23 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationOfCarbon = -1*carbonInSoil*(incrementLandUse-1);
     sequestrationCarbonCO2EqLandUse = sequestrationOfCarbon * FROM_C_TO_CO2;
     sequestrationAmendment = 0;
+
     for (int i=0; i<8; i++)
     {
+        double amend;
+        amend = dryMatter[i];
         incrementTotal *= incrementOrganicAmendment *= computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i]);
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(quantityOfAmendment[i],incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
         sequestrationCarbonCO2EqFertilizerAmendment[i] = sequestrationOfCarbon * FROM_C_TO_CO2;
         sequestrationAmendment += sequestrationCarbonCO2EqFertilizerAmendment[i];
     }
     sequestrationAmendment += sequestrationFromRecalcitrantAmendment;
-    incrementTotal *= computeSequestrationOrganicAmendments(2*computeSequestrationUnstableCarbonDueToRoots(myIdClimate),0.000835,0);
+    incrementTotal *= computeSequestrationOrganicAmendments(2*computeSequestrationUnstableCarbonDueToRoots(myIdClimate),0.001545064,0);
     double percentageUnstable[4] = {1-0.36,1-0.36,1-0.14,1-0.14};
     for (int i=0;i<4;i++)
     {
         if (isIncorporatedResidue[i])
-            incrementTotal *= computeSequestrationOrganicAmendments(2*residues[i]*percentageUnstable[i]*1000,0.000835,0);
+            incrementTotal *= computeSequestrationOrganicAmendments(2*residues[i]*percentageUnstable[i]*1000,0.001545064,0);
     }
 
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTotal-1);
