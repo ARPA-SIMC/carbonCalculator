@@ -262,7 +262,7 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
     return true;
 }
 
-bool openDataBase(QSqlDatabase &db,QString dataPath)
+bool openDataBase(QSqlDatabase &db, QString dataPath)
 {
 
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
@@ -278,7 +278,6 @@ bool openDataBase(QSqlDatabase &db,QString dataPath)
         std::cout << "Error opening db:" << db.lastError().text().toStdString() << std::endl;
         return false;
     }
-
 
     return true;
 }

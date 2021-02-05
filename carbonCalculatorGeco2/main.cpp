@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     }
 
     // read arguments carbon calculator
-    QString csvFileName;
+    QString csvFileName, csvFileNameBuyer;
     if (argc < 2)
     {
         #ifdef TEST
@@ -35,20 +35,7 @@ int main(int argc, char *argv[])
         csvFileName = argv[1];
     }
 
-    // read CSV
-    if (! QFile(csvFileName).exists())
-    {
-        std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
-        return -1;
-    }
-    int numberOfExperiments = 0;
-    std::vector<TinputData> inputData;
-    readCsvFile(csvFileName,inputData,numberOfExperiments);
-
-
-    // read arguments carbon calculator
-    QString csvFileNameBuyer;
-    if (argc < 2)
+    if (argc < 3)
     {
         #ifdef TEST
             csvFileNameBuyer = dataPath + "inputFileBuyer.csv";
@@ -59,10 +46,20 @@ int main(int argc, char *argv[])
     }
     else
     {
-        csvFileName = argv[1];
+        csvFileNameBuyer = argv[2];
     }
 
-    // read CSV
+    // read CSV seller
+    if (! QFile(csvFileName).exists())
+    {
+        std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
+        return -1;
+    }
+    int numberOfExperiments = 0;
+    std::vector<TinputData> inputData;
+    readCsvFile(csvFileName, inputData, numberOfExperiments);
+
+    // read CSV buyer
     if (! QFile(csvFileNameBuyer).exists())
     {
         std::cout << "Error!\nMissing csv file: " << csvFileNameBuyer.toStdString() << std::endl;
@@ -70,21 +67,23 @@ int main(int argc, char *argv[])
     }
     int numberOfExperimentsBuyer = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
-    readCsvFileBuyer(csvFileNameBuyer,inputDataBuyer,numberOfExperimentsBuyer);
+    readCsvFileBuyer(csvFileNameBuyer, inputDataBuyer, numberOfExperimentsBuyer);
 
-    // open parameters DB
+    // open db parameters
     QSqlDatabase dbParameters;
     if (! openDataBase(dbParameters, dataPath))
         return -1;
 
-    // create output DB
-    QSqlDatabase dbOutput;
-    printf("Do you want to use the default output DB name output.db? (please answer 1 (i.e. yes) or 0 (i.e. no))\n");
-    int answer;
-    scanf("%d",&answer);
+    // choose db output name
     QString dbName;
-    if (answer == 1)
+    char answer;
+    printf("Do you want to use the default DB name (output.db)? [y/n] ");
+    scanf("%c",&answer);
+    fflush(stdin);
+    if (answer == 'y')
+    {
         dbName = dataPath + "output.db";
+    }
     else
     {
         printf("please insert the output DB name (file extension .db) and press return:\n");
@@ -94,6 +93,10 @@ int main(int argc, char *argv[])
         scanf("%s",outputName);
         dbName = dataPath + outputName;
     }
+
+    // create output DB
+    std::cout << "create db... " << dbName.toStdString() << std::endl ;
+    QSqlDatabase dbOutput;
     if (! createOutputDB(dbOutput, dbName))
         return -1;
 
