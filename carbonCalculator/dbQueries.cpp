@@ -166,6 +166,7 @@ bool readFertilizer(QString* idFertiliser, QSqlDatabase &db, CarbonCalculator &c
             calculator.fertiliser.fertInput[i].emissionPerKgOfProduct = value;
             calculator.fertiliser.incrementalParameter[i] = value;
             calculator.fertiliser.recalcitrantCarbonIndex[i] = value;
+            calculator.fertiliser.drymatter[i] = 100.;
         }
     }
     return true;

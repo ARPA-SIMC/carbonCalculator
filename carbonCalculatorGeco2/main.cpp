@@ -79,7 +79,21 @@ int main(int argc, char *argv[])
 
     // create output DB
     QSqlDatabase dbOutput;
-    QString dbName = dataPath + "output.db";
+    printf("Do you want to use the default output DB name output.db? (please answer 1 (i.e. yes) or 0 (i.e. no))\n");
+    int answer;
+    scanf("%d",&answer);
+    QString dbName;
+    if (answer == 1)
+        dbName = dataPath + "output.db";
+    else
+    {
+        printf("please insert the output DB name (file extension .db) and press return:\n");
+        char outputName[100];
+        for (int i=0;i<100;i++)
+            outputName[i] = '\0';
+        scanf("%s",outputName);
+        dbName = dataPath + outputName;
+    }
     if (! createOutputDB(dbOutput, dbName))
         return -1;
 
