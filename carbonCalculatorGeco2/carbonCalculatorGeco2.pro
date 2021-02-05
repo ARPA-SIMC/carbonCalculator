@@ -1,7 +1,7 @@
 QT += core sql
 QT -= gui
 
-TARGET = carbonCalculatorTest
+TARGET = carbonCalculator
 CONFIG += console
 CONFIG -= app_bundle
 
