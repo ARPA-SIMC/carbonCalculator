@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        csvFileName = argv[1];
+        csvFileName = dataPath + argv[1];
     }
 
     if (argc < 3)
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        csvFileNameBuyer = argv[2];
+        csvFileNameBuyer = dataPath + argv[2];
     }
 
     // read CSV seller
@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     // read CSV buyer
     if (! QFile(csvFileNameBuyer).exists())
     {
-        std::cout << "Error!\nMissing csv file: " << csvFileNameBuyer.toStdString() << std::endl;
+        std::cout << "Error!\nMissing csv file (buyer): " << csvFileNameBuyer.toStdString() << std::endl;
         return -1;
     }
     int numberOfExperimentsBuyer = 0;
