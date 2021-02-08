@@ -1,8 +1,9 @@
-#-------------------------------------------------
+#------------------------------------------------------
 #
-# Project created by QtCreator 2020-10-06T07:09:17
+# Carbon Calculator library
+# developed in the framework of GECO2 project
 #
-#-------------------------------------------------
+#-------------------------------------------------------
 
 QT      += sql
 QT      -= gui
@@ -19,7 +20,6 @@ win32:{
     TARGET = carbonCalculator
 }
 
-#TARGET = carbonCalculator
 
 TEMPLATE = lib
 CONFIG += staticlib
