@@ -1,46 +1,27 @@
-#------------------------------------------------------
-#
-# Carbon Calculator library
-# developed in the framework of GECO2 project
-#
-#-------------------------------------------------------
+QT += core sql
+QT -= gui
 
-QT      += sql
-QT      -= gui
+TARGET = carbonCalculator
+CONFIG += console
+CONFIG -= app_bundle
 
-unix:{
-    CONFIG(debug, debug|release) {
-        TARGET = debug/carbonCalculator
-    } else {
-        TARGET = release/carbonCalculator
-    }
-}
+TEMPLATE = app
 
-win32:{
-    TARGET = carbonCalculator
+INCLUDEPATH += ../carbonCalculator
+
+
+CONFIG(release, debug|release) {
+    LIBS += -L../carbonCalculatorLib/release -lcarbonCalculatorLib
+} else {
+    LIBS += -L../carbonCalculatorLib/debug -lcarbonCalculatorLib
 }
 
 
-TEMPLATE = lib
-CONFIG += staticlib
-
-SOURCES += \
-    carbonCalculator.cpp \
-    csvUtilities.cpp \
-    dbQueries.cpp \
-    dbUtilities.cpp \
-    energyManagement.cpp \
-    fertilisationAndSoil.cpp \
-    soilmanagement.cpp \
-    biomasstrees.cpp
+SOURCES += main.cpp \
+    dbOutput.cpp \
+    inputOutput.cpp \
+    carbonCredits.cpp
 
 HEADERS += \
-    basicStructures.h \
-    carbonCalculator.h \
-    csvUtilities.h \
-    dbQueries.h \
-    dbUtilities.h \
-    energyManagement.h \
-    fertilisationAndSoil.h \
-    soilManagement.h \
-    biomasstrees.h
+    dbOutput.h \
+    inputOutput.h
