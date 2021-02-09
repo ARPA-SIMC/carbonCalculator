@@ -9,6 +9,7 @@ static BuyerCalculator buyerCalculatorCO2;
 
 int main(int argc, char *argv[])
 {
+    printf("Is it working?\n");
     bool printOutputOnScreen = false;
     QCoreApplication a(argc, argv);
 
