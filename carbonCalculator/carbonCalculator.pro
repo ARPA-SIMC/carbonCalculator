@@ -1,3 +1,10 @@
+#------------------------------------------------------
+#
+# Carbon Calculator
+# developed in the framework of IT-HR GECO2 project
+#
+#-------------------------------------------------------
+
 QT += core sql
 QT -= gui
 
@@ -7,7 +14,7 @@ CONFIG -= app_bundle
 
 TEMPLATE = app
 
-INCLUDEPATH += ../carbonCalculator
+INCLUDEPATH += ../carbonCalculatorLib
 
 
 CONFIG(release, debug|release) {
