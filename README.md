@@ -1,8 +1,8 @@
 # Carbon Calculator
 A kit to compute the LCA in cropland
 
-Developed in the framework of GECO2 European project
+Developed in the framework of IT-HR GECO2 European project
 
-# Authors
+## Authors
 - Antonio Volta avolta@arpae.it
 - Fausto Tomei ftomei@arpae.it
