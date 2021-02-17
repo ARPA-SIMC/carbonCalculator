@@ -419,6 +419,15 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
         {
             idFeature[i+(nrFertilizers/2)] = "field7";
         }
+        if (inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] == "Not_applied")
+        {
+            idFeature[i] = "field7";
+        }
+        if (inputData[iExp].agronomicInput.amendmentApplicationMethod[i] == "Not_apllied")
+        {
+            idFeature[i+(nrFertilizers/2)] = "field7";
+        }
+
     }
 
 

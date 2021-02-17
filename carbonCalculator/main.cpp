@@ -9,9 +9,12 @@ static BuyerCalculator buyerCalculatorCO2;
 
 int main(int argc, char *argv[])
 {
-    printf("|       Carbon Calculator  \n");
-    printf("|       IT-HR GECO2 project \n");
-    printf("|________________________________\n\n\n\n\n\n\n");
+
+    printf("__________________________________\n");
+    printf("|                                |\n");
+    printf("|       Carbon Calculator        |\n");
+    printf("|       IT-HR GECO2 project      |\n") ;
+    printf("|________________________________|\n\n\n\n\n");
     bool printOutputOnScreen = false;
     QCoreApplication a(argc, argv);
 
