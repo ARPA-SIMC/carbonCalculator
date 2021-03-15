@@ -79,7 +79,8 @@ void SoilManagement::setMatrix()
             }
         }
     }
-    // 0 forest 1 grass 2 arable
+    // the first index 0 means TEMPERATE_MOIST; 1 TEMPERATE_DRY; 2 TROPICAL_MOIST ; 3 TROPICAL_DRY
+    // in the matrix 0 forest 1 grass 2 arable
     soilLandUse[0].matrix[0][1]=	0.82;
     soilLandUse[0].matrix[0][2]=	0.71;
     soilLandUse[0].matrix[1][0]=	1.219512195;
@@ -192,6 +193,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     double incrementTotal=1;
 
     setMatrix();
+    myIdClimate--; // in order to move from 1-4 notation to 0-3 notation
     incrementTotal *= incrementTillage = (percentage.arable * computeSequestrationTillage(myIdClimate) + 1*(100 - percentage.arable))/100.;
     sequestrationOfCarbon = -1*carbonInSoil*(incrementTillage-1);
     sequestrationCarbonCO2EqTillage = sequestrationOfCarbon * FROM_C_TO_CO2;
