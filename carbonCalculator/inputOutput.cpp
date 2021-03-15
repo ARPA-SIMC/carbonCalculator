@@ -333,12 +333,13 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     }
 
     QString idClimate;
-    double yearETP = 1000 + 100*(avgTemperature - 13);
-    if (avgTemperature > 20 && avgRainfall > yearETP)
+    double yearET0 = 1000 + 100*(avgTemperature - 13);
+    double yearActualET = yearET0*0.6; // supposing that actual ET is 0.8 of ET0
+    if (avgTemperature > 20 && avgRainfall > yearActualET)
         idClimate = "TROPICAL_MOIST";
-    else if (avgTemperature > 20 && avgRainfall <= yearETP)
+    else if (avgTemperature > 20 && avgRainfall <= yearActualET)
         idClimate = "TROPICAL_DRY";
-    else if (avgTemperature <= 20 && avgRainfall > yearETP)
+    else if (avgTemperature <= 20 && avgRainfall > yearActualET)
         idClimate = "TEMPERATE_MOIST";
     else
         idClimate  = "TEMPERATE_DRY";

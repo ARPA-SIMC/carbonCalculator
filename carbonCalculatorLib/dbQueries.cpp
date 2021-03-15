@@ -410,7 +410,7 @@ bool readClimate(QString idClimate, QSqlDatabase &db, CarbonCalculator &calculat
         error = "Error: missing climate data";
         return false;
     }
-    calculator.idClimate = value;
+    calculator.idClimate = valueInt;
 
     query.clear();
     return true;
