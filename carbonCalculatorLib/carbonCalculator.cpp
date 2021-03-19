@@ -276,6 +276,7 @@ void CarbonCalculator::computeConservativePracticesAdopted()
     if (pesticide.weightOfActivePrinciple < 3) nrConservativePracticesAdopted++;
     if (cropResidue.kgCO2Equivalent.total < 20) nrConservativePracticesAdopted++;
     if (biomassInTree.orchardAge >= 20) nrConservativePracticesAdopted++;
+    if (energy.emissions.total <= 30) nrConservativePracticesAdopted++;
 }
 
 bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString idSoilTexture,QString idSoilOrganicCarbon,QString* idInhibitor)

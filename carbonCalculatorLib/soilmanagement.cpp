@@ -8,12 +8,19 @@ double SoilManagement::computeEmissions(double carbonInSoil,int myIdClimate)
 {
     double emissions;
     setMatrix();
-    emissions = FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
-    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.permanentGrass*0.01;
+    emissions = 0;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./33.*percentage.permanentGrass*0.01;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./33.*percentage.coverCropping*0.01;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./30.*percentage.noTillage*0.01*(percentage.arable-percentage.coverCropping)*0.01;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./27.*percentage.minimumTillage*0.01*(percentage.arable-percentage.coverCropping)*0.01;
+    emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./24.*percentage.conventionalTillage*0.01*(percentage.arable-percentage.coverCropping)*0.01;
+    /*
     double weightArable = 0.01*(percentage.conventionalTillage*soilTillage[myIdClimate].matrix[2][0] + percentage.minimumTillage*soilTillage[myIdClimate].matrix[1][0]+percentage.noTillage);
     emissions += FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./30.*percentage.arable*0.01*weightArable;
     weightArable = soilTillage[myIdClimate].matrix[2][0];
-    emissionsConventionalManagement = FROM_C_TO_CO2 * carbonInSoil * (0.006)*40./24.*weightArable;
+    */
+    emissionsConventionalManagement = FROM_C_TO_CO2 * carbonInSoil * (0.006)*44./24.; // Cools et al. 2014 the number 44, for 24 https://webcache.googleusercontent.com/search?q=cache:gFf4CmDDsT0J:https://www.nrcs.usda.gov/wps/PA_NRCSConsumption/download%3Fcid%3Dnrcs142p2_052823%26ext%3Dpdf+&cd=15&hl=it&ct=clnk&gl=it
 
     return emissions;
 }
