@@ -86,6 +86,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
         inputData[iExp].energy.electricityHydro = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
         inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+        // inputData[iExp] capire perché non c'è generalBuyer
     }
     return true;
 }
