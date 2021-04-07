@@ -215,6 +215,7 @@ bool readResidue(QString* idResidue, QSqlDatabase &db, CarbonCalculator &calcula
 
 bool readCropParameters(QString idCrop, QSqlDatabase &db, CarbonCalculator &calculator, QString &error)
 {
+    // in DataBase FRUIT_SHRUB equals OTHER_TREE, OTHER_FAST_GROWTH_TREE see FIG_TREE and OTHER_SLOW_GROWTH_TREE
     double value;
     QString valueString;
     QString queryString = "SELECT * FROM crop_parameters WHERE id_fine_classification='" + idCrop + "'";

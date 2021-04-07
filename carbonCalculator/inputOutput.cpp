@@ -589,10 +589,18 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     calculatorCO2.soilManage.percentage.permanentGrass += (ratioFallowExtension*100/2.); //assuming that sparse vegetation is intermediate between forest and permanetn grass
 
     calculatorCO2.soilManage.percentage.arable = 100 - calculatorCO2.soilManage.percentage.forest - calculatorCO2.soilManage.percentage.permanentGrass;
-    calculatorCO2.soilManage.percentage.noTillage =100 * inputData[iExp].cropFieldManagement.noTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
-    calculatorCO2.soilManage.percentage.minimumTillage =100 * inputData[iExp].cropFieldManagement.minTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
-    calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
-
+    if (calculatorCO2.soilManage.percentage.arable > 0.01)
+    {
+        calculatorCO2.soilManage.percentage.noTillage =100 * inputData[iExp].cropFieldManagement.noTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
+        calculatorCO2.soilManage.percentage.minimumTillage =100 * inputData[iExp].cropFieldManagement.minTillage/(calculatorCO2.soilManage.fieldSize*10000)*100/calculatorCO2.soilManage.percentage.arable; // input from .csv
+        calculatorCO2.soilManage.percentage.conventionalTillage = 100 - calculatorCO2.soilManage.percentage.noTillage - calculatorCO2.soilManage.percentage.minimumTillage;
+    }
+    else
+    {
+        calculatorCO2.soilManage.percentage.noTillage = 100; // input from .csv
+        calculatorCO2.soilManage.percentage.minimumTillage = 0; // input from .csv
+        calculatorCO2.soilManage.percentage.conventionalTillage = 0;
+    }
     // *********************************************************************
     // erosion
     calculatorCO2.averageTemperature = avgTemperature;
