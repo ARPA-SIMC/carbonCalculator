@@ -435,6 +435,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     QString idCrop = inputData[iExp].cropFieldManagement.cropName; //input from .csv
     calculatorCO2.soilDepth = inputData[iExp].soil.depth;
+    if (inputData[iExp].soil.depth < 0) calculatorCO2.soilDepth = 30;
     calculatorCO2.skeleton = inputData[iExp].soil.skeleton;
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
