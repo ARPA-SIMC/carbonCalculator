@@ -91,7 +91,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     return true;
 }
 
-
+/*
 bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& numberOfExperiments)
 {
     // check numberOfFields
@@ -258,6 +258,177 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         valueEnergy = inputData[iExp].energy.electricitySolar = data[iExp].value(label++).remove("\"").toFloat();
         if (valueEnergy < 0) inputData[iExp].energy.electricitySolar = valueEnergy = 20.;
         valueEnergy = inputData[iExp].energy.electricityEolic = data[iExp].value(label++).remove("\"").toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityEolic = valueEnergy = 20.;
+    }
+    return true;
+} */
+
+bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& numberOfExperiments)
+{
+    // check numberOfFields
+    QString error;
+    FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    int numberOfFields = 1;
+    char dummyComma;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyComma = char(getc(fp));
+    } while (dummyComma != '\n' && dummyComma != EOF);
+
+    do
+    {
+        dummyComma = char(getc(fp));
+        if (dummyComma == ',') numberOfFields++;
+    } while (dummyComma != '\n' && dummyComma != EOF);
+    fclose(fp);
+
+    // check numberOfExperiments
+    //FILE *fp;
+    fp = fopen(csvFileName.toStdString().c_str(),"r");
+    numberOfExperiments = 0;
+    char dummyLine;
+    // first do cycle in order to avoid the first line, i.e. the header
+    do
+    {
+        dummyLine = char(getc(fp));
+    } while (dummyLine != '\n' && dummyLine != EOF);
+    do
+    {
+        dummyLine = char(getc(fp));
+        if (dummyLine == '\n' || dummyLine == EOF) numberOfExperiments++;
+    } while (dummyLine != EOF);
+    fclose(fp);
+
+    // read data
+    std::vector<QStringList> data;
+    if (! importCsvData(csvFileName, numberOfFields, true, data, error))
+    {
+        std::cout << "Error: " << error.toStdString() << std::endl;
+    }
+
+    inputData.resize(numberOfExperiments);
+
+    // read values (remove quotes)
+    for (int iExp=0; iExp < numberOfExperiments; iExp++)
+    {
+        int label=1;
+        inputData[iExp].general.compilerName = data[iExp].value(label++);
+        inputData[iExp].general.enterpriseName = data[iExp].value(label++);
+        inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
+        inputData[iExp].general.idCountry = data[iExp].value(label++);
+        inputData[iExp].general.idRegion = data[iExp].value(label++);
+        inputData[iExp].general.year = (int)(data[iExp].value(label++).toFloat());
+        inputData[iExp].general.description = data[iExp].value(label++);
+        inputData[iExp].general.latitude = data[iExp].value(label++).toFloat();
+        inputData[iExp].general.longitude = data[iExp].value(label++).toFloat();
+        inputData[iExp].general.fieldSize = data[iExp].value(label++).toFloat();
+        inputData[iExp].general.fieldSlope = data[iExp].value(label++).toFloat();
+
+        inputData[iExp].climate.meanTemperature = data[iExp].value(label++).toFloat();
+        inputData[iExp].climate.annualRainfall = data[iExp].value(label++).toFloat();
+        inputData[iExp].climate.referenceEvapotranspiration = data[iExp].value(label++).toFloat();
+        inputData[iExp].climate.climaticWaterBalance = data[iExp].value(label++).toFloat();
+
+
+        inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.drainage = data[iExp].value(label++);
+        inputData[iExp].soil.pH = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.texture = data[iExp].value(label++);
+        inputData[iExp].soil.organicMatter = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.skeleton = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.availableWaterCapacity = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.totalNitrogen = data[iExp].value(label++).toFloat();
+        inputData[iExp].soil.carbonNitrogenRatio = data[iExp].value(label++).toFloat();
+
+
+        inputData[iExp].cropFieldManagement.cropName = data[iExp].value(label++);
+        inputData[iExp].cropFieldManagement.treeDensity = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.deadTreeDensity = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.orchardAge = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.treeDBH = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.treeHeight = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.isOrganic = data[iExp].value(label++);
+        inputData[iExp].cropFieldManagement.yield = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.noTillage = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.minTillage = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.coverCrop = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.woodyResidueWeight[1] = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.woodyResidueTreatment[0] = data[iExp].value(label++);
+        inputData[iExp].cropFieldManagement.woodyResidueTreatment[1] = data[iExp].value(label++);
+        inputData[iExp].cropFieldManagement.greenResidueWeight[0] = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.greenResidueWeight[1] = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.greenResidueTreatment[0] = data[iExp].value(label++);
+        inputData[iExp].cropFieldManagement.greenResidueTreatment[1] = data[iExp].value(label++);
+
+        inputData[iExp].agronomicInput.pesticideWeight = data[iExp].value(label++).toFloat();
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerName[i] = data[iExp].value(label++);
+        }
+        for (int i=0;i<4;i++)
+        {
+             inputData[iExp].agronomicInput.fertilizerAmount[i] = data[iExp].value(label++).toFloat();
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerApplicationMethod[i] = data[iExp].value(label++);
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.fertilizerInhibitor[i] = data[iExp].value(label++);
+        }
+
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentName[i] = data[iExp].value(label++);
+        }
+        for (int i=0;i<4;i++)
+        {
+             inputData[iExp].agronomicInput.amendmentAmount[i] = data[iExp].value(label++).toFloat();
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentApplicationMethod[i] = data[iExp].value(label++);
+        }
+        for (int i=0;i<4;i++)
+        {
+            inputData[iExp].agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++);
+        }
+        double valueEnergy;
+        valueEnergy = inputData[iExp].energy.biodiesel = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.biodiesel = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.bioethanol = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.bioethanol = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.diesel = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.diesel = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.oil = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.oil = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.petrol = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.petrol = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.LPG = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.LPG = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.coal = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.coal = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.highEnergyDensityBiomass = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.highEnergyDensityBiomass = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.wood = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.wood = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.methane = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.methane = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricityGridAmount = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityGridAmount = valueEnergy = 20.;
+        inputData[iExp].energy.electricityGridPercentageRenewables = data[iExp].value(label++).toFloat();
+        valueEnergy = inputData[iExp].energy.electricityHydro = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricityHydro = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricitySolar = data[iExp].value(label++).toFloat();
+        if (valueEnergy < 0) inputData[iExp].energy.electricitySolar = valueEnergy = 20.;
+        valueEnergy = inputData[iExp].energy.electricityEolic = data[iExp].value(label++).toFloat();
         if (valueEnergy < 0) inputData[iExp].energy.electricityEolic = valueEnergy = 20.;
     }
     return true;
