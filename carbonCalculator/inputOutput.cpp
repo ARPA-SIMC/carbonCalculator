@@ -459,8 +459,47 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     QString error;
     float avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
-    float avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
+    if (avgRainfall == NODATA)
+    {
+        if (inputData[iExp].general.idRegion == "Emilia-Romagna")
+            avgRainfall = 687; // data of Cesena
+        else if (inputData[iExp].general.idRegion == "Molise")
+            avgRainfall = 583; // data of Campobasso
+        else if (inputData[iExp].general.idRegion == "Puglia")
+            avgRainfall = 562.6; // data of Bari
+        else if (inputData[iExp].general.idRegion == "Marche")
+            avgRainfall = 742; // data of Pesaro
+        else if (inputData[iExp].general.idRegion == "Zadar")
+            avgRainfall = 879.2; // data of Zadar
+        else if (inputData[iExp].general.idRegion == "Dubrovnik_Neretva")
+            avgRainfall = 1446.6; // data of Dubrovnik
+        else if (inputData[iExp].general.idRegion == "Split_Dalmatia")
+            avgRainfall = 692.1; // data of Split
+        else
+            avgRainfall = 687;
 
+
+    }
+    float avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
+    if (avgTemperature == NODATA)
+    {
+        if (inputData[iExp].general.idRegion == "Emilia-Romagna")
+            avgTemperature = 13;
+        else if (inputData[iExp].general.idRegion == "Molise")
+            avgTemperature = 9.4;
+        else if (inputData[iExp].general.idRegion == "Puglia")
+            avgTemperature = 15.6; // data of Bari
+        else if (inputData[iExp].general.idRegion == "Marche")
+            avgTemperature = 13.5; // data of Pesaro
+        else if (inputData[iExp].general.idRegion == "Zadar")
+            avgTemperature = 15; // data of Zadar
+        else if (inputData[iExp].general.idRegion == "Dubrovnik_Neretva")
+            avgTemperature = 16.5; // data of Dubrovnik
+        else if (inputData[iExp].general.idRegion == "Split_Dalmatia")
+            avgTemperature = 15.3; // data of Split
+        else
+            avgTemperature = 13;
+    }
     // read renewables
 
     if (! readRenewables(inputData[iExp].general.idCountry,inputData[iExp].general.year, db, calculatorCO2, error))
@@ -506,7 +545,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     QString idClimate;
     double yearET0 = 1000 + 100*(avgTemperature - 13);
-    double yearActualET = yearET0*0.6; // supposing that actual ET is 0.8 of ET0
+    double yearActualET = yearET0*0.6; // supposing that actual ET is 0.6 of ET0
     if (avgTemperature > 20 && avgRainfall > yearActualET)
         idClimate = "TROPICAL_MOIST";
     else if (avgTemperature > 20 && avgRainfall <= yearActualET)
@@ -606,6 +645,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     QString idCrop = inputData[iExp].cropFieldManagement.cropName; //input from .csv
     calculatorCO2.soilDepth = inputData[iExp].soil.depth;
+    if (inputData[iExp].soil.depth < 0) calculatorCO2.soilDepth = 30;
     calculatorCO2.skeleton = inputData[iExp].soil.skeleton;
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
