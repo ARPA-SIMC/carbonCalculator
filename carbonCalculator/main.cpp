@@ -2,7 +2,7 @@
 #include "dbOutput.h"
 
 // uncomment to compute test
-#define TEST
+// #define TEST
 
 static CarbonCalculator calculatorCO2;
 static BuyerCalculator buyerCalculatorCO2;
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     printf("|                                |\n");
     printf("|       Carbon Calculator        |\n");
     printf("|       IT-HR GECO2 project      |\n") ;
-    printf("|________________________________|\n\n\n\n\n");
+    printf("|________________________________|\n\n\n\n");
     bool printOutputOnScreen = false;
     QCoreApplication a(argc, argv);
 

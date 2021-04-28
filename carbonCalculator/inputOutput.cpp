@@ -2,7 +2,7 @@
 
 void usage()
 {
-    std::cout << "USAGE:\ncarbonCalculatorTest <csv data file>\n";
+    std::cout << "USAGE:\ncarbonCalculatorTest [sellerDataFileName.csv] [buyerDataFileName.csv]\n";
 }
 
 bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments)
