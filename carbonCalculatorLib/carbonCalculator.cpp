@@ -272,9 +272,9 @@ void CarbonCalculator::computeConservativePracticesAdopted()
     if ((soilManage.sequestrationCarbonCO2EqResidue[0]+soilManage.sequestrationCarbonCO2EqResidue[1])<0) nrConservativePracticesAdopted++;
     if ((soilManage.sequestrationCarbonCO2EqResidue[2]+soilManage.sequestrationCarbonCO2EqResidue[3])<0) nrConservativePracticesAdopted++;
     if (soilManage.sequestrationAmendment < 0) nrConservativePracticesAdopted++;
-    if (fertiliser.emissionDueToFertiliserApplication < 10) nrConservativePracticesAdopted++;
+    if (fertiliser.emissionDueToFertiliserApplication < 30) nrConservativePracticesAdopted++;
     if (pesticide.weightOfActivePrinciple < 3) nrConservativePracticesAdopted++;
-    if (cropResidue.kgCO2Equivalent.total < 20) nrConservativePracticesAdopted++;
+    if (cropResidue.kgCO2Equivalent.total < 30) nrConservativePracticesAdopted++;
     if (biomassInTree.orchardAge >= 20) nrConservativePracticesAdopted++;
     if (energy.emissions.total <= 30) nrConservativePracticesAdopted++;
 }

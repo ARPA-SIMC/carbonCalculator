@@ -2,7 +2,7 @@
 #include "dbOutput.h"
 
 // uncomment to compute test
-// #define TEST
+#define TEST
 
 static CarbonCalculator calculatorCO2;
 static BuyerCalculator buyerCalculatorCO2;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         #ifdef TEST
-            csvFileName = dataPath + "inputDataTrainingCroatia.csv";
+            csvFileName = dataPath + "inputFileCroaziaDebug.csv";
         #else
             usage();
             return 1;

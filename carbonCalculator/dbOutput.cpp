@@ -57,8 +57,8 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
     if (! saveTableAgronomicInputs(id, dbOutput, inputData, "agronomic_inputs"))
         return false;
     if (! saveTableEnergy(id, dbOutput, inputData, "energy"))
-        return false;
-    if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget",credits,isAccepted))
+        return false;   
+    if (! saveTableCarbonBudget(id, dbOutput,calculatorCO2 , "carbon_budget",1.*credits/inputData.general.fieldSize,credits,isAccepted))
         return false;
     if (! saveTableCarbonDynamics(id, dbOutput,calculatorCO2 , "carbon_dynamics"))
         return false;
@@ -237,7 +237,7 @@ bool createTableCropField(QSqlDatabase &dbOutput)
                   " orchard_age INTEGER, DBH REAL, "
                   " tree_height REAL, organic_management TEXT, yield REAL, "
                   " no_tillage_area REAL, minimum_tillage_area REAL,"
-                  " cover_crop_area REAL, forestry_area REAL, sparse_vegetation_area REAL,"
+                  " cover_crop_area REAL, grass_area REAL, forestry_area REAL, sparse_vegetation_area REAL,"
                   " woody_residue_weight_1 REAL, woody_residue_weight_2 REAL,"
                   " woody_residue_treatment_1 TEXT, woody_residue_treatment_2 TEXT,"
                   " green_residue_weight_1 REAL, green_residue_weight_2 REAL,"
@@ -262,7 +262,7 @@ bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputDat
                        + " (id, crop_type, density,delta_trees, orchard_age, DBH, "
                          " tree_height, organic_management, yield, "
                          " no_tillage_area, minimum_tillage_area, "
-                         " cover_crop_area, forestry_area, sparse_vegetation_area,"
+                         " cover_crop_area, grass_area, forestry_area, sparse_vegetation_area,"
                          " woody_residue_weight_1, woody_residue_weight_2,"
                          " woody_residue_treatment_1, woody_residue_treatment_2,"
                          " green_residue_weight_1, green_residue_weight_2,"
@@ -281,6 +281,7 @@ bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputDat
                 + "," + QString::number(inputData.cropFieldManagement.noTillage)
                 + "," + QString::number(inputData.cropFieldManagement.minTillage)
                 + "," + QString::number(inputData.cropFieldManagement.coverCrop)
+                + "," + QString::number(inputData.cropFieldManagement.permanentGrass)
                 + "," + QString::number(inputData.cropFieldManagement.forest)
                 + "," + QString::number(inputData.cropFieldManagement.sparseVegetation)
                 + "," + QString::number(inputData.cropFieldManagement.woodyResidueWeight[0])
@@ -493,7 +494,7 @@ bool createTableCarbonBudget(QSqlDatabase &dbOutput)
                   "biomass_carbon_hectare REAL,biomass_carbon_field REAL,"
                   "biomass_carbon_footprint REAL,"
                   "nr_sustainable_practices INTEGER,"
-                  "isAccepted INTEGER,"
+                  "isAccepted INTEGER, credits_per_hectare REAL,"
                   "credits REAL"
                   ")";
 
@@ -509,7 +510,7 @@ bool createTableCarbonBudget(QSqlDatabase &dbOutput)
 }
 
 
-bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName,double credits, int* isAccepted)
+bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator calculatorCO2, QString tableName, double creditsPerHectare, double credits, int* isAccepted)
 {
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id,soil_carbon_budget_hectare,"
@@ -519,7 +520,7 @@ bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator 
                          "biomass_carbon_budget_hectare,biomass_carbon_budget_field, "
                          "biomass_carbon_hectare,biomass_carbon_field,"
                          "biomass_carbon_footprint,nr_sustainable_practices,"
-                         "isAccepted,"
+                         "isAccepted,credits_per_hectare,"
                          "credits) "
                        " VALUES ";
 
@@ -536,6 +537,7 @@ bool saveTableCarbonBudget(QString id, QSqlDatabase &dbOutput, CarbonCalculator 
                 + "," + QString::number(calculatorCO2.carbonFootprintPerKgOfProduceBiomass)
                 + "," + QString::number(calculatorCO2.nrConservativePracticesAdopted)
                 + "," + QString::number(*isAccepted)
+                + "," + QString::number(creditsPerHectare)
                 + "," + QString::number(credits)
                 + ")";
 
