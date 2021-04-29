@@ -663,9 +663,9 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     calculatorCO2.erosion.erosionFactor.cover = 0.01* (calculatorCO2.soilManage.percentage.forest* 0.005 + calculatorCO2.soilManage.percentage.permanentGrass* 0.01 + calculatorCO2.soilManage.percentage.arable* 0.128);
 
     calculatorCO2.erosion.erosionFactor.soilManagement = 0.01*(calculatorCO2.soilManage.percentage.coverCropping*0.26 + (100 - calculatorCO2.soilManage.percentage.coverCropping)*1);
-    calculatorCO2.erosion.erosionFactor.soilManagement *= 0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26);
-    calculatorCO2.erosion.erosionFactor.soilManagement *= 0.01 * calculatorCO2.soilManage.percentage.arable;
-    calculatorCO2.erosion.erosionFactor.soilManagement += 0.01*(calculatorCO2.soilManage.percentage.permanentGrass + calculatorCO2.soilManage.percentage.forest)*0.26;
+    calculatorCO2.erosion.erosionFactor.soilManagement *= (0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
+    calculatorCO2.erosion.erosionFactor.soilManagement *= (0.01 * calculatorCO2.soilManage.percentage.arable);
+    calculatorCO2.erosion.erosionFactor.soilManagement += (0.01*(calculatorCO2.soilManage.percentage.permanentGrass + calculatorCO2.soilManage.percentage.forest)*0.26);
     return true;
 }
 
