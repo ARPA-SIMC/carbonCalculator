@@ -166,6 +166,10 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
 
 
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
+        if (inputData[iExp].soil.depth < 3)
+        {
+            printf("Warning: in record %d you defined a soil thinner than 3 cm, are you sure?\n",iExp+1);
+        }
         inputData[iExp].soil.drainage = data[iExp].value(label++);
         inputData[iExp].soil.pH = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.texture = data[iExp].value(label++);
@@ -190,6 +194,17 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         inputData[iExp].cropFieldManagement.permanentGrass = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).toFloat();
+        inputData[iExp].cropFieldManagement.conventionalTillage = inputData[iExp].general.fieldSize * 10000 - inputData[iExp].cropFieldManagement.noTillage - inputData[iExp].cropFieldManagement.minTillage - inputData[iExp].cropFieldManagement.permanentGrass - inputData[iExp].cropFieldManagement.forest - inputData[iExp].cropFieldManagement.sparseVegetation;
+        if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
+        {
+            printf("Error: in record %d wrong records for areas. Please note that the total area must equal the field size\n",iExp+1);
+            return false;
+        }
+        if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
+        {
+            printf("Error: in record %d cover crop area larger than cultivated area\n",iExp+1);
+            return false;
+        }
         inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.woodyResidueWeight[1] = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.woodyResidueTreatment[0] = data[iExp].value(label++);

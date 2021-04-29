@@ -69,6 +69,7 @@ struct TcropFieldManagement{
     float yield;
     float noTillage;
     float minTillage;
+    float conventionalTillage;
     float coverCrop;
     float permanentGrass;
     float forest;

@@ -236,7 +236,7 @@ bool createTableCropField(QSqlDatabase &dbOutput)
                   " (id TEXT, crop_type TEXT, density INTEGER, delta_trees INTEGER,"
                   " orchard_age INTEGER, DBH REAL, "
                   " tree_height REAL, organic_management TEXT, yield REAL, "
-                  " no_tillage_area REAL, minimum_tillage_area REAL,"
+                  " no_tillage_area REAL, minimum_tillage_area REAL, conventional_tillage_area REAL, "
                   " cover_crop_area REAL, grass_area REAL, forestry_area REAL, sparse_vegetation_area REAL,"
                   " woody_residue_weight_1 REAL, woody_residue_weight_2 REAL,"
                   " woody_residue_treatment_1 TEXT, woody_residue_treatment_2 TEXT,"
@@ -261,7 +261,7 @@ bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputDat
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id, crop_type, density,delta_trees, orchard_age, DBH, "
                          " tree_height, organic_management, yield, "
-                         " no_tillage_area, minimum_tillage_area, "
+                         " no_tillage_area, minimum_tillage_area, conventional_tillage_area,"
                          " cover_crop_area, grass_area, forestry_area, sparse_vegetation_area,"
                          " woody_residue_weight_1, woody_residue_weight_2,"
                          " woody_residue_treatment_1, woody_residue_treatment_2,"
@@ -280,6 +280,7 @@ bool saveTableCropField(QString id, QSqlDatabase &dbOutput, TinputData &inputDat
                 + "," + QString::number(inputData.cropFieldManagement.yield)
                 + "," + QString::number(inputData.cropFieldManagement.noTillage)
                 + "," + QString::number(inputData.cropFieldManagement.minTillage)
+                + "," + QString::number(inputData.cropFieldManagement.conventionalTillage)
                 + "," + QString::number(inputData.cropFieldManagement.coverCrop)
                 + "," + QString::number(inputData.cropFieldManagement.permanentGrass)
                 + "," + QString::number(inputData.cropFieldManagement.forest)
