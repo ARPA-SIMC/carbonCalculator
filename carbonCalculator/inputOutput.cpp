@@ -198,12 +198,12 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
         {
             printf("Error: in record %d wrong records for areas. Please note that the total area must equal the field size\n",iExp+1);
-            return false;
+            continue;
         }
         if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
         {
             printf("Error: in record %d cover crop area larger than cultivated area\n",iExp+1);
-            return false;
+            continue;
         }
         inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.woodyResidueWeight[1] = data[iExp].value(label++).toFloat();

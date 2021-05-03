@@ -29,10 +29,10 @@ double SoilManagement::computeSequestrationRootBiomass(int myIdClimate)
 {
 
     double biomassRootPerHectare;
-    double biomassRootCrop;
-    double biomassRootCoverCrop;
-    double biomassRootPermanentGrass;
-    double biomassRootForest;
+    double biomassRootCrop=0;
+    double biomassRootCoverCrop=0;
+    double biomassRootPermanentGrass=0;
+    double biomassRootForest=0;
     if (!isOrganic) biomassRootPerHectare = 370;
     else biomassRootPerHectare = 695; // computation for weeds 370 kg/ha in conventional and 695 kg/ha for organic of carbon from Hu et al. 2018
     biomassRootCrop = - biomassRootPerHectare * FROM_C_TO_CO2*exp(-1.27)*(100 - percentage.forest)*0.01;//*0.01*(percentage.conventionalTillage + percentage.noTillage * ((soilTillage[myIdClimate].matrix[2][0]-1)/20 + 1) + percentage.minimumTillage * ((soilTillage[myIdClimate].matrix[1][0]-1)/20 +1));
