@@ -26,11 +26,14 @@ CONFIG += staticlib
 
 SOURCES += \
     carbonCalculator.cpp \
+    carbonCredits.cpp \
     csvUtilities.cpp \
+    dbOutput.cpp \
     dbQueries.cpp \
     dbUtilities.cpp \
     energyManagement.cpp \
     fertilisationAndSoil.cpp \
+    inputOutput.cpp \
     soilmanagement.cpp \
     biomasstrees.cpp
 
@@ -38,9 +41,11 @@ HEADERS += \
     basicStructures.h \
     carbonCalculator.h \
     csvUtilities.h \
+    dbOutput.h \
     dbQueries.h \
     dbUtilities.h \
     energyManagement.h \
     fertilisationAndSoil.h \
+    inputOutput.h \
     soilManagement.h \
     biomasstrees.h

@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
 
     QString dataPath;
-    if (! searchDataPath(&dataPath))
+    if (! searchDataPath(dataPath))
     {
         std::cout << "Error: missing DATA directory" << std::endl;
         return -1;

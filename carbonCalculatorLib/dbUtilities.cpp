@@ -60,7 +60,7 @@ bool getValue(QVariant myRs, QString* myValue)
 }
 
 
-bool searchDataPath(QString* dataPath)
+bool searchDataPath(QString  &dataPath)
 {
     QString myPath = QDir::currentPath();
     QString myRoot = QDir::rootPath();
@@ -83,6 +83,6 @@ bool searchDataPath(QString* dataPath)
     }
     if (! isFound) return false;
 
-    *dataPath = QDir::cleanPath(myPath) + "/DATA/";
+    dataPath = QDir::cleanPath(myPath) + "/DATA/";
     return true;
 }

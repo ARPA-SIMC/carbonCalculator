@@ -13,7 +13,7 @@
     bool getValue(QVariant myRs, double* myValue);
     bool getValue(QVariant myRs, QString* myValue);
 
-    bool searchDataPath(QString* dataPath);
+    bool searchDataPath(QString &dataPath);
 
 
 #endif // DBUTILITIES_H

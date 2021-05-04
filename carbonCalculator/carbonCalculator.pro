@@ -8,7 +8,7 @@
 QT += core sql
 QT -= gui
 
-TARGET = carbonCalculator
+TARGET = carbonCalculatorScript
 CONFIG += console
 CONFIG -= app_bundle
 
@@ -24,11 +24,5 @@ CONFIG(release, debug|release) {
 }
 
 
-SOURCES += main.cpp \
-    dbOutput.cpp \
-    inputOutput.cpp \
-    carbonCredits.cpp
+SOURCES += main.cpp
 
-HEADERS += \
-    dbOutput.h \
-    inputOutput.h
