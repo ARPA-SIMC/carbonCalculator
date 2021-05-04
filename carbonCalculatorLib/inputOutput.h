@@ -143,8 +143,8 @@ public:
 
 
 bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments);
-bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments);
-bool openDataBase(QSqlDatabase &db, QString dataPath);
+bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments, QString &error);
+bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error);
 bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorCO2,std::vector<TinputData> &inputData,int iExp);
 void printOutput(CarbonCalculator &calculatorCO2);
 void usage();

@@ -96,10 +96,9 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
 
 
 
-bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& numberOfExperiments)
+bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments, QString &error)
 {
     // check numberOfFields
-    QString error;
     FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     int numberOfFields = 1;
@@ -138,15 +137,17 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
     std::vector<QStringList> data;
     if (! importCsvData(csvFileName, numberOfFields, true, data, error))
     {
-        std::cout << "Error: " << error.toStdString() << std::endl;
+       return false;
     }
 
     inputData.resize(numberOfExperiments);
+    error = "";
 
     // read values (remove quotes)
     for (int iExp=0; iExp < numberOfExperiments; iExp++)
     {
         int label=1;
+        QString recordNr = QString::number(iExp+1);
         inputData[iExp].general.compilerName = data[iExp].value(label++);
         inputData[iExp].general.enterpriseName = data[iExp].value(label++);
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
@@ -168,7 +169,7 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
         if (inputData[iExp].soil.depth < 3)
         {
-            printf("Warning: in record %d you defined a soil thinner than 3 cm, are you sure?\n",iExp+1);
+            error += "Warning: in record " + recordNr + " you defined a soil thinner than 3 cm, are you sure?\n";
         }
         inputData[iExp].soil.drainage = data[iExp].value(label++);
         inputData[iExp].soil.pH = data[iExp].value(label++).toFloat();
@@ -197,12 +198,12 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
         inputData[iExp].cropFieldManagement.conventionalTillage = inputData[iExp].general.fieldSize * 10000 - inputData[iExp].cropFieldManagement.noTillage - inputData[iExp].cropFieldManagement.minTillage - inputData[iExp].cropFieldManagement.permanentGrass - inputData[iExp].cropFieldManagement.forest - inputData[iExp].cropFieldManagement.sparseVegetation;
         if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
         {
-            printf("Error: in record %d wrong records for areas. Please note that the total area must equal the field size\n",iExp+1);
+            error += "Error: in record " + recordNr + " wrong records for areas. Please note that the total area must equal the field size\n";
             continue;
         }
         if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
         {
-            printf("Error: in record %d cover crop area larger than cultivated area\n",iExp+1);
+            error += "Error: in record " + recordNr + " cover crop area larger than cultivated area\n";
             continue;
         }
         inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).toFloat();
@@ -282,25 +283,27 @@ bool readCsvFile(QString csvFileName,std::vector<TinputData> &inputData,int& num
     return true;
 }
 
-bool openDataBase(QSqlDatabase &db, QString dataPath)
+
+bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error)
 {
 
     QString dbName = dataPath + "carbonCalculatorDataBase.db";
     if (! QFile(dbName).exists())
     {
-        std::cout << "Error! db file is missing: " << dbName.toStdString() << std::endl;
+        error = "Error! DB file is missing: " + dbName;
         return false;
     }
     db = QSqlDatabase::addDatabase("QSQLITE", "carbon");
     db.setDatabaseName(dbName);
     if (! db.open())
     {
-        std::cout << "Error opening db:" << db.lastError().text().toStdString() << std::endl;
+        error = "Error opening db: " + db.lastError().text();
         return false;
     }
 
     return true;
 }
+
 
 bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorCO2,std::vector<TinputData> &inputData,int iExp)
 {

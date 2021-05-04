@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         #ifdef TEST
-            csvFileName = dataPath + "inputDataTrainingCroatiaBiochar.csv";
+            csvFileName = dataPath + "inputFileCroaziaDebug.csv";
         #else
             usage();
             return 1;
@@ -61,9 +61,16 @@ int main(int argc, char *argv[])
         std::cout << "Error!\nMissing csv file: " << csvFileName.toStdString() << std::endl;
         return -1;
     }
+    QString error;
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
-    readCsvFile(csvFileName, inputData, numberOfExperiments);
+    if (! readCsvFile(csvFileName, inputData, numberOfExperiments, error))
+    {
+        std::cout << error.toStdString();
+        return -1;
+    }
+    else if (error != "")
+        std::cout << error.toStdString();
 
     // read CSV buyer
     if (! QFile(csvFileNameBuyer).exists())
@@ -77,8 +84,12 @@ int main(int argc, char *argv[])
 
     // open db parameters
     QSqlDatabase dbParameters;
-    if (! openDataBase(dbParameters, dataPath))
+
+    if (! openDBParameters(dbParameters, dataPath, error))
+    {
+        std::cout << error.toStdString() << std::endl;
         return -1;
+    }
 
     // choose db output name
     QString dbName;

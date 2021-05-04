@@ -4,6 +4,8 @@
 #include <QFileDialog>
 
 #include "dbUtilities.h"
+#include "inputOutput.h"
+#include "dbOutput.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,6 +13,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     qApp->setStyleSheet("QMessageBox { messagebox-text-interaction-flags: 5; }");
+
+    searchDataPath(dataPath);
+
+    if (! openDBParameters(dbParameters, dataPath, error))
+    {
+        ui->logBrowser->append(error);
+    }
+    else
+    {
+        ui->logBrowser->append("DB parameters = " + dbParameters.databaseName());
+    }
 }
 
 MainWindow::~MainWindow()
@@ -27,8 +40,6 @@ void MainWindow::on_actionShow_Info_triggered()
 
 void MainWindow::on_actionChoose_sellers_triggered()
 {
-    QString dataPath = "";
-    searchDataPath(dataPath);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Choose Sellers file"), dataPath, tr("Comma separated values (*.csv)"));
     if (fileName != "")
     {
@@ -40,8 +51,6 @@ void MainWindow::on_actionChoose_sellers_triggered()
 
 void MainWindow::on_actionChoose_buyers_triggered()
 {
-    QString dataPath = "";
-    searchDataPath(dataPath);
     QString fileName = QFileDialog::getOpenFileName(this, tr("Choose Buyers file"), dataPath, tr("Comma separated values (*.csv)"));
     if (fileName != "")
     {
@@ -65,8 +74,43 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         ui->logBrowser->append("Missing csv file: " + csvFileName);
         return;
     }
-    //int numberOfExperiments = 0;
 
-    //std::vector<TinputData> inputData;
-    //readCsvFile(csvFileName, inputData, numberOfExperiments);
+    ui->logBrowser->append("Read csv file: " + csvFileName);
+    int numberOfExperiments = 0;
+    std::vector<TinputData> inputData;
+    readCsvFile(csvFileName, inputData, numberOfExperiments);
+
+    // create output DB
+    QString dbName = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
+    ui->logBrowser->append("Create output db: " + dbName);
+    QSqlDatabase dbOutput;
+    if (! createOutputDB(dbOutput, dbName))
+    {
+        ui->logBrowser->append("Error in creating db!");
+        return;
+    }
+
+    // compute budget
+    ui->logBrowser->append("field simulation:");
+    for (int iExp=0; iExp<numberOfExperiments; iExp++)
+    {
+        bool isSetVarOk = false;
+        isSetVarOk = setCarbonCalculatorVariables(dbParameters, calculatorCO2, inputData, iExp);
+        if (!isSetVarOk)
+            return;
+
+        calculatorCO2.computeBalance();
+
+        double credits;
+        int isAccepted;
+        credits = computeCredits(calculatorCO2,&isAccepted);
+        QString id = QString::number(inputData[iExp].general.year) +
+                "_" + inputData[iExp].general.enterpriseName
+                + "_Field" + QString::number(inputData[iExp].general.nrField);
+        std::cout << "ID: " << id.toStdString() << "\t" << iExp+1 << " of " << numberOfExperiments << std::endl;
+        if (printOutputOnScreen) printOutput(calculatorCO2);
+
+        if (! saveOutput(id, dbOutput, inputData[iExp],calculatorCO2,credits,&isAccepted))
+            return;
+    }
 }
