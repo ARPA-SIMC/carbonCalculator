@@ -2,7 +2,7 @@
 #include "dbOutput.h"
 
 // uncomment to compute test
-//#define TEST
+#define TEST
 
 static CarbonCalculator calculatorCO2;
 static BuyerCalculator buyerCalculatorCO2;

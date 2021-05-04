@@ -374,6 +374,10 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     double pHSoil = inputData[iExp].soil.pH; // input from .csv
     QString idSoilTexture = inputData[iExp].soil.texture; // input from .csv
     QString idSoilOrganicCarbon;
+    calculatorCO2.soilOrganicMatter = inputData[iExp].soil.organicMatter;
+    if (calculatorCO2.soilOrganicMatter > 10.32)
+        calculatorCO2.soilOrganicMatter = 10.32;
+
     if (inputData[iExp].soil.organicMatter <= 1.72)
     {
         idSoilOrganicCarbon = "SOM<=1.72";

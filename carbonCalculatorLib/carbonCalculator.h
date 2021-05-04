@@ -95,6 +95,7 @@
             int bouwmanEquivalentTag;
             TsoilTexture soilTexture;
             double carbonInTop30CmSoil;
+            double soilOrganicMatter;
             double skeleton;
             double soilDepth;
             int idClimate;

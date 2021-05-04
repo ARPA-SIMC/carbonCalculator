@@ -333,6 +333,7 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
         fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[3];
         somParameterForCec = 180;
     }
+    somParameterForCec = 0.845*soilOrganicMatter*soilOrganicMatter+7.994*soilOrganicMatter+22.5;
 
     //**************************************************************************
 
