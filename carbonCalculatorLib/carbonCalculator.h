@@ -3,8 +3,8 @@
 
     #include "basicStructures.h"
     #include "energyManagement.h"
-    #include "fertilisationandsoil.h"
-    #include "soilmanagement.h"
+    #include "fertilisationAndSoil.h"
+    #include "soilManagement.h"
     #include "biomasstrees.h"
     #include <QString>
 

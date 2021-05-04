@@ -198,12 +198,12 @@ bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &n
         inputData[iExp].cropFieldManagement.conventionalTillage = inputData[iExp].general.fieldSize * 10000 - inputData[iExp].cropFieldManagement.noTillage - inputData[iExp].cropFieldManagement.minTillage - inputData[iExp].cropFieldManagement.permanentGrass - inputData[iExp].cropFieldManagement.forest - inputData[iExp].cropFieldManagement.sparseVegetation;
         if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
         {
-            error += "Error: in record " + recordNr + " wrong records for areas. Please note that the total area must equal the field size\n";
+            error += "ERROR: in record " + recordNr + " wrong records for areas. Please note that the total area must equal the field size\n";
             continue;
         }
         if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
         {
-            error += "Error: in record " + recordNr + " cover crop area larger than cultivated area\n";
+            error += "ERROR: in record " + recordNr + " cover crop area is larger than cultivated area\n";
             continue;
         }
         inputData[iExp].cropFieldManagement.woodyResidueWeight[0] = data[iExp].value(label++).toFloat();
@@ -305,10 +305,9 @@ bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error)
 }
 
 
-bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorCO2,std::vector<TinputData> &inputData,int iExp)
+bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculatorCO2,
+                                  std::vector<TinputData> &inputData, int iExp, QString &error)
 {
-
-    QString error;
     float avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
     if (avgRainfall == NODATA)
     {
@@ -328,9 +327,8 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
             avgRainfall = 692.1; // data of Split
         else
             avgRainfall = 687;
-
-
     }
+
     float avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
     if (avgTemperature == NODATA)
     {
@@ -355,7 +353,6 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     if (! readRenewables(inputData[iExp].general.idCountry,inputData[iExp].general.year, db, calculatorCO2, error))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
     bool isOrganic = false; // input from .csv
@@ -494,9 +491,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
         {
             idFeature[i+(nrFertilizers/2)] = "field7";
         }
-
     }
-
 
     QString idCrop = inputData[iExp].cropFieldManagement.cropName; //input from .csv
     calculatorCO2.soilDepth = inputData[iExp].soil.depth;
@@ -505,15 +500,11 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     calculatorCO2.initialiazeVariables(idDrainage,pHSoil,idSoilTexture,idSoilOrganicCarbon,inhibitor);
 
-
     // read climate
-
     if (! readClimate(idClimate, db, calculatorCO2, error))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
-
 
     // read fertilizer
     for (int i=0; i<nrFertilizers;i++)
@@ -528,19 +519,14 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     calculatorCO2.fertiliser.amountFertiliser[6] = inputData[iExp].agronomicInput.amendmentAmount[2];
     calculatorCO2.fertiliser.amountFertiliser[7] = inputData[iExp].agronomicInput.amendmentAmount[3];
 
-
-    if (! readFertilizer(idFertiliser, db, calculatorCO2, error,nrFertilizers))
+    if (! readFertilizer(idFertiliser, db, calculatorCO2, error, nrFertilizers))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
 
     // read bouwmanNH4 table
-
-
-    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error,nrFertilizers))
+    if (! readBouwmanNH4(idFeature, db, calculatorCO2, error, nrFertilizers))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
 
@@ -571,19 +557,14 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
 
     if (! readResidue(idResidue, db, calculatorCO2, error))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
-
 
     // read crop_parameters table
     if (! readCropParameters(idCrop, db, calculatorCO2, error))
     {
-        std::cout << "ERROR: " + error.toStdString() << std::endl;
         return false;
     }
-
-
 
 
     // *********************************************************************
@@ -688,8 +669,10 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db,CarbonCalculator &calculatorC
     calculatorCO2.erosion.erosionFactor.soilManagement *= (0.01*(calculatorCO2.soilManage.percentage.conventionalTillage + calculatorCO2.soilManage.percentage.minimumTillage*0.52 + calculatorCO2.soilManage.percentage.noTillage*0.26));
     calculatorCO2.erosion.erosionFactor.soilManagement *= (0.01 * calculatorCO2.soilManage.percentage.arable);
     calculatorCO2.erosion.erosionFactor.soilManagement += (0.01*(calculatorCO2.soilManage.percentage.permanentGrass + calculatorCO2.soilManage.percentage.forest)*0.26);
+
     return true;
 }
+
 
 bool  BuyerCalculator::setInputBuyer(std::vector<TinputDataBuyer> inputData, int iExp, CarbonCalculator calculatorCO2)
 {

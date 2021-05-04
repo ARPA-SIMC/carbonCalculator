@@ -118,12 +118,16 @@ int main(int argc, char *argv[])
         return -1;
 
     // compute balance
-    std::cout << "field simulation:" << std::endl ;
+    std::cout << "seller simulation:" << std::endl ;
     for (int iExp=0; iExp<numberOfExperiments; iExp++)
     {
         bool isSetVarOk = false;
-        isSetVarOk = setCarbonCalculatorVariables(dbParameters,calculatorCO2,inputData,iExp);
-        if (!isSetVarOk) return -1;
+        isSetVarOk = setCarbonCalculatorVariables(dbParameters, calculatorCO2, inputData, iExp, error);
+        if (!isSetVarOk)
+        {
+            std::cout << iExp+1 << " of " << numberOfExperiments << " ERROR! " + error.toStdString() << std::endl;
+            continue;
+        }
         calculatorCO2.computeBalance();
         double credits;
         int isAccepted;

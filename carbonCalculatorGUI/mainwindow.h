@@ -3,6 +3,8 @@
 
     #include <QMainWindow>
     #include <QSqlDatabase>
+    #include "carbonCalculator.h"
+    #include "inputOutput.h"
 
     QT_BEGIN_NAMESPACE
     namespace Ui { class MainWindow; }
@@ -29,6 +31,8 @@
         QString dataPath;
         QString error;
         QSqlDatabase dbParameters;
+        CarbonCalculator calculatorCO2;
+        BuyerCalculator buyerCalculatorCO2;
 
         Ui::MainWindow *ui;
     };
