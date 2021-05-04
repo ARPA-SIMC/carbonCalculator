@@ -27,6 +27,9 @@
 
         void on_actionCompute_Sellers_triggered();
 
+    protected:
+        void resizeEvent(QResizeEvent * event);
+
     private:
         QString dataPath;
         QString error;

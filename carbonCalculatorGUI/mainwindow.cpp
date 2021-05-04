@@ -31,6 +31,12 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::resizeEvent(QResizeEvent * event)
+{
+    ui->logBrowser->resize(ui->logBrowser->width(), this->height() - ui->logBrowser->y() - 50);
+}
+
+
 void MainWindow::on_actionShow_Info_triggered()
 {
     QMessageBox::information(this, "Carbon Calculator V1.1", "https://github.com/ARPA-SIMC/carbonCalculator");
