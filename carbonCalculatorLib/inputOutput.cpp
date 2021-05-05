@@ -575,7 +575,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
 
     if (calculatorCO2.cropResidue.residueWeight[0] == NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.5; // t/ha
+        calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.2; // t/ha
         calculatorCO2.cropResidue.residueWeight[1] = 0;
     }
     else if (calculatorCO2.cropResidue.residueWeight[0] != NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
@@ -584,7 +584,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     }
     if (calculatorCO2.cropResidue.residueWeight[2] == NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[2] = 0.5; // t/ha
+        calculatorCO2.cropResidue.residueWeight[2] = 0.2; // t/ha
         calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
     }
     else if (calculatorCO2.cropResidue.residueWeight[2] != NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
@@ -594,16 +594,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
 
     calculatorCO2.cropResidue.totalWoodyResidue = calculatorCO2.cropResidue.residueWeight[0];
     calculatorCO2.cropResidue.totalWoodyResidue += calculatorCO2.cropResidue.residueWeight[1];
-    /*calculatorCO2.percentageTreeBiomassToAccountFor = 20 * 0.36; // supposing 20% is the wheight of the belowground biomass
-    for (int i=0;i<2;i++)
-    {
-        if (idResidue[i] == "Left_on_field_incorporated_or_mulch")
-            calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.36)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
-        else if (idResidue[i] == "Biochar")
-            calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.5)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
-        else if (idResidue[i] == "Burned")
-            calculatorCO2.percentageTreeBiomassToAccountFor += (80 * 0.05)*calculatorCO2.cropResidue.residueWeight[i]/calculatorCO2.cropResidue.totalWoodyResidue;
-    }*/
+
     // **********************************************************************
     double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
     if (idPercentageEnergyInGrid != NODATA)
