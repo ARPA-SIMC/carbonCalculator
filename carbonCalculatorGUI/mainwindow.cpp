@@ -111,7 +111,6 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         return;
     }
 
-    // compute
     ui->logBrowser->append("Sellers simulation:");
     for (int iExp = 0; iExp < numberOfExperiments; iExp++)
     {
@@ -122,7 +121,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         isSetVarOk = setCarbonCalculatorVariables(dbParameters, calculatorCO2, inputData, iExp, error);
         if (!isSetVarOk)
         {
-            ui->logBrowser->append("ERROR! " + error);
+            ui->logBrowser->append("ERROR in setCarbonCalculatorVariables! " + error);
             continue;
         }
 
@@ -136,7 +135,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
 
         QString yesOrNo = (isAccepted? "YES" : "NO");
         text = idField + " --- isAccepted: " + yesOrNo;
-        text += " --- credits: " + QString::number(credits);
+        text += " --- Credits: " + QString::number(credits);
         ui->logBrowser->append(text);
         qApp->processEvents();
 
@@ -146,4 +145,70 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         }
     }
     ui->logBrowser->append("\nSimulation ended");
+}
+
+
+void MainWindow::on_actionCompute_Buyers_triggered()
+{
+    QString csvFileName = ui->buyerBox->text();
+    if (csvFileName == "")
+    {
+        ui->logBrowser->append("Choose Buyers file before!");
+        return;
+    }
+
+    if (! QFile(csvFileName).exists())
+    {
+        ui->logBrowser->append("Missing csv file: " + csvFileName);
+        return;
+    }
+
+    // read csv file
+    int numberOfBuyers = 0;
+    std::vector<TinputDataBuyer> inputDataBuyer;
+    readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers);
+
+    // create output DB
+    ui->logBrowser->append("Choose output database...");
+    QString dbName = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
+    ui->logBrowser->append("Create output db: " + dbName);
+    qApp->processEvents();
+    QSqlDatabase dbOutput;
+    if (! createOutputDB(dbOutput, dbName))
+    {
+        ui->logBrowser->append("Error in creating db!");
+        return;
+    }
+
+    ui->logBrowser->append("Buyers simulation:");
+    for (int i=0; i < numberOfBuyers; i++)
+    {
+        QString text = QString::number(i+1) + " of " + QString::number(numberOfBuyers);
+        ui->logBrowser->append(text);
+
+        bool isSetVarOk = false;
+        isSetVarOk = buyerCalculatorCO2.setInputBuyer(inputDataBuyer,i, calculatorCO2);
+        if (!isSetVarOk)
+        {
+            ui->logBrowser->append("ERROR in setInputBuyer!");
+            continue;
+        }
+
+        double debits = buyerCalculatorCO2.computeDebitsBuyer();
+        QString idBuyer = QString::number(inputDataBuyer[i].generalBuyer.year) +
+                "_" + inputDataBuyer[i].generalBuyer.enterpriseName
+                + "_" + inputDataBuyer[i].generalBuyer.chainName
+                + "_" + inputDataBuyer[i].generalBuyer.productName;
+
+        text = idBuyer + " --- Debits: " + QString::number(debits);
+        ui->logBrowser->append(text);
+        qApp->processEvents();
+
+        // save db output
+        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[i],buyerCalculatorCO2,debits))
+        {
+            ui->logBrowser->append("Error in saving id: " + idBuyer);
+        }
+    }
+
 }

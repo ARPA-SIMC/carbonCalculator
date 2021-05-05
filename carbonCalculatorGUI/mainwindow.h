@@ -27,6 +27,8 @@
 
         void on_actionCompute_Sellers_triggered();
 
+        void on_actionCompute_Buyers_triggered();
+
     protected:
         void resizeEvent(QResizeEvent * event);
 

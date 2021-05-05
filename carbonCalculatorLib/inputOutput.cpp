@@ -706,9 +706,9 @@ bool  BuyerCalculator::setInputBuyer(std::vector<TinputDataBuyer> inputData, int
     energy.parameterFuel.woodEmissionPerEnergyUnit = calculatorCO2.energy.parameterFuel.woodEmissionPerEnergyUnit;
     energy.parameterFuel.woodHeatPower = calculatorCO2.energy.parameterFuel.woodHeatPower;
 
-
     return true;
 }
+
 
 double BuyerCalculator::computeDebitsBuyer()
 {
