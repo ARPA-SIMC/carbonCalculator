@@ -145,4 +145,5 @@ void MainWindow::on_actionCompute_Sellers_triggered()
             ui->logBrowser->append("Error in saving id: " + idField);
         }
     }
+    ui->logBrowser->append("\nSimulation ended");
 }
