@@ -80,7 +80,11 @@ int main(int argc, char *argv[])
     }
     int numberOfExperimentsBuyer = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
-    readCsvFileBuyer(csvFileNameBuyer, inputDataBuyer, numberOfExperimentsBuyer);
+    if (!readCsvFileBuyer(csvFileNameBuyer, inputDataBuyer, numberOfExperimentsBuyer))
+    {
+        printf("wrong buyer file, the simulation will be stopped\n");
+        return 0;
+    }
 
     // open db parameters
     QSqlDatabase dbParameters;
