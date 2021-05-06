@@ -40,7 +40,7 @@ bool importCsvData(QString csvFileName, int nrValues, bool headerExist, std::vec
 
     if (data.size() == 0)
     {
-        error = "incomplete data.";
+        error = "Error: data are incomplete.";
         return false;
     }
 

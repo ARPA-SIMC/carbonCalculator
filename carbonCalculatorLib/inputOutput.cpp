@@ -6,10 +6,9 @@ void usage()
 }
 
 
-bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments)
+bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments, QString &error)
 {
     // check numberOfFields
-    QString error;
     FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     int numberOfFields = 1;
@@ -26,11 +25,12 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
         if (dummyComma == ',') numberOfFields++;
     } while (dummyComma != '\n' && dummyComma != EOF);
     fclose(fp);
-    printf("numberOfFields buyer%d \n",numberOfFields);
+    //printf("numberOfFields buyer%d \n",numberOfFields);
     //getchar();
 
     if (numberOfFields != 28)
     {
+        error = "Error: the file contains wrong number of columns (expected 28)";
         return false;
     }
     // check numberOfExperiments
@@ -54,7 +54,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     std::vector<QStringList> data;
     if (! importCsvData(csvFileName, numberOfFields, true, data, error))
     {
-        std::cout << "Error: " << error.toStdString() << std::endl;
+        return false;
     }
 
     inputData.resize(numberOfExperiments);
@@ -104,7 +104,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
 
 
 
-bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments, QString &error)
+bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments, QString &error)
 {
     // check numberOfFields
     FILE *fp;
@@ -128,6 +128,7 @@ bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &n
 
     if (numberOfFields != 99)
     {
+        error = "Error: the file contains wrong number of columns (expected 99)";
         return false;
     }
     // check numberOfExperiments
@@ -294,6 +295,7 @@ bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &n
         valueEnergy = inputData[iExp].energy.electricityEolic = data[iExp].value(label++).toFloat();
         if (valueEnergy < 0) inputData[iExp].energy.electricityEolic = valueEnergy = 20.;
     }
+
     return true;
 }
 

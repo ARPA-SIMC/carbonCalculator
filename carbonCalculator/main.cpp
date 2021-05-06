@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
     QString error;
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
-    if (! readCsvFile(csvFileName, inputData, numberOfExperiments, error))
+    if (! readCsvFileSeller(csvFileName, inputData, numberOfExperiments, error))
     {
         std::cout << error.toStdString();
         return -1;
@@ -80,9 +80,10 @@ int main(int argc, char *argv[])
     }
     int numberOfExperimentsBuyer = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
-    if (!readCsvFileBuyer(csvFileNameBuyer, inputDataBuyer, numberOfExperimentsBuyer))
+    if (!readCsvFileBuyer(csvFileNameBuyer, inputDataBuyer, numberOfExperimentsBuyer, error))
     {
-        printf("wrong buyer file, the simulation will be stopped\n");
+        std::cout << error.toStdString() << std::endl;
+        std::cout << "Wrong buyer file, the simulation will be stopped." << std::endl;
         return 0;
     }
 

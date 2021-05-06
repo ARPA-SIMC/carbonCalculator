@@ -57,7 +57,7 @@ void MainWindow::on_actionChoose_sellers_triggered()
     ui->logBrowser->append("\nRead csv file: " + csvFileName);
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
-    readCsvFile(csvFileName, inputData, numberOfExperiments, error);
+    readCsvFileSeller(csvFileName, inputData, numberOfExperiments, error);
     if (error != "")
         ui->logBrowser->append(error);
     else
@@ -67,12 +67,22 @@ void MainWindow::on_actionChoose_sellers_triggered()
 
 void MainWindow::on_actionChoose_buyers_triggered()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Choose Buyers file"), dataPath, tr("Comma separated values (*.csv)"));
-    if (fileName != "")
+    QString csvFileName = QFileDialog::getOpenFileName(this, tr("Choose Buyers file"), dataPath, tr("Comma separated values (*.csv)"));
+    if (csvFileName != "")
     {
         ui->buyerBox->setEnabled(true);
-        ui->buyerBox->setText(fileName);
+        ui->buyerBox->setText(csvFileName);
     }
+
+    // check file
+    ui->logBrowser->append("\nRead csv file: " + csvFileName);
+    int numberOfBuyers = 0;
+    std::vector<TinputDataBuyer> inputDataBuyer;
+    readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers, error);
+    if (error != "")
+        ui->logBrowser->append(error);
+    else
+        ui->logBrowser->append("File is correct!\n");
 }
 
 
@@ -94,9 +104,10 @@ void MainWindow::on_actionCompute_Sellers_triggered()
     // read csv file
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
-    if (! readCsvFile(csvFileName, inputData, numberOfExperiments, error))
+    if (! readCsvFileSeller(csvFileName, inputData, numberOfExperiments, error))
     {
         ui->logBrowser->append(error);
+        ui->logBrowser->append("Computation failed.");
         return;
     }
 
@@ -117,6 +128,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
     if (! createOutputDB(dbOutput, dbNameWithPath))
     {
         ui->logBrowser->append("Error in creating db!");
+        ui->logBrowser->append("Computation failed.");
         return;
     }
 
@@ -175,9 +187,10 @@ void MainWindow::on_actionCompute_Buyers_triggered()
     // read csv file
     int numberOfBuyers = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
-    if (! readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers))
+    if (! readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers, error))
     {
-        ui->logBrowser->append("File is not correct! " + csvFileName);
+        ui->logBrowser->append(error);
+        ui->logBrowser->append("Computation failed.");
         return;
     }
 
