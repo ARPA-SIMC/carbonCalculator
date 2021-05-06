@@ -120,7 +120,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         return;
     }
 
-    ui->logBrowser->append("Credits computation:");
+    ui->logBrowser->append("\nCredits computation:");
     for (int iExp = 0; iExp < numberOfExperiments; iExp++)
     {
         QString text = QString::number(iExp+1) + " of " + QString::number(numberOfExperiments);
@@ -130,7 +130,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         isSetVarOk = setCarbonCalculatorVariables(dbParameters, calculatorCO2, inputData, iExp, error);
         if (!isSetVarOk)
         {
-            ui->logBrowser->append("ERROR in setCarbonCalculatorVariables! " + error);
+            ui->logBrowser->append("ERROR in setCarbonCalculatorVariables " + error);
             continue;
         }
 
@@ -153,7 +153,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
             ui->logBrowser->append("Error in saving id: " + idField);
         }
     }
-    ui->logBrowser->append("Computation ended");
+    ui->logBrowser->append("\nComputation ended.");
 }
 
 
@@ -200,7 +200,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
         return;
     }
 
-    ui->logBrowser->append("Debits computation:");
+    ui->logBrowser->append("\nDebits computation:");
     for (int i=0; i < numberOfBuyers; i++)
     {
         QString text = QString::number(i+1) + " of " + QString::number(numberOfBuyers);
@@ -230,6 +230,6 @@ void MainWindow::on_actionCompute_Buyers_triggered()
             ui->logBrowser->append("Error in saving id: " + idBuyer);
         }
     }
-    ui->logBrowser->append("Computation ended");
+    ui->logBrowser->append("\nComputation ended.");
 
 }
