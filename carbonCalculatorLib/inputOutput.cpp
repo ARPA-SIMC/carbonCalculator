@@ -26,7 +26,8 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
         if (dummyComma == ',') numberOfFields++;
     } while (dummyComma != '\n' && dummyComma != EOF);
     fclose(fp);
-
+    printf("numberOfFields buyer%d \n",numberOfFields);
+    getchar();
     // check numberOfExperiments
     //FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
@@ -117,7 +118,8 @@ bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &n
         if (dummyComma == ',') numberOfFields++;
     } while (dummyComma != '\n' && dummyComma != EOF);
     fclose(fp);
-
+    printf("numberOfFields seller%d \n",numberOfFields);
+    getchar();
     // check numberOfExperiments
     //FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
