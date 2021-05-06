@@ -5,6 +5,7 @@ void usage()
     std::cout << "USAGE:\ncarbonCalculatorTest [sellerDataFileName.csv] [buyerDataFileName.csv]\n";
 }
 
+
 bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments)
 {
     // check numberOfFields
@@ -91,6 +92,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
         inputData[iExp].energy.electricitySolar = data[iExp].value(label++).toFloat();
         inputData[iExp].energy.electricityEolic = data[iExp].value(label++).toFloat();
     }
+
     return true;
 }
 
@@ -287,12 +289,13 @@ bool readCsvFile(QString csvFileName, std::vector<TinputData> &inputData, int &n
 bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error)
 {
 
-    QString dbName = dataPath + "carbonCalculatorDataBase.db";
+    QString dbName = dataPath + "carbonCalculatorParameters.db";
     if (! QFile(dbName).exists())
     {
-        error = "Error! DB file is missing: " + dbName;
+        error = "Error! DB parameters file is missing: " + dbName;
         return false;
     }
+
     db = QSqlDatabase::addDatabase("QSQLITE", "carbon");
     db.setDatabaseName(dbName);
     if (! db.open())
@@ -726,6 +729,7 @@ double BuyerCalculator::computeDebitsBuyer()
     }
     return debits;
 }
+
 
 void printOutput(CarbonCalculator &calculatorCO2)
 {

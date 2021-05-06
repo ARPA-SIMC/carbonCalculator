@@ -6,6 +6,7 @@
 #include "dbUtilities.h"
 #include "dbOutput.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -80,7 +81,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
     QString csvFileName = ui->sellerBox->text();
     if (csvFileName == "")
     {
-        ui->logBrowser->append("Choose Sellers file before!");
+        ui->logBrowser->append("Choose Credits file before!");
         return;
     }
 
@@ -99,19 +100,27 @@ void MainWindow::on_actionCompute_Sellers_triggered()
         return;
     }
 
-    // create output DB
+    // choose output DB
     ui->logBrowser->append("Choose output database...");
-    QString dbName = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
-    ui->logBrowser->append("Create output db: " + dbName);
+    QString dbNameWithPath = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
+    QString fileName = getFileName(dbNameWithPath);
+    if (fileName == "carbonCalculatorParameters.db")
+    {
+        QMessageBox::information(this, fileName, "You are not allowed to modify this database.");
+        ui->logBrowser->append("Error: Choose another output database");
+        return;
+    }
+
+    ui->logBrowser->append("Create output db: " + dbNameWithPath);
     qApp->processEvents();
     QSqlDatabase dbOutput;
-    if (! createOutputDB(dbOutput, dbName))
+    if (! createOutputDB(dbOutput, dbNameWithPath))
     {
         ui->logBrowser->append("Error in creating db!");
         return;
     }
 
-    ui->logBrowser->append("Sellers simulation:");
+    ui->logBrowser->append("Credits computation:");
     for (int iExp = 0; iExp < numberOfExperiments; iExp++)
     {
         QString text = QString::number(iExp+1) + " of " + QString::number(numberOfExperiments);
@@ -135,7 +144,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
 
         QString yesOrNo = (isAccepted? "YES" : "NO");
         text = idField + " --- isAccepted: " + yesOrNo;
-        text += " --- Credits: " + QString::number(credits);
+        text += " --- Budget: " + QString::number(credits) + " kg CO2eq";
         ui->logBrowser->append(text);
         qApp->processEvents();
 
@@ -144,7 +153,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
             ui->logBrowser->append("Error in saving id: " + idField);
         }
     }
-    ui->logBrowser->append("\nSimulation ended");
+    ui->logBrowser->append("Computation ended");
 }
 
 
@@ -153,7 +162,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
     QString csvFileName = ui->buyerBox->text();
     if (csvFileName == "")
     {
-        ui->logBrowser->append("Choose Buyers file before!");
+        ui->logBrowser->append("Choose Debits file before!");
         return;
     }
 
@@ -166,21 +175,32 @@ void MainWindow::on_actionCompute_Buyers_triggered()
     // read csv file
     int numberOfBuyers = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
-    readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers);
+    if (! readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers))
+    {
+        ui->logBrowser->append("File is not correct! " + csvFileName);
+        return;
+    }
 
-    // create output DB
     ui->logBrowser->append("Choose output database...");
-    QString dbName = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
-    ui->logBrowser->append("Create output db: " + dbName);
+    QString dbNameWithPath = QFileDialog::getSaveFileName(this, tr("Save output DB"), dataPath, tr("SQLite database (*.db)"));
+    QString fileName = getFileName(dbNameWithPath);
+    if (fileName == "carbonCalculatorParameters.db")
+    {
+        QMessageBox::information(this, fileName, "You are not allowed to modify this database.");
+        ui->logBrowser->append("Error: Choose another output database");
+        return;
+    }
+
+    ui->logBrowser->append("Create output db: " + dbNameWithPath);
     qApp->processEvents();
     QSqlDatabase dbOutput;
-    if (! createOutputDB(dbOutput, dbName))
+    if (! createOutputDB(dbOutput, dbNameWithPath))
     {
         ui->logBrowser->append("Error in creating db!");
         return;
     }
 
-    ui->logBrowser->append("Buyers simulation:");
+    ui->logBrowser->append("Debits computation:");
     for (int i=0; i < numberOfBuyers; i++)
     {
         QString text = QString::number(i+1) + " of " + QString::number(numberOfBuyers);
@@ -200,7 +220,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
                 + "_" + inputDataBuyer[i].generalBuyer.chainName
                 + "_" + inputDataBuyer[i].generalBuyer.productName;
 
-        text = idBuyer + " --- Debits: " + QString::number(debits);
+        text = idBuyer + " --- Debits: " + QString::number(debits) + " kg CO2eq";
         ui->logBrowser->append(text);
         qApp->processEvents();
 
@@ -210,5 +230,6 @@ void MainWindow::on_actionCompute_Buyers_triggered()
             ui->logBrowser->append("Error in saving id: " + idBuyer);
         }
     }
+    ui->logBrowser->append("Computation ended");
 
 }

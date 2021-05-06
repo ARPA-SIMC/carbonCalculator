@@ -86,3 +86,20 @@ bool searchDataPath(QString  &dataPath)
     dataPath = QDir::cleanPath(myPath) + "/DATA/";
     return true;
 }
+
+
+QString getFileName(QString fileNameComplete)
+{
+    QString c;
+    QString fileName = "";
+    for (int i = fileNameComplete.length()-1; i >= 0; i--)
+    {
+        c = fileNameComplete.mid(i,1);
+        if ((c != "\\") && (c != "/"))
+            fileName = c + fileName;
+        else
+            return fileName;
+    }
+    return fileName;
+}
+

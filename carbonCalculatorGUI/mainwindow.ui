@@ -45,7 +45,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Sellers file</string>
+     <string>Credits file</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="logBrowser">
@@ -73,7 +73,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Buyers file</string>
+     <string>Debits file</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="sellerBox">
@@ -163,12 +163,12 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionChoose_sellers">
    <property name="text">
-    <string>Choose sellers</string>
+    <string>Load Credits file (csv)</string>
    </property>
   </action>
   <action name="actionChoose_buyers">
    <property name="text">
-    <string>Choose buyers </string>
+    <string>Load Debits file (csv)</string>
    </property>
   </action>
   <action name="actionShow_Info">
@@ -178,12 +178,12 @@
   </action>
   <action name="actionCompute_Sellers">
    <property name="text">
-    <string>Compute Sellers</string>
+    <string>Compute Credits</string>
    </property>
   </action>
   <action name="actionCompute_Buyers">
    <property name="text">
-    <string>Compute Buyers</string>
+    <string>Compute Debits</string>
    </property>
   </action>
  </widget>

@@ -14,6 +14,7 @@
     bool getValue(QVariant myRs, QString* myValue);
 
     bool searchDataPath(QString &dataPath);
+    QString getFileName(QString fileNameComplete);
 
 
 #endif // DBUTILITIES_H
