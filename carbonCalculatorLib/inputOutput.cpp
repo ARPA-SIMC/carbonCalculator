@@ -126,11 +126,11 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
     //printf("numberOfFields seller%d \n",numberOfFields);
     //getchar();
 
-    if (numberOfFields != 99)
+    /*if (numberOfFields != 99)
     {
         error = "Error: the file contains wrong number of columns (expected 99)";
         return false;
-    }
+    }*/
     // check numberOfExperiments
     //FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
@@ -182,12 +182,20 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
 
 
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
+        if (inputData[iExp].soil.depth == NODATA)
+        {
+            inputData[iExp].soil.depth = 100;
+        }
         if (inputData[iExp].soil.depth < 3)
         {
             error += "Warning: in record " + recordNr + " you defined a soil thinner than 3 cm, are you sure?\n";
         }
         inputData[iExp].soil.drainage = data[iExp].value(label++);
         inputData[iExp].soil.pH = data[iExp].value(label++).toFloat();
+        if (inputData[iExp].soil.pH == NODATA)
+        {
+            inputData[iExp].soil.pH = 7;
+        }
         inputData[iExp].soil.texture = data[iExp].value(label++);
         inputData[iExp].soil.organicMatter = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.skeleton = data[iExp].value(label++).toFloat();
