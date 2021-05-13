@@ -57,6 +57,7 @@ void MainWindow::on_actionChoose_sellers_triggered()
     ui->logBrowser->append("\nRead csv file: " + csvFileName);
     int numberOfExperiments = 0;
     std::vector<TinputData> inputData;
+    error = "";
     readCsvFileSeller(csvFileName, inputData, numberOfExperiments, error);
     if (error != "")
         ui->logBrowser->append(error);
@@ -78,6 +79,7 @@ void MainWindow::on_actionChoose_buyers_triggered()
     ui->logBrowser->append("\nRead csv file: " + csvFileName);
     int numberOfBuyers = 0;
     std::vector<TinputDataBuyer> inputDataBuyer;
+    error = "";
     readCsvFileBuyer(csvFileName, inputDataBuyer, numberOfBuyers, error);
     if (error != "")
         ui->logBrowser->append(error);
