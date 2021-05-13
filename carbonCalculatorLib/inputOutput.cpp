@@ -198,7 +198,16 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         }
         inputData[iExp].soil.texture = data[iExp].value(label++);
         inputData[iExp].soil.organicMatter = data[iExp].value(label++).toFloat();
+        if (inputData[iExp].soil.organicMatter == NODATA)
+        {
+            error += "ERROR: in record " + recordNr + " you must know organic matter in order to run the simulation\n";
+            continue;
+        }
         inputData[iExp].soil.skeleton = data[iExp].value(label++).toFloat();
+        if (inputData[iExp].soil.skeleton == NODATA)
+        {
+            inputData[iExp].soil.skeleton = 1;
+        }
         inputData[iExp].soil.availableWaterCapacity = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.totalNitrogen = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.carbonNitrogenRatio = data[iExp].value(label++).toFloat();

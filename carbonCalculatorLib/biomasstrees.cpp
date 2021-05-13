@@ -82,22 +82,28 @@ double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double perce
     double carbon;
     double carbonCO2Eq=0;
     double woodWeight;
-    if (annualWoodyProduction < pruningWeight)
+    /*if (annualWoodyProduction < pruningWeight)
         woodWeight = annualWoodyProduction;
     else
         woodWeight = pruningWeight;
 
     if (woodWeight < 0.5) woodWeight = 0.5; // added to avoid 0
-
+    */
+    woodWeight = annualWoodyProduction - pruningWeight;
     carbon = (woodWeight * 0.5)* percentageAccounted * 0.01;
     carbon *= 1000;
     carbonCO2Eq = FROM_C_TO_CO2 * carbon; // stored in trunk
+    if (carbonCO2Eq < 0) carbonCO2Eq = 0;
     return -carbonCO2Eq;
 }
 
 double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted, double pruningWeight)
 {
-    return age*annualCarbonGain2(annualWoodyProduction,percentageAccounted,pruningWeight);
+    double carbon,carbonCO2Eq;
+    carbon = (annualWoodyProduction * 0.5)* percentageAccounted * 0.01;
+    carbon *= 1000;
+    carbonCO2Eq = FROM_C_TO_CO2 * carbon;
+    return age*(-carbonCO2Eq);
 }
 
 double BiomassTree::woodyCarbonFromForestInCO2Eq2(double age, double annualCO2Credits, double percentage)
