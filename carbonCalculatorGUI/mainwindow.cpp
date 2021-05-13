@@ -52,6 +52,7 @@ void MainWindow::on_actionChoose_sellers_triggered()
         ui->sellerBox->setEnabled(true);
         ui->sellerBox->setText(csvFileName);
     }
+    else return;
 
     // check file
     ui->logBrowser->append("\nRead csv file: " + csvFileName);
@@ -74,6 +75,7 @@ void MainWindow::on_actionChoose_buyers_triggered()
         ui->buyerBox->setEnabled(true);
         ui->buyerBox->setText(csvFileName);
     }
+    else return;
 
     // check file
     ui->logBrowser->append("\nRead csv file: " + csvFileName);
