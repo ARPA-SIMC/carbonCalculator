@@ -126,11 +126,11 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
     //printf("numberOfFields seller%d \n",numberOfFields);
     //getchar();
 
-    /*if (numberOfFields != 99)
+    if (numberOfFields < 98)
     {
         error = "Error: the file contains wrong number of columns (expected 99)";
         return false;
-    }*/
+    }
     // check numberOfExperiments
     //FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");

@@ -219,7 +219,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         if (dryMatter[i] < 0.5)
             amend = 0;
         else
-            amend = quantityOfAmendment[i] * 100.0 / dryMatter[i];
+            amend = quantityOfAmendment[i];// * 100.0 / dryMatter[i];
         incrementOrganicAmendment *= computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i]);
         incrementTotal *= incrementOrganicAmendment;
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
