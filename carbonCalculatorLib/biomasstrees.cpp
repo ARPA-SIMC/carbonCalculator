@@ -97,7 +97,7 @@ double BiomassTree::annualCarbonGain2(double annualWoodyProduction, double perce
     return -carbonCO2Eq;
 }
 
-double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted, double pruningWeight)
+double BiomassTree::woodyCarbonInCO2Eq2(double age, double annualWoodyProduction, double percentageAccounted)
 {
     double carbon,carbonCO2Eq;
     carbon = (annualWoodyProduction * 0.5)* percentageAccounted * 0.01;

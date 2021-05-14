@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         #ifdef TEST
-            csvFileName = dataPath + "inputDataTrainingCroatiaAmendments.csv";
+            csvFileName = dataPath + "inputDataTrainingCroatiaBiochar.csv";
         #else
             usage();
             return 1;
@@ -100,7 +100,8 @@ int main(int argc, char *argv[])
     QString dbName;
     char answer;
     printf("Do you want to use the default DB name (output.db)? [y/n] ");
-    scanf("%c",&answer);
+    //scanf("%c",&answer);
+    answer = 'y';
     fflush(stdin);
     if (answer == 'y')
     {
