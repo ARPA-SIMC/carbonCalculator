@@ -178,7 +178,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
     QString csvFileName = ui->buyerBox->text();
     if (csvFileName == "")
     {
-        ui->logBrowser->append("Choose Debits file before!");
+        ui->logBrowser->append("Choose Debts file before!");
         return;
     }
 
@@ -217,7 +217,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
         return;
     }
 
-    ui->logBrowser->append("\nDebits computation:");
+    ui->logBrowser->append("\nDebts computation:");
     for (int i=0; i < numberOfBuyers; i++)
     {
         QString text = QString::number(i+1) + " of " + QString::number(numberOfBuyers);
@@ -231,18 +231,18 @@ void MainWindow::on_actionCompute_Buyers_triggered()
             continue;
         }
 
-        double debits = buyerCalculatorCO2.computeDebitsBuyer();
+        double debts = buyerCalculatorCO2.computeDebtsBuyer();
         QString idBuyer = QString::number(inputDataBuyer[i].generalBuyer.year) +
                 "_" + inputDataBuyer[i].generalBuyer.enterpriseName
                 + "_" + inputDataBuyer[i].generalBuyer.chainName
                 + "_" + inputDataBuyer[i].generalBuyer.productName;
 
-        text = idBuyer + " --- Debits: " + QString::number(debits) + " kg CO2eq";
+        text = idBuyer + " --- Debts: " + QString::number(debts) + " kg CO2eq";
         ui->logBrowser->append(text);
         qApp->processEvents();
 
         // save db output
-        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[i],buyerCalculatorCO2,debits))
+        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[i],buyerCalculatorCO2,debts))
         {
             ui->logBrowser->append("Error in saving id: " + idBuyer);
         }

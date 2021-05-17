@@ -78,7 +78,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Debits input file</string>
+     <string>Debts input file</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="sellerBox">
@@ -173,7 +173,7 @@
   </action>
   <action name="actionChoose_buyers">
    <property name="text">
-    <string>Load debits file (csv)</string>
+    <string>Load debts file (csv)</string>
    </property>
   </action>
   <action name="actionShow_Info">
@@ -188,7 +188,7 @@
   </action>
   <action name="actionCompute_Buyers">
    <property name="text">
-    <string>Compute Debits</string>
+    <string>Compute Debts</string>
    </property>
   </action>
  </widget>

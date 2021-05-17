@@ -67,9 +67,9 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
     return true;
 }
 
-bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debits)
+bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debts)
 {
-    if (! saveTableBuyer(id, dbOutput,buyerCalculatorCO2,inputData , "buyer",debits))
+    if (! saveTableBuyer(id, dbOutput,buyerCalculatorCO2,inputData , "buyer",debts))
         return false;
 
     // TODO save other tables
@@ -641,7 +641,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
                   "methane REAL,electricity_grid REAL,"
                   "percentage_renewables_provider REAL,hydropower_electricity REAL, "
                   "photovoltaic_electricity REAL,eolic_electricity REAL,"
-                  "total_energetic_emission REAL, debits REAL)";
+                  "total_energetic_emission REAL, debts REAL)";
 
     myQuery = dbOutput.exec(queryString);
 
@@ -655,7 +655,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
 }
 
 
-bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debits)
+bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debts)
 {
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id_buyer, enterprise_name, name_chain_production,name_of_product, year, "
@@ -669,7 +669,7 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
                          "methane,electricity_grid,"
                          "percentage_renewables_provider,hydropower_electricity,"
                          "photovoltaic_electricity,eolic_electricity,"
-                         "total_energetic_emission, debits) "
+                         "total_energetic_emission, debts) "
                        " VALUES ";
 
 
@@ -701,7 +701,7 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
                 + "," + QString::number(inputData.energy.electricitySolar)
                 + "," + QString::number(inputData.energy.electricityEolic)
                 + "," + QString::number(buyerCalculatorCO2.energy.emissions.total)
-                + "," + QString::number(debits)
+                + "," + QString::number(debts)
                 + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);

@@ -152,11 +152,11 @@ int main(int argc, char *argv[])
     std::cout << "buyer simulation:" << std::endl ;
     for (int iExp=0; iExp<numberOfExperimentsBuyer; iExp++)
     {
-        double debits;
+        double debts;
         bool isSetVarOk = false;
         isSetVarOk = buyerCalculatorCO2.setInputBuyer(inputDataBuyer,iExp,calculatorCO2);
         if (!isSetVarOk) return -1;
-        debits = buyerCalculatorCO2.computeDebitsBuyer();
+        debts = buyerCalculatorCO2.computeDebtsBuyer();
         QString idBuyer = QString::number(inputDataBuyer[iExp].generalBuyer.year) +
                 "_" + inputDataBuyer[iExp].generalBuyer.enterpriseName
                 + "_" + inputDataBuyer[iExp].generalBuyer.chainName
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
         std::cout << "ID: " << idBuyer.toStdString() << "\t" << iExp+1 << " of " << numberOfExperimentsBuyer << std::endl;
 
         // save db output
-        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[iExp],buyerCalculatorCO2,debits))
+        if (! saveOutputBuyer(idBuyer, dbOutput, inputDataBuyer[iExp],buyerCalculatorCO2,debts))
             return -1;
     }
 

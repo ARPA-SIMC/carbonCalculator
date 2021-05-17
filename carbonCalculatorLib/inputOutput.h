@@ -134,7 +134,7 @@ struct TinputData{
 class BuyerCalculator{
 public:
     bool setInputBuyer(std::vector<TinputDataBuyer> inputData,int iExp,CarbonCalculator calculatorCO2);
-    double computeDebitsBuyer();
+    double computeDebtsBuyer();
     int isPresentLCA;
     double valueLCA;
     EnergyManagement energy;

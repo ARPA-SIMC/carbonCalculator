@@ -744,21 +744,21 @@ bool  BuyerCalculator::setInputBuyer(std::vector<TinputDataBuyer> inputData, int
 }
 
 
-double BuyerCalculator::computeDebitsBuyer()
+double BuyerCalculator::computeDebtsBuyer()
 {
-    double debits;
+    double debts;
 
     if (isPresentLCA > 0.1)
     {
         energy.emissions.total = NODATA;
-        debits = valueLCA;
+        debts = valueLCA;
     }
     else
     {
         energy.computeEmissions();
-        debits = energy.emissions.total;
+        debts = energy.emissions.total;
     }
-    return debits;
+    return debts;
 }
 
 
