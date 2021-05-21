@@ -84,7 +84,7 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE general "
-                  " (id TEXT, enterprise_name TEXT, nr_field INTEGER, year INTEGER, "
+                  " (id TEXT, email_address TEXT,enterprise_name TEXT, nr_field INTEGER, year INTEGER, "
                   " country TEXT,region TEXT, description TEXT, latitude REAL, longitude REAL, "
                   " field_size REAL, field_slope REAL )";
 
@@ -103,11 +103,12 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
 bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id, enterprise_name, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
+                       + " (id, enterprise_name,email_address, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
                  + ",'" + inputData.general.enterpriseName + "'"
+                 + ",'" + inputData.general.emailAddress + "'"
                  + "," + QString::number(inputData.general.nrField)
                  + "," + QString::number(inputData.general.year)
                  + ",'" + inputData.general.idCountry + "'"
@@ -630,7 +631,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE buyer"
-                  " (id_buyer TEXT, enterprise_name TEXT, name_chain_production TEXT,name_of_product TEXT, year INTEGER, "
+                  " (id_buyer TEXT, email_address TEXT, enterprise_name TEXT, name_chain_production TEXT,name_of_product TEXT, year INTEGER, "
                   " country TEXT, region TEXT, description TEXT, latitude REAL, longitude REAL, "
                   "is_LCA_present INTEGER,life_cycle_assessment REAL,"
                   "biodiesel REAL,"
@@ -658,7 +659,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
 bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debts)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id_buyer, enterprise_name, name_chain_production,name_of_product, year, "
+                       + " (id_buyer, email_address, enterprise_name, name_chain_production,name_of_product, year, "
                          " country, region, description, latitude, longitude, "
                          "is_LCA_present,life_cycle_assessment,"
                          "biodiesel,"
@@ -674,6 +675,7 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
 
 
     queryOutput += "('" + id_buyer + "'"
+                + "," + "'" + inputData.generalBuyer.emailAddress + "'"
                 + "," + "'" + inputData.generalBuyer.enterpriseName + "'"
                 + "," + "'" + inputData.generalBuyer.chainName   + "'"
                 + "," + "'" + inputData.generalBuyer.productName   + "'"

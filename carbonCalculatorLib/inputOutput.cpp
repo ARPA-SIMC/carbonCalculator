@@ -28,7 +28,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     //printf("numberOfFields buyer%d \n",numberOfFields);
     //getchar();
 
-    if (numberOfFields != 28)
+    if (numberOfFields != 29)
     {
         error = "Error: the file contains wrong number of columns (expected 28)";
         return false;
@@ -64,6 +64,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     {
         int label=1;
         inputData[iExp].generalBuyer.compilerName = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.emailAddress = data[iExp].value(label++);
         inputData[iExp].generalBuyer.enterpriseName = data[iExp].value(label++);
         inputData[iExp].generalBuyer.chainName = data[iExp].value(label++);
         inputData[iExp].generalBuyer.productName = data[iExp].value(label++);
@@ -164,6 +165,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         int label=1;
         QString recordNr = QString::number(iExp+1);
         inputData[iExp].general.compilerName = data[iExp].value(label++);
+        inputData[iExp].general.emailAddress = data[iExp].value(label++);
         inputData[iExp].general.enterpriseName = data[iExp].value(label++);
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++);

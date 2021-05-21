@@ -20,6 +20,7 @@
 
 struct TgeneralBuyer{
     QString compilerName;
+    QString emailAddress;
     QString enterpriseName;
     QString idCountry;
     QString idRegion;
@@ -35,6 +36,7 @@ struct TgeneralBuyer{
 
 struct Tgeneral{
     QString compilerName;
+    QString emailAddress;
     QString enterpriseName;
     QString idCountry;
     QString idRegion;
