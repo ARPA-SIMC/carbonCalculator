@@ -30,7 +30,7 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
 
     if (numberOfFields != 29)
     {
-        error = "Error: the file contains wrong number of columns (expected 28)";
+        error = "Error: the file contains wrong number of columns (expected 29)";
         return false;
     }
     // check numberOfExperiments
@@ -104,36 +104,43 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
 }
 
 
-
 bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, int &numberOfExperiments, QString &error)
 {
     // check numberOfFields
     FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     int numberOfFields = 1;
-    char dummyComma;
+    char dummy;
+
+    // check quotes
+    dummy = char(getc(fp));
+    if (dummy == '"')
+    {
+        error = "Error: remove \"\" from data ";
+        return false;
+    }
+
     // first do cycle in order to avoid the first line, i.e. the header
     do
     {
-        dummyComma = char(getc(fp));
-    } while (dummyComma != '\n' && dummyComma != EOF);
+        dummy = char(getc(fp));
+    } while (dummy != '\n' && dummy != EOF);
 
+    // compute numberOfFields
     do
     {
-        dummyComma = char(getc(fp));
-        if (dummyComma == ',') numberOfFields++;
-    } while (dummyComma != '\n' && dummyComma != EOF);
-    fclose(fp);
-    //printf("numberOfFields seller%d \n",numberOfFields);
-    //getchar();
+        dummy = char(getc(fp));
+        if (dummy == ',') numberOfFields++;
+    } while (dummy != '\n' && dummy != EOF);
 
     if (numberOfFields < 98)
     {
-        error = "Error: the file contains wrong number of columns (expected 99)";
+        error = "Error: the file contains wrong number of columns (expected 98)";
         return false;
     }
+    fclose(fp);
+
     // check numberOfExperiments
-    //FILE *fp;
     fp = fopen(csvFileName.toStdString().c_str(),"r");
     numberOfExperiments = 0;
     char dummyLine;
@@ -181,7 +188,6 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].climate.annualRainfall = data[iExp].value(label++).toFloat();
         inputData[iExp].climate.referenceEvapotranspiration = data[iExp].value(label++).toFloat();
         inputData[iExp].climate.climaticWaterBalance = data[iExp].value(label++).toFloat();
-
 
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
         if (inputData[iExp].soil.depth == NODATA)
@@ -232,7 +238,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].cropFieldManagement.conventionalTillage = inputData[iExp].general.fieldSize * 10000 - inputData[iExp].cropFieldManagement.noTillage - inputData[iExp].cropFieldManagement.minTillage - inputData[iExp].cropFieldManagement.permanentGrass - inputData[iExp].cropFieldManagement.forest - inputData[iExp].cropFieldManagement.sparseVegetation;
         if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
         {
-            error += "ERROR: in record " + recordNr + " wrong records for areas. Please note that the total area must equal the field size\n";
+            error += "ERROR: in record " + recordNr + " wrong records for management areas. Please note that the total area must equal the field size\n";
             continue;
         }
         if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
