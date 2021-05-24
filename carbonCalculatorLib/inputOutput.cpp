@@ -615,23 +615,40 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[0]; //(t/ha) dry weight of green residue input from .csv
     calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
 
-    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA)
+
     {
-        calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.2; // t/ha
-        calculatorCO2.cropResidue.residueWeight[1] = 0;
+        if(calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+        {
+            calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.2; // t/ha
+            calculatorCO2.cropResidue.residueWeight[1] = 0;
+        }
+        else
+        {
+            calculatorCO2.cropResidue.residueWeight[1] = calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.1;
+        }
     }
     else if (calculatorCO2.cropResidue.residueWeight[0] != NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[1] = 0; // t/ha
+        calculatorCO2.cropResidue.residueWeight[1] =  calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.1; // t/ha
     }
-    if (calculatorCO2.cropResidue.residueWeight[2] == NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+
+    if (calculatorCO2.cropResidue.residueWeight[2] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[2] = 0.2; // t/ha
-        calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
+        if (calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+        {
+            calculatorCO2.cropResidue.residueWeight[2] = 0.2; // t/ha
+            calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
+        }
+        else
+        {
+            calculatorCO2.cropResidue.residueWeight[2] = 0.1; // t/ha
+            calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
+        }
     }
     else if (calculatorCO2.cropResidue.residueWeight[2] != NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
+        calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
     }
 
     calculatorCO2.cropResidue.totalWoodyResidue = calculatorCO2.cropResidue.residueWeight[0];

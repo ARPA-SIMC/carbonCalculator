@@ -327,14 +327,14 @@ double SoilManagement::computeSequestrationResidueIncorporation2(double residueI
     if (!isIncorporatedResidue) return 0;
     if (isHerbaceous == 0)
     {
-        residueIncorporated += 1*0.01*percentage.forest;//1 t/ha of wood incorporated
+        residueIncorporated += 1*0.01*percentage.forest;//1 tCO2Eq/ha of wood incorporated
         sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)values from Ye et al. 2012
         if (sequestration < 0) return sequestration;
         else return 0;
     }
     else
     {
-        // 0.2 t/ha of forest leaves, 0.5 t/ha of permanent grass, 0.5 t/ha of cover cropping
+        // 0.2 tCO2Eq/ha of forest leaves, 0.5 tCO2Eq/ha of permanent grass, 0.5 tCO2Eq/ha of cover crops
         residueIncorporated += 0.01*(0.2*percentage.forest+0.5*percentage.permanentGrass + 0.5*percentage.arable*0.01*percentage.coverCropping);
         sequestration = -0.45*residueIncorporated*1000*0.147;
         if (sequestration < 0) return sequestration;
