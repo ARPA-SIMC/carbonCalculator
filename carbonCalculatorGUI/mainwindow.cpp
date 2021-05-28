@@ -16,7 +16,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     if (!searchDataPath(dataPath))
     {
-        QMessageBox::critical(this, "Error", "Missing path DATA/");
+        QString dbName, filename;
+        bool isFound = false;
+
+        while (! isFound)
+        {
+        dbName = QFileDialog::getOpenFileName(this, tr("Choose carbonCalculatorParameters.db"), "", tr("SQLite database (*.db)"));
+        filename = getFileName(dbName);
+        if (filename != "carbonCalculatorParameters.db")
+            QMessageBox::critical(this, "error", "Wrong parameters db");
+        else
+            isFound = true;
+        }
+
+        dataPath = getFilePath(dbName);
     };
 
     if (! openDBParameters(dbParameters, dataPath, error))

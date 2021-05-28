@@ -112,3 +112,11 @@ QString getFileName(QString fileNameComplete)
     return fileName;
 }
 
+
+QString getFilePath(QString fileNameComplete)
+{
+    QString fileName = getFileName(fileNameComplete);
+    QString filePath = fileNameComplete.left(fileNameComplete.length() - fileName.length());
+    return filePath;
+}
+

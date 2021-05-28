@@ -327,8 +327,15 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
 
 bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error)
 {
+    QString dbName;
+    if (dataPath != "")
+    {
+        dbName = dataPath + "carbonCalculatorParameters.db";
+    }
+    else
+    {
 
-    QString dbName = dataPath + "carbonCalculatorParameters.db";
+    }
     if (! QFile(dbName).exists())
     {
         error = "Error! DB parameters file is missing: " + dbName;

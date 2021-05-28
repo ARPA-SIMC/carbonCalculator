@@ -15,6 +15,7 @@
 
     bool searchDataPath(QString &dataPath);
     QString getFileName(QString fileNameComplete);
+    QString getFilePath(QString fileNameComplete);
 
 
 #endif // DBUTILITIES_H
