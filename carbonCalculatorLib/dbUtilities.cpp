@@ -68,11 +68,20 @@ bool searchDataPath(QString  &dataPath)
     QString winRoot = myPath.left(3);
 
     bool isFound = false;
+    QString dataStr;
     while (! isFound)
     {
         if (QDir(myPath + "/DATA").exists())
         {
             isFound = true;
+            dataStr = "/DATA/";
+            break;
+        }
+
+        if (QDir(myPath + "/data").exists())
+        {
+            isFound = true;
+            dataStr = "/data/";
             break;
         }
 
@@ -83,7 +92,7 @@ bool searchDataPath(QString  &dataPath)
     }
     if (! isFound) return false;
 
-    dataPath = QDir::cleanPath(myPath) + "/DATA/";
+    dataPath = QDir::cleanPath(myPath) + dataStr;
     return true;
 }
 

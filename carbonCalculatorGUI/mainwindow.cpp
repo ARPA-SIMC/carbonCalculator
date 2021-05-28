@@ -14,7 +14,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     qApp->setStyleSheet("QMessageBox { messagebox-text-interaction-flags: 5; }");
 
-    searchDataPath(dataPath);
+    if (!searchDataPath(dataPath))
+    {
+        QMessageBox::critical(this, "Error", "Missing path DATA/");
+    };
 
     if (! openDBParameters(dbParameters, dataPath, error))
     {
