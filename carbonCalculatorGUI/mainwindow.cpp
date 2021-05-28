@@ -21,12 +21,13 @@ MainWindow::MainWindow(QWidget *parent)
 
         while (! isFound)
         {
-        dbName = QFileDialog::getOpenFileName(this, tr("Choose carbonCalculatorParameters.db"), "", tr("SQLite database (*.db)"));
-        filename = getFileName(dbName);
-        if (filename != "carbonCalculatorParameters.db")
-            QMessageBox::critical(this, "error", "Wrong parameters db");
-        else
-            isFound = true;
+            QMessageBox::information(this, "Carbon calculator", "Choose carbonCalculatorParameters.db");
+            dbName = QFileDialog::getOpenFileName(this, tr("Choose carbonCalculatorParameters.db"), "", tr("SQLite database (*.db)"));
+            filename = getFileName(dbName);
+            if (filename != "carbonCalculatorParameters.db")
+                QMessageBox::critical(this, "error", "Wrong parameters db");
+            else
+                isFound = true;
         }
 
         dataPath = getFilePath(dbName);
