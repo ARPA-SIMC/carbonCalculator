@@ -236,10 +236,14 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].cropFieldManagement.forest = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.sparseVegetation = data[iExp].value(label++).toFloat();
         inputData[iExp].cropFieldManagement.conventionalTillage = inputData[iExp].general.fieldSize * 10000 - inputData[iExp].cropFieldManagement.noTillage - inputData[iExp].cropFieldManagement.minTillage - inputData[iExp].cropFieldManagement.permanentGrass - inputData[iExp].cropFieldManagement.forest - inputData[iExp].cropFieldManagement.sparseVegetation;
-        if (inputData[iExp].cropFieldManagement.conventionalTillage < 0)
+        if (inputData[iExp].cropFieldManagement.conventionalTillage < -1)
         {
             error += "ERROR: in record " + recordNr + " wrong records for management areas. Please note that the total area must equal the field size\n";
             continue;
+        }
+        else if (inputData[iExp].cropFieldManagement.conventionalTillage < 0 && inputData[iExp].cropFieldManagement.conventionalTillage >= -1)
+        {
+            inputData[iExp].cropFieldManagement.conventionalTillage = 0;
         }
         if (inputData[iExp].cropFieldManagement.coverCrop > inputData[iExp].cropFieldManagement.noTillage + inputData[iExp].cropFieldManagement.minTillage + inputData[iExp].cropFieldManagement.conventionalTillage)
         {
