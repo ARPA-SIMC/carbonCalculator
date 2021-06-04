@@ -680,7 +680,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     calculatorCO2.energy.input.fromFuelCoal = inputData[iExp].energy.coal; // kg input from .csv
     calculatorCO2.energy.input.fromFuelDiesel = inputData[iExp].energy.diesel; // l input from .csv
     calculatorCO2.energy.input.fromFuelHighDensityBiomass = inputData[iExp].energy.highEnergyDensityBiomass; // kg input from .csv
-    calculatorCO2.energy.input.fromFuelLPG = inputData[iExp].energy.highEnergyDensityBiomass; // l input from .csv
+    calculatorCO2.energy.input.fromFuelLPG = inputData[iExp].energy.LPG; // l input from .csv
     calculatorCO2.energy.input.fromFuelOil = inputData[iExp].energy.oil; // l input from .csv
     calculatorCO2.energy.input.fromFuelPetrol = inputData[iExp].energy.petrol; // l input from .csv
     calculatorCO2.energy.input.fromFuelWood = inputData[iExp].energy.wood; // kg input from .csv
@@ -749,7 +749,7 @@ bool  BuyerCalculator::setInputBuyer(std::vector<TinputDataBuyer> inputData, int
     energy.input.fromFuelCoal = inputData[iExp].energy.coal; // kg input from .csv
     energy.input.fromFuelDiesel = inputData[iExp].energy.diesel; // l input from .csv
     energy.input.fromFuelHighDensityBiomass = inputData[iExp].energy.highEnergyDensityBiomass; // kg input from .csv
-    energy.input.fromFuelLPG = inputData[iExp].energy.highEnergyDensityBiomass; // l input from .csv
+    energy.input.fromFuelLPG = inputData[iExp].energy.LPG; // l input from .csv
     energy.input.fromFuelOil = inputData[iExp].energy.oil; // l input from .csv
     energy.input.fromFuelPetrol = inputData[iExp].energy.petrol; // l input from .csv
     energy.input.fromFuelWood = inputData[iExp].energy.wood; // kg input from .csv
