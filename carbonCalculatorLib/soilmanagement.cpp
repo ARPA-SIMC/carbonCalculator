@@ -328,7 +328,7 @@ double SoilManagement::computeSequestrationResidueIncorporation2(double residueI
     if (isHerbaceous == 0)
     {
         residueIncorporated += 1*0.01*percentage.forest;//1 tCO2Eq/ha of wood incorporated
-        sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)values from Ye et al. 2012
+        sequestration = -0.5*residueIncorporated *1000*(0.577+0.147)*0.5; //  supposing  lignin = cellulose (content)values from Yue et al. 2016
         if (sequestration < 0) return sequestration;
         else return 0;
     }
