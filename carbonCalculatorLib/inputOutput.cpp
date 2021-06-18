@@ -631,17 +631,17 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     {
         if(calculatorCO2.cropResidue.residueWeight[1] == NODATA)
         {
-            calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.2; // t/ha
+            calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.5; // t/ha
             calculatorCO2.cropResidue.residueWeight[1] = 0;
         }
         else
         {
-            calculatorCO2.cropResidue.residueWeight[1] = calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.1;
+            calculatorCO2.cropResidue.residueWeight[1] = calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.25;
         }
     }
     else if (calculatorCO2.cropResidue.residueWeight[0] != NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
     {
-        calculatorCO2.cropResidue.residueWeight[1] =  calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.1; // t/ha
+        calculatorCO2.cropResidue.residueWeight[1] =  calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.25; // t/ha
     }
 
     if (calculatorCO2.cropResidue.residueWeight[2] == NODATA)
