@@ -84,9 +84,10 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE general "
-                  " (id TEXT, email_address TEXT,enterprise_name TEXT, nr_field INTEGER, year INTEGER, "
-                  " country TEXT,region TEXT, description TEXT, latitude REAL, longitude REAL, "
-                  " field_size REAL, field_slope REAL )";
+                  " (id TEXT, email_address TEXT, enterprise_name TEXT, vat_number TEXT, fiscal_code TEXT,"
+                  " project_manager_name TEXT, project_manager_surname TEXT, email_project_manager TEXT,"
+                  " nr_field INTEGER, year INTEGER, country TEXT,region TEXT, description TEXT, "
+                  " latitude REAL, longitude REAL, field_size REAL, field_slope REAL )";
 
     myQuery = dbOutput.exec(queryString);
 
@@ -103,22 +104,28 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
 bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData, QString tableName)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id, enterprise_name,email_address, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
+                       + " (id, enterprise_name, email_address, vat_number, fiscal_code, project_manager_name, project_manager_surname,"
+                         " email_project_manager, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
-                 + ",'" + inputData.general.enterpriseName + "'"
-                 + ",'" + inputData.general.emailAddress + "'"
-                 + "," + QString::number(inputData.general.nrField)
-                 + "," + QString::number(inputData.general.year)
-                 + ",'" + inputData.general.idCountry + "'"
-                 + ",'" + inputData.general.idRegion + "'"
-                 + ",'" + inputData.general.description + "'"
-                 + "," + QString::number(inputData.general.latitude)
-                 + "," + QString::number(inputData.general.longitude)
-                 + "," + QString::number(inputData.general.fieldSize)
-                 + "," + QString::number(inputData.general.fieldSlope)
-                 + ")";
+                + ",'" + inputData.general.enterpriseName + "'"
+                + ",'" + inputData.general.emailAddress + "'"
+                + ",'" + inputData.general.vatNumber + "'"
+                + ",'" + inputData.general.fiscalCode + "'"
+                + ",'" + inputData.general.projectManagerName + "'"
+                + ",'" + inputData.general.projectManagerSurname + "'"
+                + ",'" + inputData.general.emailProjectManager + "'"
+                + "," + QString::number(inputData.general.nrField)
+                + "," + QString::number(inputData.general.year)
+                + ",'" + inputData.general.idCountry + "'"
+                + ",'" + inputData.general.idRegion + "'"
+                + ",'" + inputData.general.description + "'"
+                + "," + QString::number(inputData.general.latitude)
+                + "," + QString::number(inputData.general.longitude)
+                + "," + QString::number(inputData.general.fieldSize)
+                + "," + QString::number(inputData.general.fieldSlope)
+                + ")";
 
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
     if (myQuery.lastError().isValid())

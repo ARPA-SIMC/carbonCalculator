@@ -38,6 +38,11 @@ struct Tgeneral{
     QString compilerName;
     QString emailAddress;
     QString enterpriseName;
+    QString vatNumber;
+    QString fiscalCode;
+    QString projectManagerName;
+    QString projectManagerSurname;
+    QString emailProjectManager;
     QString idCountry;
     QString idRegion;
     QString description;

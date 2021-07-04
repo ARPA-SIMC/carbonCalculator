@@ -133,9 +133,9 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         if (dummy == ',') numberOfFields++;
     } while (dummy != '\n' && dummy != EOF);
 
-    if (numberOfFields < 98)
+    if (numberOfFields < 109)
     {
-        error = "Error: the file contains wrong number of columns (expected 98)";
+        error = "Error: the file contains wrong number of columns (expected 109)";
         return false;
     }
     fclose(fp);
@@ -172,8 +172,14 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         int label=1;
         QString recordNr = QString::number(iExp+1);
         inputData[iExp].general.compilerName = data[iExp].value(label++);
-        inputData[iExp].general.emailAddress = data[iExp].value(label++);
         inputData[iExp].general.enterpriseName = data[iExp].value(label++);
+        inputData[iExp].general.emailAddress = data[iExp].value(label++);
+        inputData[iExp].general.vatNumber = data[iExp].value(label++);
+        inputData[iExp].general.fiscalCode = data[iExp].value(label++);
+        // TODO check on vat number and fiscal code?
+        inputData[iExp].general.projectManagerName = data[iExp].value(label++);
+        inputData[iExp].general.projectManagerSurname = data[iExp].value(label++);
+        inputData[iExp].general.emailProjectManager = data[iExp].value(label++);
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++);
         inputData[iExp].general.idRegion = data[iExp].value(label++);
