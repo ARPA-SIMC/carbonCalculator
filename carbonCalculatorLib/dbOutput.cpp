@@ -84,8 +84,9 @@ bool createTableGeneral(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE general "
-                  " (id TEXT, email_address TEXT, enterprise_name TEXT, vat_number TEXT, fiscal_code TEXT,"
-                  " project_manager_name TEXT, project_manager_surname TEXT, email_project_manager TEXT,"
+                  " (id TEXT, enterprise_name TEXT, email_address TEXT, vat_number TEXT, fiscal_code TEXT,"
+                  " project_manager_name TEXT, project_manager_surname TEXT,"
+                  " compiler_name TEXT, compiler_email TEXT,"
                   " nr_field INTEGER, year INTEGER, country TEXT,region TEXT, description TEXT, "
                   " latitude REAL, longitude REAL, field_size REAL, field_slope REAL )";
 
@@ -105,7 +106,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData,
 {
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id, enterprise_name, email_address, vat_number, fiscal_code, project_manager_name, project_manager_surname,"
-                         " email_project_manager, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
+                         " compiler_name, compiler_email, nr_field, year, country, region, description, latitude, longitude, field_size, field_slope) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
@@ -115,6 +116,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData,
                 + ",'" + inputData.general.fiscalCode + "'"
                 + ",'" + inputData.general.projectManagerName + "'"
                 + ",'" + inputData.general.projectManagerSurname + "'"
+                + ",'" + inputData.general.compilerName + "'"
                 + ",'" + inputData.general.compilerEmail + "'"
                 + "," + QString::number(inputData.general.nrField)
                 + "," + QString::number(inputData.general.year)

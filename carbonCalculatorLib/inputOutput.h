@@ -36,13 +36,13 @@ struct TgeneralBuyer{
 
 struct Tgeneral{
     QString compilerName;
-    QString emailAddress;
+    QString compilerEmail;
     QString enterpriseName;
+    QString emailAddress;
     QString vatNumber;
     QString fiscalCode;
     QString projectManagerName;
     QString projectManagerSurname;
-    QString compilerEmail;
     QString idCountry;
     QString idRegion;
     QString description;

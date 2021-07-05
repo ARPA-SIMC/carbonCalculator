@@ -183,7 +183,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
 
         if (! saveOutput(idField, dbOutput, inputData[iExp], calculatorCO2, credits, &isAccepted))
         {
-            ui->logBrowser->append("Error in saving id: " + idField);
+            ui->logBrowser->append("*** ERROR in saving id: " + idField);
         }
     }
     ui->logBrowser->append("\nComputation ended.");
