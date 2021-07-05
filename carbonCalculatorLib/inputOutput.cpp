@@ -172,6 +172,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         int label=1;
         QString recordNr = QString::number(iExp+1);
         inputData[iExp].general.compilerName = data[iExp].value(label++);
+        inputData[iExp].general.compilerEmail = data[iExp].value(label++);
         inputData[iExp].general.enterpriseName = data[iExp].value(label++);
         inputData[iExp].general.emailAddress = data[iExp].value(label++);
         inputData[iExp].general.vatNumber = data[iExp].value(label++);
@@ -179,7 +180,6 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         // TODO check on vat number and fiscal code?
         inputData[iExp].general.projectManagerName = data[iExp].value(label++);
         inputData[iExp].general.projectManagerSurname = data[iExp].value(label++);
-        inputData[iExp].general.emailProjectManager = data[iExp].value(label++);
         inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
         inputData[iExp].general.idCountry = data[iExp].value(label++);
         inputData[iExp].general.idRegion = data[iExp].value(label++);
@@ -367,7 +367,7 @@ bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error)
 bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculatorCO2,
                                   std::vector<TinputData> &inputData, int iExp, QString &error)
 {
-    float avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
+    double avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
     if (avgRainfall == NODATA)
     {
         if (inputData[iExp].general.idRegion == "Emilia-Romagna")
@@ -388,7 +388,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
             avgRainfall = 687;
     }
 
-    float avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
+    double avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
     if (avgTemperature == NODATA)
     {
         if (inputData[iExp].general.idRegion == "Emilia-Romagna")
@@ -811,7 +811,7 @@ void printOutput(CarbonCalculator &calculatorCO2)
     std::cout << "emissions due to pesticide production: " << calculatorCO2.pesticide.emissionDueToProduction << std::endl;
     std::cout << "emissions due to residue management: " << calculatorCO2.cropResidue.kgCO2Equivalent.total << std::endl;
     std::cout << "emissions due to type of soil due to Nitrogen: " << calculatorCO2.fertiliser.emissionDueToSoil << std::endl;
-    std::cout << "emissions due to type of soil due to Carbon Oxidation: " << calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate) << std::endl;
+    std::cout << "emissions due to type of soil due to Carbon Oxidation: " << calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil) << std::endl;
     std::cout << "emissions due to fertiliser production: " << calculatorCO2.fertiliser.emissionDueToFertiliserProduction << std::endl;
     std::cout << "emissions due to fertiliser application: " << calculatorCO2.fertiliser.emissionDueToFertiliserApplication << std::endl;
     std::cout << "loss due to erosion: " << calculatorCO2.erosion.lostCO2 << std::endl;
@@ -829,7 +829,7 @@ void printOutput(CarbonCalculator &calculatorCO2)
     std::cout << "sequestration due to green residues2" <<calculatorCO2.soilManage.sequestrationCarbonCO2EqResidue[3] << std::endl;
 
     std::cout <<"sequestration - recalcitrant carbon stock: " <<calculatorCO2.fertiliser.sequestrationDueToFertiliserApplication << std::endl;
-    std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass(calculatorCO2.idClimate) << std::endl;
+    std::cout << "sequestration due to roots: " <<calculatorCO2.soilManage.computeSequestrationRootBiomass() << std::endl;
 
     printf("\n\n");
     std::cout << "___________________________________________________________________________\n" << std::endl;

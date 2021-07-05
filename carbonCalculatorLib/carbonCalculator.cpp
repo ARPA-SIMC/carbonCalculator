@@ -227,12 +227,12 @@ void CarbonCalculator::computeBalance()
     cropResidue.computeEmissions();
     fertiliser.computeEmissions();
     erosion.computeCarbonLoss();
-    soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
+    soilManage.computeEmissions(carbonInTop30CmSoil);
     soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField,fertiliser.sequestrationDueToFertiliserApplication,fertiliser.drymatter);
     biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,80.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     biomassInTree.annualFromForestCarbonGain2(2500,(soilManage.percentage.forest/100.));
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
-            + soilManage.computeEmissions(carbonInTop30CmSoil,idClimate) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
+            + soilManage.computeEmissions(carbonInTop30CmSoil) + fertiliser.emissionDueToFertiliserProduction + fertiliser.emissionDueToFertiliserApplication
             + erosion.lostCO2 + soilManage.sequestrationCarbonCO2Eq + fertiliser.sequestrationDueToFertiliserApplication ;
     carbonBudgetWholeFieldSoil = carbonBudgetPerHectareSoil*soilManage.fieldSize;
     carbonFootprintPerKgOfProduceSoil = carbonBudgetPerHectareSoil/soilManage.yield;
@@ -248,7 +248,7 @@ void CarbonCalculator::computeBalance()
     carbonBudgetWholeFieldBiomass = carbonBudgetPerHectareBiomass*soilManage.fieldSize;
     carbonFootprintPerKgOfProduceBiomass = carbonBudgetPerHectareBiomass/soilManage.yield;
     carbonSavedBySustainablePractices = 0;
-    carbonSavedBySustainablePractices = soilManage.emissionsConventionalManagement - soilManage.computeEmissions(carbonInTop30CmSoil,idClimate);
+    carbonSavedBySustainablePractices = soilManage.emissionsConventionalManagement - soilManage.computeEmissions(carbonInTop30CmSoil);
     carbonSavedBySustainablePractices -= soilManage.sequestrationCarbonCO2Eq;
     carbonSavedBySustainablePractices -= fertiliser.sequestrationDueToFertiliserApplication;
     carbonSavedBySustainablePracticesWholeField = carbonSavedBySustainablePractices*soilManage.fieldSize;
@@ -256,7 +256,7 @@ void CarbonCalculator::computeBalance()
     computeConservativePracticesAdopted();
 
     soilManage.isOrganic = false;
-    carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass(idClimate);
+    carbonSavedBySustainablePractices += soilManage.computeSequestrationRootBiomass();
     carbonBiomass = biomassInTree.woodyCarbonInCO2Eq2(biomassInTree.orchardAge,biomassInTree.annualCarbonWoodyDryMatter,50.0);
     carbonBiomass += biomassInTree.woodyCarbonFromForestInCO2Eq2(biomassInTree.orchardAge,2500,(soilManage.percentage.forest/100.));
     carbonBiomassWholeField = carbonBiomass*soilManage.fieldSize;

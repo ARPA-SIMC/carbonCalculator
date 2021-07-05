@@ -115,7 +115,7 @@ bool saveTableGeneral(QString id, QSqlDatabase &dbOutput, TinputData &inputData,
                 + ",'" + inputData.general.fiscalCode + "'"
                 + ",'" + inputData.general.projectManagerName + "'"
                 + ",'" + inputData.general.projectManagerSurname + "'"
-                + ",'" + inputData.general.emailProjectManager + "'"
+                + ",'" + inputData.general.compilerEmail + "'"
                 + "," + QString::number(inputData.general.nrField)
                 + "," + QString::number(inputData.general.year)
                 + ",'" + inputData.general.idCountry + "'"
@@ -608,7 +608,7 @@ bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculato
                 + "," + QString::number(calculatorCO2.pesticide.emissionDueToProduction)
                 + "," + QString::number(calculatorCO2.cropResidue.kgCO2Equivalent.total)
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToSoil)
-                + "," + QString::number(calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil,calculatorCO2.idClimate))
+                + "," + QString::number(calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil))
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserProduction)
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserApplication)
                 + "," + QString::number(calculatorCO2.erosion.lostCO2)

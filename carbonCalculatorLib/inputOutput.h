@@ -42,7 +42,7 @@ struct Tgeneral{
     QString fiscalCode;
     QString projectManagerName;
     QString projectManagerSurname;
-    QString emailProjectManager;
+    QString compilerEmail;
     QString idCountry;
     QString idRegion;
     QString description;
