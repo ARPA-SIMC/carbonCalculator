@@ -610,7 +610,7 @@ bool saveTableCarbonDynamics(QString id, QSqlDatabase &dbOutput, CarbonCalculato
                 + "," + QString::number(calculatorCO2.pesticide.emissionDueToProduction)
                 + "," + QString::number(calculatorCO2.cropResidue.kgCO2Equivalent.total)
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToSoil)
-                + "," + QString::number(calculatorCO2.soilManage.computeEmissions(calculatorCO2.carbonInTop30CmSoil))
+                + "," + QString::number(calculatorCO2.emissionsDueToOxidation)
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserProduction)
                 + "," + QString::number(calculatorCO2.fertiliser.emissionDueToFertiliserApplication)
                 + "," + QString::number(calculatorCO2.erosion.lostCO2)

@@ -304,8 +304,8 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationCarbonCO2EqLandUse = weightLandUse * sequesteredCarbonCO2EqCopy;
     sequestrationCarbonCO2EqCropCover = weightCoverCrop * sequesteredCarbonCO2EqCopy;
     sequestrationAmendment += weightAmendment*sequesteredCarbonCO2EqCopy;
-    sequestrationRoot = weightRoot*sequesteredCarbonCO2EqCopy;
-    //sequestrationRoot = 0;
+    //sequestrationRoot = weightRoot*sequesteredCarbonCO2EqCopy;
+    sequestrationRoot = 0;
     sequestrationRoot += SoilManagement::computeSequestrationRootBiomass();
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass();
 

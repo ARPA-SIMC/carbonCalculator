@@ -114,6 +114,7 @@
             double carbonSavedBySustainablePracticesWholeField;
             bool woodyCrop;
             int nrConservativePracticesAdopted;
+            double emissionsDueToOxidation;
             void computeConservativePracticesAdopted();
     };
 
