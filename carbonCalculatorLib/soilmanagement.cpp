@@ -9,7 +9,7 @@ double SoilManagement::computeEmissions(double carbonInSoil)
     double emissions;
     double percentageEmissions = 0.006;
     if(isOrganic)
-        percentageEmissions -= 0.001; // we suppose organic management increases the telluric ecosystem carbon avoiding death of many organims
+        percentageEmissions -= 0.002; // we suppose organic management increases the telluric ecosystem carbon avoiding death of many organims
     setMatrix();
     emissions = 0;
     emissions += FROM_C_TO_CO2 * carbonInSoil * (percentageEmissions)*percentage.forest*0.01; // 0.006 from Hockaday et al. 2015
@@ -238,7 +238,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         if (dryMatter[i] < 0.5)
             amend = 0;
         else
-            amend = quantityOfAmendment[i];// * 100.0 / dryMatter[i];
+            amend = quantityOfAmendment[i]*dryMatter[i]/100.;// * 100.0 / dryMatter[i];
         incrementOrganicAmendment *= computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i]);
         incrementTotal *= incrementOrganicAmendment;
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
