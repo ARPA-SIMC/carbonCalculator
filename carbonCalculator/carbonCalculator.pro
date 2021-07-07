@@ -10,6 +10,7 @@ QT -= gui
 
 TARGET = carbonCalculatorScript
 CONFIG += console
+CONFIG += _CRT_SECURE_NO_WARNINGS
 CONFIG -= app_bundle
 
 TEMPLATE = app

@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     if (argc < 2)
     {
         #ifdef TEST
-            csvFileName = dataPath + "inputDataTrainingCroatiaBiochar.csv";
+            csvFileName = dataPath + "testInputCredits.csv";
         #else
             usage();
             return 1;
@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     if (argc < 3)
     {
         #ifdef TEST
-            csvFileNameBuyer = dataPath + "inputFileBuyerDebug.csv";
+            csvFileNameBuyer = dataPath + "testInputDebts.csv";
         #else
             usage();
             return 1;
