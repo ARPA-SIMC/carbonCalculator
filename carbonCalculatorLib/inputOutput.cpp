@@ -1,10 +1,5 @@
 #include "inputOutput.h"
 
-void usage()
-{
-    std::cout << "USAGE:\ncarbonCalculatorTest [sellerDataFileName.csv] [buyerDataFileName.csv]\n";
-}
-
 
 bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputData,int& numberOfExperiments, QString &error)
 {
@@ -28,9 +23,9 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     //printf("numberOfFields buyer%d \n",numberOfFields);
     //getchar();
 
-    if (numberOfFields != 29)
+    if (numberOfFields < 34)
     {
-        error = "Error: the file contains wrong number of columns (expected 29)";
+        error = "Error: the file contains wrong number of columns (expected 34)";
         return false;
     }
     // check numberOfExperiments
@@ -64,8 +59,14 @@ bool readCsvFileBuyer(QString csvFileName,std::vector<TinputDataBuyer> &inputDat
     {
         int label=1;
         inputData[iExp].generalBuyer.compilerName = data[iExp].value(label++);
-        inputData[iExp].generalBuyer.emailAddress = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.compilerEmail = data[iExp].value(label++);
         inputData[iExp].generalBuyer.enterpriseName = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.emailAddress = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.vatNumber = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.fiscalCode = data[iExp].value(label++);
+        // TODO check on vat number and fiscal code?
+        inputData[iExp].generalBuyer.projectManagerName = data[iExp].value(label++);
+        inputData[iExp].generalBuyer.projectManagerSurname = data[iExp].value(label++);
         inputData[iExp].generalBuyer.chainName = data[iExp].value(label++);
         inputData[iExp].generalBuyer.productName = data[iExp].value(label++);
         inputData[iExp].generalBuyer.idCountry = data[iExp].value(label++);

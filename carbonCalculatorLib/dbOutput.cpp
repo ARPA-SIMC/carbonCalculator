@@ -640,7 +640,10 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
     QSqlQuery myQuery = dbOutput.exec(queryString);
 
     queryString = "CREATE TABLE buyer"
-                  " (id_buyer TEXT, email_address TEXT, enterprise_name TEXT, name_chain_production TEXT,name_of_product TEXT, year INTEGER, "
+                  " (id_buyer TEXT, enterprise_name TEXT, email_address TEXT, vat_number TEXT, fiscal_code TEXT,"
+                  " project_manager_name TEXT, project_manager_surname TEXT,"
+                  " compiler_name TEXT, compiler_email TEXT,"
+                  " name_chain_production TEXT, name_of_product TEXT, year INTEGER, "
                   " country TEXT, region TEXT, description TEXT, latitude REAL, longitude REAL, "
                   "is_LCA_present INTEGER,life_cycle_assessment REAL,"
                   "biodiesel REAL,"
@@ -668,14 +671,16 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
 bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debts)
 {
     QString queryOutput = "INSERT INTO " + tableName
-                       + " (id_buyer, email_address, enterprise_name, name_chain_production,name_of_product, year, "
-                         " country, region, description, latitude, longitude, "
+                       + " (id_buyer, enterprise_name, email_address, vat_number, fiscal_code,"
+                         "project_manager_name, project_manager_surname,"
+                         "compiler_name, compiler_email, name_chain_production,name_of_product, year,"
+                         "country, region, description, latitude, longitude, "
                          "is_LCA_present,life_cycle_assessment,"
                          "biodiesel,"
                          "bioethanol,diesel,"
                          "oil,petrol, "
                          "LPG,coal,"
-                         "high_density_biomass,wood, "
+                         "high_density_biomass,wood,"
                          "methane,electricity_grid,"
                          "percentage_renewables_provider,hydropower_electricity,"
                          "photovoltaic_electricity,eolic_electricity,"
@@ -684,8 +689,14 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
 
 
     queryOutput += "('" + id_buyer + "'"
-                + "," + "'" + inputData.generalBuyer.emailAddress + "'"
-                + "," + "'" + inputData.generalBuyer.enterpriseName + "'"
+                + ",'" + inputData.generalBuyer.enterpriseName + "'"
+                + ",'" + inputData.generalBuyer.emailAddress + "'"
+                + ",'" + inputData.generalBuyer.vatNumber + "'"
+                + ",'" + inputData.generalBuyer.fiscalCode + "'"
+                + ",'" + inputData.generalBuyer.projectManagerName + "'"
+                + ",'" + inputData.generalBuyer.projectManagerSurname + "'"
+                + ",'" + inputData.generalBuyer.compilerName + "'"
+                + ",'" + inputData.generalBuyer.compilerEmail + "'"
                 + "," + "'" + inputData.generalBuyer.chainName   + "'"
                 + "," + "'" + inputData.generalBuyer.productName   + "'"
                 + "," + QString::number(inputData.generalBuyer.year)

@@ -72,7 +72,7 @@ double SoilManagement::computeSequestrationUnstableCarbonDueToRoots()
     biomassRootCoverCrop = biomassRootPerHectare*(exp(-1.27))*percentage.coverCropping*0.01*0.5;//*0.01*percentage.coverCropping*((soilCoverCropping[myIdClimate].matrix[0][1]-1)/20 + 1);
     biomassRootPermanentGrass = biomassRootPerHectare*(exp(-1.27))*percentage.permanentGrass*0.01;// *((soilLandUse[myIdClimate].matrix[2][1]-1)/20 + 1);
     biomassRootForest = 981*(exp(-0.71))*percentage.forest*0.01;//*((soilLandUse[myIdClimate].matrix[2][0]-1)/20 + 1); // we supposed forest is organic by default
-    return biomassRootCrop + biomassRootCoverCrop + biomassRootCoverCrop + biomassRootForest;
+    return biomassRootCrop + biomassRootCoverCrop + biomassRootPermanentGrass + biomassRootForest;
 
 }
 

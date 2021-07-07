@@ -20,8 +20,13 @@
 
 struct TgeneralBuyer{
     QString compilerName;
-    QString emailAddress;
+    QString compilerEmail;
     QString enterpriseName;
+    QString emailAddress;
+    QString vatNumber;
+    QString fiscalCode;
+    QString projectManagerName;
+    QString projectManagerSurname;
     QString idCountry;
     QString idRegion;
     QString chainName;
@@ -154,7 +159,6 @@ bool readCsvFileBuyer(QString csvFileName, std::vector<TinputDataBuyer> &inputDa
 bool openDBParameters(QSqlDatabase &db, QString dataPath, QString &error);
 bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculatorCO2, std::vector<TinputData> &inputData, int iExp, QString &error);
 void printOutput(CarbonCalculator &calculatorCO2);
-void usage();
 
 // credits
 
