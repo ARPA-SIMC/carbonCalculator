@@ -26,8 +26,8 @@ void FertiliserApplication::computeEmissions()
 {
 
     double amountNitrogen[8];
-    double amountOtherElements[8];
-    double amountCarbon[8];
+    //double amountOtherElements[8];
+    //double amountCarbon[8];
     double producedN2O[8];
     double producedNO[8];
     double sumProducedN2O = 0;
@@ -36,8 +36,8 @@ void FertiliserApplication::computeEmissions()
     for (int i=0;i<8;i++)
     {
         amountNitrogen[i] = 0;
-        amountOtherElements[i] = 0;
-        amountCarbon[i] = 0;
+        //amountOtherElements[i] = 0;
+        //amountCarbon[i] = 0;
         producedN2O[i] = 0;
         producedNO[i] = 0;
 
@@ -46,8 +46,8 @@ void FertiliserApplication::computeEmissions()
     for (int i=0;i<8;i++)
     {
         amountNitrogen[i] = amountFertiliser[i]*fertInput[i].contentElement.nitrogen * (100. - volatilizationFraction[i])/100.;
-        amountOtherElements[i] = amountFertiliser[i] * (fertInput[i].contentElement.phosphorus + fertInput[i].contentElement.potassium);
-        amountCarbon[i] = amountFertiliser[i]*fertInput[i].contentElement.carbon;
+        //amountOtherElements[i] = amountFertiliser[i] * (fertInput[i].contentElement.phosphorus + fertInput[i].contentElement.potassium);
+        //amountCarbon[i] = amountFertiliser[i]*fertInput[i].contentElement.carbon;
         producedN2O[i] = fertInput[i].bouwmanN2O*amountNitrogen[i];
         producedNO[i] = fertInput[i].bouwmanNO*amountNitrogen[i];
         sumProducedN2O += producedN2O[i];

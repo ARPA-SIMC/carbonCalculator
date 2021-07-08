@@ -48,7 +48,7 @@ public:
     double rootDecayParameter;
     double yield;
     double fieldSize;
-    void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double *recalcitrantIndex, double* incrementalParameterAmendment, double *residues, double *dryMatterResidues, bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double *dryMatter);
+    void computeSequestration(double carbonInSoil, int myIdClimate, double* quantityAmendment , double *recalcitrantIndex, double* incrementalParameterAmendment, double *residues, bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double *dryMatter);
     double computeEmissions(double carbonInSoil);
     double computeSequestrationRootBiomass();
     double computeSequestrationUnstableCarbonDueToRoots();
@@ -57,7 +57,7 @@ public:
     double computeSequestrationCoverCropping(int myIdClimate);
     double computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment, double recalcitrantIndex);
     double computeSequestrationResidueIncorporation(double residueIncorporated,double percentageDryMatter,bool isIncorporatedResidue,int indexRecalitrant);
-    double computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue, int isHerbaceous);
+    double computeSequestrationResidueIncorporation2(double residueIncorporated, bool isIncorporatedResidue, int isHerbaceous);
     double computeSequestrationDueToOrganicMamagement();
 };
 

@@ -206,7 +206,7 @@ void SoilManagement::setMatrix()
     carbonFromAmendmentManagement[3][2]= 0.798507463;
 }
 
-void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* recalcitrantIndex, double* incrementalParameterAmendment,double* residues , double* dryMatterResidues,bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double* dryMatter)
+void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, double* quantityOfAmendment, double* recalcitrantIndex, double* incrementalParameterAmendment, double* residues, bool* isIncorporatedResidue, double sequestrationFromRecalcitrantAmendment, double* dryMatter)
 {
     double sequestrationOfCarbon;
     double incrementTillage=1;
@@ -309,18 +309,18 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
     sequestrationRoot += SoilManagement::computeSequestrationRootBiomass();
     sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationRootBiomass();
 
-    sequestrationCarbonCO2EqResidue[0] = SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2EqResidue[2] = SoilManagement::computeSequestrationResidueIncorporation2(residues[2],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2EqResidue[3] = SoilManagement::computeSequestrationResidueIncorporation2(residues[3],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[0] = SoilManagement::computeSequestrationResidueIncorporation2(residues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[1] = SoilManagement::computeSequestrationResidueIncorporation2(residues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[2] = SoilManagement::computeSequestrationResidueIncorporation2(residues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2EqResidue[3] = SoilManagement::computeSequestrationResidueIncorporation2(residues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
     sequestrationCarbonCO2EqResidueWood = sequestrationCarbonCO2EqResidue[0] + sequestrationCarbonCO2EqResidue[1];
     sequestrationCarbonCO2EqResidueGreen = sequestrationCarbonCO2EqResidue[2] + sequestrationCarbonCO2EqResidue[3];
     sequestrationCarbonCO2EqResidueGreen += 0.5*weightResidue*sequesteredCarbonCO2EqCopy;
     sequestrationCarbonCO2EqResidueWood += 0.5*weightResidue*sequesteredCarbonCO2EqCopy;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],dryMatterResidues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],dryMatterResidues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[2],dryMatterResidues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
-    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[3],dryMatterResidues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[0],isIncorporatedResidue[0],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[1],isIncorporatedResidue[1],0)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[2],isIncorporatedResidue[2],1)* FROM_C_TO_CO2;
+    sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationResidueIncorporation2(residues[3],isIncorporatedResidue[3],1)* FROM_C_TO_CO2;
     //sequestrationCarbonCO2Eq += SoilManagement::computeSequestrationDueToOrganicMamagement();
 }
 
@@ -390,7 +390,7 @@ double SoilManagement::computeSequestrationResidueIncorporation(double residueIn
     return increment;
 }
 
-double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, double percentageDryMatter, bool isIncorporatedResidue,int isHerbaceous)
+double SoilManagement::computeSequestrationResidueIncorporation2(double residueIncorporated, bool isIncorporatedResidue,int isHerbaceous)
 {
     double sequestration = 0 ;
     if (!isIncorporatedResidue) return 0;

@@ -435,7 +435,7 @@ bool createTableEnergy(QSqlDatabase &dbOutput)
                   "high_density_biomass REAL,wood REAL, "
                   "methane REAL,electricity_grid REAL,"
                   "percentage_renewables_provider REAL,hydropower_electricity REAL, "
-                  "photovoltaic_electricity REAL,eolic_electricity REAL"
+                  "photovoltaic_electricity REAL,windpower_electricity REAL"
                   ")";
 
     myQuery = dbOutput.exec(queryString);
@@ -460,7 +460,7 @@ bool saveTableEnergy(QString id, QSqlDatabase &dbOutput, TinputData &inputData, 
                          "high_density_biomass,wood, "
                          "methane,electricity_grid,"
                          "percentage_renewables_provider,hydropower_electricity, "
-                         "photovoltaic_electricity,eolic_electricity) "
+                         "photovoltaic_electricity,windpower_electricity) "
                        " VALUES ";
 
     queryOutput += "('" + id + "'"
@@ -653,7 +653,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
                   "high_density_biomass REAL,wood REAL, "
                   "methane REAL,electricity_grid REAL,"
                   "percentage_renewables_provider REAL,hydropower_electricity REAL, "
-                  "photovoltaic_electricity REAL,eolic_electricity REAL,"
+                  "photovoltaic_electricity REAL,windpower_electricity REAL,"
                   "total_energetic_emission REAL, debts REAL)";
 
     myQuery = dbOutput.exec(queryString);
@@ -683,7 +683,7 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
                          "high_density_biomass,wood,"
                          "methane,electricity_grid,"
                          "percentage_renewables_provider,hydropower_electricity,"
-                         "photovoltaic_electricity,eolic_electricity,"
+                         "photovoltaic_electricity,windpower_electricity,"
                          "total_energetic_emission, debts) "
                        " VALUES ";
 

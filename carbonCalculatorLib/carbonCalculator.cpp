@@ -228,7 +228,7 @@ void CarbonCalculator::computeBalance()
     fertiliser.computeEmissions();
     erosion.computeCarbonLoss();
     emissionsDueToOxidation = soilManage.computeEmissions(carbonInTop30CmSoil);
-    soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.cropResidueParameter.dryMatterFraction,cropResidue.residueLeftOnField,fertiliser.sequestrationDueToFertiliserApplication,fertiliser.drymatter);
+    soilManage.computeSequestration(carbonInTop30CmSoil,idClimate,fertiliser.amountFertiliser,fertiliser.recalcitrantCarbonIndex,fertiliser.incrementalParameter ,cropResidue.residueWeight,cropResidue.residueLeftOnField,fertiliser.sequestrationDueToFertiliserApplication,fertiliser.drymatter);
     biomassInTree.annualCarbonGain2(biomassInTree.annualCarbonWoodyDryMatter,80.0,cropResidue.residueWeight[0]+cropResidue.residueWeight[1]);
     biomassInTree.annualFromForestCarbonGain2(2500,(soilManage.percentage.forest/100.));
     carbonBudgetPerHectareSoil = energy.emissions.total + pesticide.emissionDueToProduction + cropResidue.kgCO2Equivalent.total + fertiliser.emissionDueToSoil
