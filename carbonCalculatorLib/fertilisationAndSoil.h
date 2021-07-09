@@ -4,22 +4,6 @@
 #include "basicStructures.h"
 
 class FertiliserApplication{
-private:
-    double applicationRate; // kg/ha
-    int kindOfFertiliser;
-    int applicationMethod;
-    int kindOfInhibitor;
-    int kindOfFertiliserProduction;
-
-
-
-    double indexBouwmanN2O;
-    double indexBouwmanNO;
-    double indexBouwmanNH3;
-
-    double emissionsByProduction;
-
-
 
 public:
     TfertInput fertInput[8];
