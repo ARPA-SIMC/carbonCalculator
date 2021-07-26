@@ -238,7 +238,7 @@ void SoilManagement::computeSequestration(double carbonInSoil, int myIdClimate, 
         if (dryMatter[i] < 0.5)
             amend = 0;
         else
-            amend = quantityOfAmendment[i]*dryMatter[i]/100.;// * 100.0 / dryMatter[i];
+            amend = quantityOfAmendment[i];//*dryMatter[i]/100.;// * 100.0 / dryMatter[i];
         incrementOrganicAmendment *= computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i]);
         incrementTotal *= incrementOrganicAmendment;
         sequestrationOfCarbon = -1*carbonInSoil*(computeSequestrationOrganicAmendments(amend,incrementalParameterAmendment[i],recalcitrantIndex[i])-1);
@@ -373,6 +373,10 @@ double SoilManagement::computeSequestrationCoverCropping(int myIdClimate)
 double SoilManagement::computeSequestrationOrganicAmendments(double amountOfAmendments, double incrementalParameterAmendment,double recalcitrantIndex)
 {
     double increment;
+    if (amountOfAmendments > 3000)
+    {
+        amountOfAmendments = 2999 + pow(amountOfAmendments - 2999,0.95); // in order to avoid divergence in computation for huge quantities of amendment
+    }
     increment = 1 + incrementalParameterAmendment* amountOfAmendments*(1-recalcitrantIndex)/1000;
     return increment;
 
