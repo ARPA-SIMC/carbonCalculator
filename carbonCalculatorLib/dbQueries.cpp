@@ -29,7 +29,7 @@ bool readRenewables(QString idCountry, int year, QSqlDatabase &db, CarbonCalcula
     calculator.energy.percentageRenewablesInGrid = renewablesPercentage;// + (year-2016);
 
     //check
-    if (calculator.energy.percentageRenewablesInGrid == NODATA)
+    if (fabs(calculator.energy.percentageRenewablesInGrid - NODATA) < 0.0001)
     {
         calculator.energy.percentageRenewablesInGrid = 24 + (year-2016);
     }

@@ -134,7 +134,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         if (dummy == ',') numberOfFields++;
     } while (dummy != '\n' && dummy != EOF);
 
-    if (numberOfFields < 109)
+    if (numberOfFields < 106)
     {
         error = "Error: the file contains wrong number of columns (expected 109)";
         return false;
@@ -197,7 +197,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].climate.climaticWaterBalance = data[iExp].value(label++).toFloat();
 
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
-        if (inputData[iExp].soil.depth == NODATA)
+        if ((inputData[iExp].soil.depth - NODATA)<0.0001)
         {
             inputData[iExp].soil.depth = 100;
         }
@@ -207,19 +207,19 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         }
         inputData[iExp].soil.drainage = data[iExp].value(label++);
         inputData[iExp].soil.pH = data[iExp].value(label++).toFloat();
-        if (inputData[iExp].soil.pH == NODATA)
+        if (fabs(inputData[iExp].soil.pH - NODATA)<0.0001)
         {
             inputData[iExp].soil.pH = 7;
         }
         inputData[iExp].soil.texture = data[iExp].value(label++);
         inputData[iExp].soil.organicMatter = data[iExp].value(label++).toFloat();
-        if (inputData[iExp].soil.organicMatter == NODATA)
+        if (fabs(inputData[iExp].soil.organicMatter - NODATA)<0.0001)
         {
             error += "ERROR: in record " + recordNr + " you must know organic matter in order to run the simulation\n";
             continue;
         }
         inputData[iExp].soil.skeleton = data[iExp].value(label++).toFloat();
-        if (inputData[iExp].soil.skeleton == NODATA)
+        if (fabs(inputData[iExp].soil.skeleton - NODATA)<0.0001)
         {
             inputData[iExp].soil.skeleton = 1;
         }
@@ -369,7 +369,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
                                   std::vector<TinputData> &inputData, int iExp, QString &error)
 {
     double avgRainfall = inputData[iExp].climate.annualRainfall ; // input from .csv
-    if (avgRainfall == NODATA)
+    if (fabs(avgRainfall - NODATA)<0.0001)
     {
         if (inputData[iExp].general.idRegion == "Emilia-Romagna")
             avgRainfall = 687; // data of Cesena
@@ -390,7 +390,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     }
 
     double avgTemperature = inputData[iExp].climate.meanTemperature; // to quit // input from .csv
-    if (avgTemperature == NODATA)
+    if (fabs(avgTemperature - NODATA)<0.0001)
     {
         if (inputData[iExp].general.idRegion == "Emilia-Romagna")
             avgTemperature = 13;
@@ -633,10 +633,10 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
     calculatorCO2.cropResidue.residueWeight[2] = inputData[iExp].cropFieldManagement.greenResidueWeight[0]; //(t/ha) dry weight of green residue input from .csv
     calculatorCO2.cropResidue.residueWeight[3] = inputData[iExp].cropFieldManagement.woodyResidueWeight[1]; //(t/ha) dry weight of woody residue input from .csv
 
-    if (calculatorCO2.cropResidue.residueWeight[0] == NODATA)
+    if (fabs(calculatorCO2.cropResidue.residueWeight[0] - NODATA)<0.0001)
 
     {
-        if(calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+        if(fabs(calculatorCO2.cropResidue.residueWeight[1] - NODATA)<0.0001)
         {
             calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.5; // t/ha
             calculatorCO2.cropResidue.residueWeight[1] = 0;
@@ -646,14 +646,14 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
             calculatorCO2.cropResidue.residueWeight[1] = calculatorCO2.cropResidue.residueWeight[0] = calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.25;
         }
     }
-    else if (calculatorCO2.cropResidue.residueWeight[0] != NODATA && calculatorCO2.cropResidue.residueWeight[1] == NODATA)
+    else if (fabs(calculatorCO2.cropResidue.residueWeight[0] - NODATA)>0.0001 && fabs(calculatorCO2.cropResidue.residueWeight[1] - NODATA)<0.0001)
     {
         calculatorCO2.cropResidue.residueWeight[1] =  calculatorCO2.biomassInTree.annualCarbonWoodyDryMatter*0.25; // t/ha
     }
 
-    if (calculatorCO2.cropResidue.residueWeight[2] == NODATA)
+    if (fabs(calculatorCO2.cropResidue.residueWeight[2] - NODATA)<0.0001)
     {
-        if (calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+        if (fabs(calculatorCO2.cropResidue.residueWeight[3] - NODATA)<0.0001)
         {
             calculatorCO2.cropResidue.residueWeight[2] = 0.2; // t/ha
             calculatorCO2.cropResidue.residueWeight[3] = 0; // t/ha
@@ -664,7 +664,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
             calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
         }
     }
-    else if (calculatorCO2.cropResidue.residueWeight[2] != NODATA && calculatorCO2.cropResidue.residueWeight[3] == NODATA)
+    else if (fabs(calculatorCO2.cropResidue.residueWeight[2] - NODATA)>0.0001 && fabs(calculatorCO2.cropResidue.residueWeight[3] - NODATA)<0.0001)
     {
         calculatorCO2.cropResidue.residueWeight[3] = 0.1; // t/ha
     }
@@ -674,7 +674,7 @@ bool setCarbonCalculatorVariables(QSqlDatabase &db, CarbonCalculator &calculator
 
     // **********************************************************************
     double idPercentageEnergyInGrid = inputData[iExp].energy.electricityGridPercentageRenewables;  // % input from .csv
-    if (idPercentageEnergyInGrid != NODATA)
+    if (fabs(idPercentageEnergyInGrid - NODATA)>0.0001)
     {
         calculatorCO2.energy.percentageRenewablesInGrid = idPercentageEnergyInGrid;
     }
