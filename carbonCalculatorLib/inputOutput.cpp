@@ -168,7 +168,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
     error = "";
 
     // read values (remove quotes)
-    for (int iExp=0; iExp < numberOfExperiments; iExp++)
+    for (unsigned int iExp=0; iExp < numberOfExperiments; iExp++)
     {
         int label=1;
         QString recordNr = QString::number(iExp+1);
@@ -181,10 +181,10 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         // TODO check on vat number and fiscal code?
         inputData[iExp].general.projectManagerName = data[iExp].value(label++);
         inputData[iExp].general.projectManagerSurname = data[iExp].value(label++);
-        inputData[iExp].general.nrField = (int) data[iExp].value(label++).toFloat();
+        inputData[iExp].general.nrField = data[iExp].value(label++).toInt();
         inputData[iExp].general.idCountry = data[iExp].value(label++);
         inputData[iExp].general.idRegion = data[iExp].value(label++);
-        inputData[iExp].general.year = (int)(data[iExp].value(label++).toFloat());
+        inputData[iExp].general.year = data[iExp].value(label++).toInt();
         inputData[iExp].general.description = data[iExp].value(label++);
         inputData[iExp].general.latitude = data[iExp].value(label++).toFloat();
         inputData[iExp].general.longitude = data[iExp].value(label++).toFloat();

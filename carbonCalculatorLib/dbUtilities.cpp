@@ -101,7 +101,7 @@ QString getFileName(QString fileNameComplete)
 {
     QString c;
     QString fileName = "";
-    for (int i = fileNameComplete.length()-1; i >= 0; i--)
+    for (int i = int(fileNameComplete.length())-1; i >= 0; i--)
     {
         c = fileNameComplete.mid(i,1);
         if ((c != "\\") && (c != "/"))

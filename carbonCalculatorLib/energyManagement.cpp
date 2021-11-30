@@ -19,7 +19,7 @@ double EnergyManagement::electricityEmissionComputation(double input,double para
 void EnergyManagement::computeEmissions()
 {
     double parameter;
-    if (percentageRenewablesInGrid == NODATA) percentageRenewablesInGrid = 50.;
+    if (fabs(percentageRenewablesInGrid - NODATA) < 0.00001) percentageRenewablesInGrid = 50.;
     parameter = parameterElectricity.fossil * (100. - percentageRenewablesInGrid)/100 + (percentageRenewablesInGrid/100.)*(parameterElectricity.hydropower+parameterElectricity.photovoltaic + parameterElectricity.wind)/3.0;
     emissions.fromElectricityGrid = electricityEmissionComputation(input.fromElectricityGrid,parameter);
     parameter = parameterElectricity.photovoltaic;

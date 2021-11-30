@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         dataPath = getFilePath(dbName);
-    };
+    }
 
     if (! openDBParameters(dbParameters, dataPath, error))
     {
@@ -52,6 +52,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent * event)
 {
+    Q_UNUSED(event)
     ui->logBrowser->resize(ui->logBrowser->width(), this->height() - ui->logBrowser->y() - 50);
 }
 
@@ -155,7 +156,7 @@ void MainWindow::on_actionCompute_Sellers_triggered()
     }
 
     ui->logBrowser->append("\nCredits computation:");
-    for (int iExp = 0; iExp < numberOfExperiments; iExp++)
+    for (unsigned int iExp = 0; iExp < unsigned(numberOfExperiments); iExp++)
     {
         QString text = QString::number(iExp+1) + " of " + QString::number(numberOfExperiments);
         ui->logBrowser->append(text);
@@ -236,7 +237,7 @@ void MainWindow::on_actionCompute_Buyers_triggered()
     }
 
     ui->logBrowser->append("\nDebts computation:");
-    for (int i=0; i < numberOfBuyers; i++)
+    for (unsigned int i=0; i < unsigned(numberOfBuyers); i++)
     {
         QString text = QString::number(i+1) + " of " + QString::number(numberOfBuyers);
         ui->logBrowser->append(text);

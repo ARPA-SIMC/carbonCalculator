@@ -310,29 +310,30 @@ bool CarbonCalculator::initialiazeVariables(QString idDrainage,double pH,QString
         fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[0];
         fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[0];
         fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[0];
-        somParameterForCec = 30;
+        //somParameterForCec = 30;
     }
     else if (idSoilOrganicCarbon == "1.72<SOM<=5.16")
     {
         fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[1];
         fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[1];
         fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[1];
-        somParameterForCec = 60;
+        //somParameterForCec = 60;
     }
     else if (idSoilOrganicCarbon == "5.16<SOM<=10.32")
     {
         fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[2];
         fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[2];
         fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[2];
-        somParameterForCec = 135;
+        //somParameterForCec = 135;
     }
     else if (idSoilOrganicCarbon == "SOM>10.32")
     {
         fertiliser.bouwmanParameterN2O.soilOrganicCarbon = bouwmanTableN2O.soilOrganicCarbon[3];
         fertiliser.bouwmanParameterNO.soilOrganicCarbon = bouwmanTableNO.soilOrganicCarbon[3];
         fertiliser.bouwmanParameterNH4.soilOrganicCarbon = bouwmanTableNH4.soilOrganicCarbon[3];
-        somParameterForCec = 180;
+        //somParameterForCec = 180;
     }
+
     somParameterForCec = 0.845*soilOrganicMatter*soilOrganicMatter+7.994*soilOrganicMatter+22.5;
 
     //**************************************************************************
