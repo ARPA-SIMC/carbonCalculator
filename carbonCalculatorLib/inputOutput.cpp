@@ -197,7 +197,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].climate.climaticWaterBalance = data[iExp].value(label++).toFloat();
 
         inputData[iExp].soil.depth = data[iExp].value(label++).toFloat();
-        if ((inputData[iExp].soil.depth - NODATA)<0.0001)
+        if (fabs(inputData[iExp].soil.depth - NODATA)<0.0001)
         {
             inputData[iExp].soil.depth = 100;
         }
@@ -213,6 +213,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         }
         inputData[iExp].soil.texture = data[iExp].value(label++);
         inputData[iExp].soil.organicMatter = data[iExp].value(label++).toFloat();
+
         if (fabs(inputData[iExp].soil.organicMatter - NODATA)<0.0001)
         {
             error += "ERROR: in record " + recordNr + " you must know organic matter in order to run the simulation\n";
@@ -226,7 +227,6 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         inputData[iExp].soil.availableWaterCapacity = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.totalNitrogen = data[iExp].value(label++).toFloat();
         inputData[iExp].soil.carbonNitrogenRatio = data[iExp].value(label++).toFloat();
-
 
         inputData[iExp].cropFieldManagement.cropName = data[iExp].value(label++);
         inputData[iExp].cropFieldManagement.treeDensity = data[iExp].value(label++).toFloat();
@@ -300,6 +300,7 @@ bool readCsvFileSeller(QString csvFileName, std::vector<TinputData> &inputData, 
         {
             inputData[iExp].agronomicInput.amendmentInhibitor[i] = data[iExp].value(label++);
         }
+
         double valueEnergy;
         valueEnergy = inputData[iExp].energy.biodiesel = data[iExp].value(label++).toFloat();
         if (valueEnergy < 0) inputData[iExp].energy.biodiesel = valueEnergy = 20.;
