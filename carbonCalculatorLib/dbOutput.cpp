@@ -69,8 +69,11 @@ bool saveOutput(QString id, QSqlDatabase &dbOutput, TinputData &inputData, Carbo
 
 bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debts)
 {
-    if (! saveTableBuyer(id, dbOutput,buyerCalculatorCO2,inputData , "buyer",debts))
+    QString error_;
+    if (! saveTableBuyer(error_,id, dbOutput,buyerCalculatorCO2,inputData , "buyer",debts))
+    {
         return false;
+    }
 
     // TODO save other tables
 
@@ -668,7 +671,7 @@ bool createTableBuyer(QSqlDatabase &dbOutput)
 }
 
 
-bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debts)
+bool saveTableBuyer(QString &myError , QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName,double debts)
 {
     QString queryOutput = "INSERT INTO " + tableName
                        + " (id_buyer, enterprise_name, email_address, vat_number, fiscal_code,"
@@ -726,10 +729,12 @@ bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator bu
                 + "," + QString::number(debts)
                 + ")";
 
+    myError = "";
     QSqlQuery myQuery = dbOutput.exec(queryOutput);
     if (myQuery.lastError().isValid())
     {
-        std::cout << "Error in saving table " + tableName.toStdString() + ": " << myQuery.lastError().text().toStdString();
+        myError =  "Error in saving table " + tableName + ": " + myQuery.lastError().text();
+
         return false;
     }
 

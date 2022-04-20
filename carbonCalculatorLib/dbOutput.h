@@ -38,7 +38,7 @@
 
     bool saveOutputBuyer(QString id, QSqlDatabase &dbOutput, TinputDataBuyer &inputData, BuyerCalculator buyerCalculatorCO2, double debts);
     bool createTableBuyer(QSqlDatabase &dbOutput);
-    bool saveTableBuyer(QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName, double debts);
+    bool saveTableBuyer(QString &myError,QString id_buyer, QSqlDatabase &dbOutput, BuyerCalculator buyerCalculatorCO2, TinputDataBuyer &inputData, QString tableName, double debts);
 
 
 #endif // DBOUTPUT_H
